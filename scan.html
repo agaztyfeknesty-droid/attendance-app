@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>تسجيل الحضور</title>
+  <title>بوابة الخدام</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Changa:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
@@ -12,20 +12,37 @@
 </head>
 <body>
 
-  <form>
+  <form id="passwordForm">
     <img src="logo.png" alt="اجازتي في كنيستي" class="logo">
-    <h1>تسجيل الحضور</h1>
-    <p id="instructions">وجّه الكاميرا لكارت الطالب</p>
+    <h1>بوابة الخدام 🛡️</h1>
+    <p class="sub-greeting">الصفحة دي للخدام بس</p>
 
-    <div id="reader" style="width: 100%; margin-top: 10px;"></div>
+    <label for="adminPassword">كلمة مرور الخدام</label>
+    <input type="password" id="adminPassword" placeholder="********">
 
-    <div id="resultBox" style="display:none; margin-top:15px;">
-      <p id="resultMessage" style="font-weight:700; color:#15213E;"></p>
-      <button type="button" id="scanAgainBtn">امسح طالب تاني</button>
-    </div>
+    <button type="submit">دخول</button>
   </form>
 
+  <div id="scanArea" style="display:none;">
+    <form>
+      <img src="logo.png" alt="اجازتي في كنيستي" class="logo">
+      <h1>تسجيل الحضور</h1>
+
+      <a href="students-list.html" class="admin-btn sky">📊 درجات كل المخدومين</a>
+
+      <p id="instructions" style="margin-top:15px;">وجّه الكاميرا لكارت الطالب</p>
+      <div id="reader" style="width: 100%; margin-top: 10px;"></div>
+
+      <div id="resultBox" style="display:none; margin-top:15px;">
+        <p id="resultMessage" style="font-weight:700; color:#15213E;"></p>
+        <button type="button" id="scanAgainBtn">امسح طالب تاني</button>
+      </div>
+    </form>
+  </div>
+
   <script>
+    const ADMIN_PASSWORD = "Khadem2026";
+
     const firebaseConfig = {
       apiKey: "AIzaSyBTlBr41Tl-GxnOwOsZvPkg26iQs2SGW3A",
       authDomain: "agazty-feknesty.firebaseapp.com",
@@ -39,63 +56,91 @@
 
     function getTodayString() {
       const today = new Date();
-      return today.toISOString().slice(0, 10); // مثال: 2026-06-21
+      const year = today.getFullYear();
+      const month = String(today.getMonth() + 1).padStart(2, '0');
+      const day = String(today.getDate()).padStart(2, '0');
+      return year + "-" + month + "-" + day;
     }
 
-    function onScanSuccess(decodedText) {
-      scanner.clear(); // نوقف الكاميرا فورًا عشان متقراش نفس الكود كذا مرة
+    function showScanArea() {
+      document.getElementById("passwordForm").style.display = "none";
+      document.getElementById("scanArea").style.display = "block";
+      startScanner();
+    }
 
-      const studentCode = decodedText;
-      const todayString = getTodayString();
+    if (localStorage.getItem("isAdminLoggedIn") === "true") {
+      showScanArea();
+    } else {
+      document.getElementById("passwordForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+        const entered = document.getElementById("adminPassword").value;
 
-      db.collection("students").doc(studentCode).get().then(function(docSnap) {
-        if (!docSnap.exists) {
-          showResult("الكود ده مش موجود ❌");
-          return;
+        if (entered === ADMIN_PASSWORD) {
+          localStorage.setItem("isAdminLoggedIn", "true");
+          showScanArea();
+        } else {
+          alert("كلمة المرور غلط ❌");
         }
-
-        const student = docSnap.data();
-
-        if (student.lastAttendanceDate === todayString) {
-          showResult("الطالب " + student.name + " اتسجل حضوره النهاردة بالفعل ✅");
-          return;
-        }
-
-        // حساب السلسلة: لو آخر حضور كان قريب، نزودها. لو بعيد أو أول مرة، تبدأ من 1
-        let newStreak = 1;
-        if (student.lastAttendanceDate) {
-          const lastDate = new Date(student.lastAttendanceDate);
-          const today = new Date(todayString);
-          const diffDays = Math.round((today - lastDate) / (1000 * 60 * 60 * 24));
-          if (diffDays <= 10) {
-            newStreak = (student.streak || 0) + 1;
-          }
-        }
-
-        const newPoints = (student.points || 0) + 10;
-
-        db.collection("students").doc(studentCode).update({
-          points: newPoints,
-          streak: newStreak,
-          lastAttendanceDate: todayString
-        }).then(function() {
-          showResult("تم تسجيل حضور " + student.name + " ✅ نقاطه دلوقتي: " + newPoints + " | السلسلة: " + newStreak + " يوم");
-        });
       });
     }
 
-    function showResult(message) {
-      document.getElementById("resultMessage").textContent = message;
-      document.getElementById("resultBox").style.display = "block";
-      document.getElementById("instructions").style.display = "none";
+    function startScanner() {
+      function onScanSuccess(decodedText) {
+        scanner.clear();
+
+        const studentCode = decodedText;
+        const todayString = getTodayString();
+
+        db.collection("students").doc(studentCode).get().then(function(docSnap) {
+          if (!docSnap.exists) {
+            showResult("الكود ده مش موجود ❌");
+            return;
+          }
+
+          const student = docSnap.data();
+
+          if (student.lastAttendanceDate === todayString) {
+            showResult("الطالب " + student.name + " اتسجل حضوره النهاردة بالفعل ✅");
+            return;
+          }
+
+          let newStreak = 1;
+          if (student.lastAttendanceDate) {
+            const lastDate = new Date(student.lastAttendanceDate);
+            const today = new Date(todayString);
+            const diffDays = Math.round((today - lastDate) / (1000 * 60 * 60 * 24));
+            if (diffDays <= 10) {
+              newStreak = (student.streak || 0) + 1;
+            }
+          }
+
+          const newPoints = (student.points || 0) + 10;
+
+          db.collection("students").doc(studentCode).update({
+            points: newPoints,
+            streak: newStreak,
+            lastAttendanceDate: todayString
+          }).then(function() {
+            showResult("تم تسجيل حضور " + student.name + " ✅ نقاطه دلوقتي: " + newPoints + " | السلسلة: " + newStreak + " يوم");
+          });
+        });
+      }
+
+      function showResult(message) {
+        document.getElementById("resultMessage").textContent = message;
+        document.getElementById("resultBox").style.display = "block";
+        document.getElementById("instructions").style.display = "none";
+      }
+
+      document.getElementById("scanAgainBtn").addEventListener("click", function() {
+        window.location.reload();
+      });
+
+      window.scanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 220 });
+      window.scanner.render(onScanSuccess);
     }
 
-    document.getElementById("scanAgainBtn").addEventListener("click", function() {
-      window.location.reload();
-    });
-
-    const scanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 220 });
-    scanner.render(onScanSuccess);
+    var scanner;
   </script>
 
 </body>
