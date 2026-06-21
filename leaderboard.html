@@ -12,7 +12,7 @@
 </head>
 <body>
 
-  <form>
+  <form onsubmit="return false;">
     <img src="logo.png" alt="اجازتي في كنيستي" class="logo">
     <h1>لوحة الصدارة 🏆</h1>
     <p class="sub-greeting">مين أكتر واحد التزم؟ ✨</p>
@@ -32,6 +32,7 @@
   </div>
 
   <script>
+    // إعدادات الفايربيس الخاصة ببروجكت "أجازتي في كنيستي"
     const firebaseConfig = {
       apiKey: "AIzaSyBTlBr41Tl-GxnOwOsZvPkg26iQs2SGW3A",
       authDomain: "agazty-feknesty.firebaseapp.com",
@@ -46,27 +47,42 @@
     const listDiv = document.getElementById("list");
     const avatarColors = ["#F2618C", "#36AEE0", "#F4B731", "#7C5CFC", "#2BB673"];
 
-    db.collection("students").orderBy("points", "desc").get().then(function(querySnapshot) {
+    // الاستماع لايف (Real-time) لجميع الطلاب وترتيبهم حسب النقاط تنازلياً
+    db.collection("students").orderBy("points", "desc").onSnapshot(function(querySnapshot) {
+      // مسح القائمة القديمة قبل إعادة الرسم لمنع التكرار
+      listDiv.innerHTML = "";
+      
       let rank = 1;
       const medals = ["🥇", "🥈", "🥉"];
 
       querySnapshot.forEach(function(doc) {
         const student = doc.data();
+        
+        // أول 3 هياخدوا ميداليات، والباقي أرقام عادية
         const medal = rank <= 3 ? medals[rank - 1] : rank;
-        const initial = student.name.charAt(0).toUpperCase();
+        
+        // جلب أول حرف من الاسم عشان الـ Avatar
+        const initial = student.name ? student.name.charAt(0).toUpperCase() : "⭐";
         const color = avatarColors[(rank - 1) % avatarColors.length];
 
+        // بناء صف الطالب في لوحة الصدارة
         const row = document.createElement("div");
         row.className = "leader-row";
-        row.innerHTML =
-          "<div class='leader-rank'>" + medal + "</div>" +
-          "<div class='leader-avatar' style='background:" + color + "'>" + initial + "</div>" +
-          "<div class='leader-name'>" + student.name + "</div>" +
-          "<div class='leader-points'>⭐ " + student.points + "</div>";
+        row.innerHTML = `
+          <div class="leader-rank">${medal}</div>
+          <div class="leader-avatar" style="background-color: ${color};">${initial}</div>
+          <div class="leader-info">
+            <div class="leader-name">${student.name}</div>
+            <div class="leader-streak">${student.streak || 0} 🔥 يوم التزام</div>
+          </div>
+          <div class="leader-points">${student.points || 0} ⭐</div>
+        `;
 
         listDiv.appendChild(row);
         rank++;
       });
+    }, function(error) {
+      console.error("Error listening to leaderboard: ", error);
     });
   </script>
 
