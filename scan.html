@@ -3,10 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>بوابة الخدام</title>
+  <title>بوابة الخدام - تسجيل الحضور</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Changa:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
@@ -16,33 +17,41 @@
   <form id="passwordForm">
     <img src="logo.png" alt="اجازتي في كنيستي" class="logo">
     <h1>بوابة الخدام 🛡️</h1>
-    <p class="sub-greeting">الصفحة دي للخدام بس</p>
+    <p class="sub-greeting">اكتب الرقم السري للدخول</p>
 
     <label for="adminPassword">كلمة مرور الخدام</label>
-    <input type="password" id="adminPassword" placeholder="********">
+    <input type="password" id="adminPassword" placeholder="********" style="text-align:center;">
 
     <button type="submit">دخول</button>
-    <p id="loginError" style="color:red; display:none; margin-top:10px;">كلمة المرور غلط ❌</p>
+    <p id="loginError" style="color:red; display:none; margin-top:10px; font-weight:700;">كلمة المرور غلط ❌</p>
   </form>
 
   <div id="scannerSection" style="display:none; text-align:center;">
-    <form style="position:relative;">
+    <form style="position:relative; width: 100%; max-width: 360px;">
       <img src="logo.png" alt="اجازتي في كنيستي" class="logo">
       <h1>تسجيل الحضور 📱</h1>
       <p class="sub-greeting" id="instructions">وجه الكاميرا على QR Code بتاع الطالب</p>
 
-      <div id="reader" style="width:100%; border-radius:16px; overflow:hidden; margin-top:15px;"></div>
+      <div id="reader" style="width:100%; border-radius:16px; overflow:hidden; margin-top:15px; background:#eee;"></div>
 
-      <div id="resultBox" style="display:none; margin-top:20px;">
-        <h3 id="resultMessage" style="color:#15213E; font-family:'Changa', sans-serif;"></h3>
-        <button type="button" id="scanAgainBtn" style="background-color:#2BB673; margin-top:15px;">سكان طالب تاني 🔄</button>
+      <div id="resultBox" style="display:none; margin-top:20px; padding:15px; border-radius:12px; background:#e0f2fe;">
+        <h3 id="resultMessage" style="color:#15213E; font-family:'Changa', sans-serif; font-size:16px;"></h3>
+        <button type="button" id="scanAgainBtn" style="background-color:#2BB673; margin-top:15px; width:100%;">سكان طالب تاني 🔄</button>
       </div>
 
-      <a href="students-list.html" style="display:block; margin-top:20px; color:#36AEE0; font-weight:700; text-decoration:none;">📊 عرض درجات المخدومين</a>
+      <hr style="margin: 25px 0; border: 0; border-top: 2px dashed #ccc;">
+
+      <button type="button" id="toggleListBtn" style="background-color:#36AEE0; margin-bottom:15px;">📊 إظهار درجات المخدومين لايف</button>
+
+      <div id="studentsListContainer" style="display:none; text-align:right; max-height: 400px; overflow-y: auto; margin-top:10px;">
+        <h3 style="text-align:center; font-family:'Changa'; font-size:16px; margin-bottom:10px; color:#15213E;">لوحة درجات المخدومين 🔥</h3>
+        <div id="list"></div>
+      </div>
     </form>
   </div>
 
   <script>
+    // إعدادات الفايربيس الصالحة والمجربة للمشروع
     const firebaseConfig = {
       apiKey: "AIzaSyBTlBr41Tl-GxnOwOsZvPkg26iQs2SGW3A",
       authDomain: "agazty-feknesty.firebaseapp.com",
@@ -54,14 +63,16 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
+    // تشييك الباسورد
     document.getElementById("passwordForm").addEventListener("submit", function(event) {
       event.preventDefault();
-      const pass = document.getElementById("adminPassword").value;
+      const pass = document.getElementById("adminPassword").value.trim();
 
       if (pass === "Khadem2026") {
         document.getElementById("passwordForm").style.display = "none";
         document.getElementById("scannerSection").style.display = "block";
         startScanner();
+        loadStudentsRealTime(); // تشغيل استماع الأسماء لايف فوراً
       } else {
         document.getElementById("loginError").style.display = "block";
       }
@@ -78,8 +89,12 @@
     }
 
     function startScanner() {
-      window.scanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 250 });
-      window.scanner.render(onScanSuccess);
+      window.scanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: { width: 200, height: 200 } });
+      window.scanner.render(onScanSuccess, onScanFailure);
+    }
+
+    function onScanFailure(error) {
+      // تفادي إخراج إيرادات كثيرة في الكونسول أثناء البحث عن الكود
     }
 
     function onScanSuccess(decodedText, decodedResult) {
@@ -95,28 +110,24 @@
 
         const student = docSnap.data();
 
-        // 1. حماية ضد تكرار التسجيل في نفس اليوم
+        // حماية ضد التكرار في نفس اليوم
         if (student.lastAttendanceDate === todayString) {
           showResult("الطالب " + student.name + " اتسجل حضوره النهاردة بالفعل ✅");
           return;
         }
 
-        let newStreak = 1; // الديفولت لو أول مرة يحضر أو غاب كتير
-
+        let newStreak = 1;
         if (student.lastAttendanceDate) {
           const lastDate = new Date(student.lastAttendanceDate);
           const today = new Date(todayString);
-          
-          // حساب فرق الأيام بدقة
           const diffTime = today.getTime() - lastDate.getTime();
           const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
 
-          // لو الحضور متتالي (من الإتنين للأربع = يومين) أو (من الأربع للإتنين = 5 أيام)
-          // حطينا حد أقصى 5 أيام كأمان عشان يغطي الويك إند
+          // لوجيك الإثنين والأربعاء (حد أقصى 5 أيام للأمان)
           if (diffDays <= 5) {
             newStreak = (student.streak || 0) + 1;
           } else {
-            newStreak = 1; // غاب أكتر من المسموح فالسلسلة تصفر
+            newStreak = 1;
           }
         }
 
@@ -129,18 +140,66 @@
         }).then(function() {
           showResult("تم تسجيل حضور " + student.name + " ✅ نقاطه: " + newPoints + " | السلسلة: " + newStreak + " أيام");
         });
+      }).catch(function(err){
+        showResult("عطل في الاتصال بالفايربيس ❌");
       });
     }
 
     function showResult(message) {
-      document.getElementById("resultMessage").textContent = message;
+      document.getElementById("resultMessage").innerHTML = message;
       document.getElementById("resultBox").style.display = "block";
       document.getElementById("instructions").style.display = "none";
+      document.getElementById("reader").style.display = "none";
     }
 
     document.getElementById("scanAgainBtn").addEventListener("click", function() {
       window.location.reload();
     });
+
+    // إظهار وإخفاء قائمة الدرجات
+    document.getElementById("toggleListBtn").addEventListener("click", function() {
+      const container = document.getElementById("studentsListContainer");
+      if(container.style.display === "none") {
+        container.style.display = "block";
+        this.textContent = "🔼 إخفاء قائمة الدرجات";
+      } else {
+        container.style.display = "none";
+        this.textContent = "📊 إظهار درجات المخدومين لايف";
+      }
+    });
+
+    // لوجيك جلب الأسماء والدرجات لايف Real-Time
+    function loadStudentsRealTime() {
+      const listDiv = document.getElementById("list");
+      const avatarColors = ["#F2618C", "#36AEE0", "#F4B731", "#7C5CFC", "#2BB673"];
+
+      db.collection("students").orderBy("points", "desc").onSnapshot(function(querySnapshot) {
+        listDiv.innerHTML = ""; 
+        let rank = 1;
+
+        querySnapshot.forEach(function(doc) {
+          const student = doc.data();
+          const initial = student.name ? student.name.charAt(0).toUpperCase() : "⭐";
+          const color = avatarColors[(rank - 1) % avatarColors.length];
+
+          const row = document.createElement("div");
+          row.className = "leader-row";
+          row.style.margin = "8px 0";
+          row.innerHTML = `
+            <div class="leader-rank" style="font-weight:bold; width:25px;">${rank}</div>
+            <div class="leader-avatar" style="background-color: ${color}; color:white; width:30px; height:30px; border-radius:50%; text-align:center; line-height:30px; display:inline-block; margin-left:10px;">${initial}</div>
+            <div class="leader-info" style="display:inline-block; vertical-align:middle; width: calc(100% - 120px);">
+              <div class="leader-name" style="font-weight:600; font-size:14px;">${student.name}</div>
+              <div style="font-size:11px; color:#6b7280;">كود: ${student.code} | 🔥 ${student.streak || 0} أيام</div>
+            </div>
+            <div class="leader-points" style="float:left; font-weight:bold; color:#2BB673;">${student.points || 0} ⭐</div>
+            <div style="clear:both;"></div>
+          `;
+          listDiv.appendChild(row);
+          rank++;
+        });
+      });
+    }
   </script>
 
 </body>
