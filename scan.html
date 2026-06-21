@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>تسجيل الحضور</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Changa:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+</head>
+<body>
+
+  <form>
+    <img src="logo.png" alt="اجازتي في كنيستي" class="logo">
+    <h1>تسجيل الحضور</h1>
+    <p>وجّه الكاميرا لكارت الطالب</p>
+
+    <div id="reader" style="width: 100%; margin-top: 10px;"></div>
+  </form>
+
+  <script>
+    function onScanSuccess(decodedText, decodedResult) {
+      alert("تم قراءة الكود: " + decodedText);
+    }
+
+    const scanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 220 });
+    scanner.render(onScanSuccess);
+  </script>
+
+</body>
+</html>
