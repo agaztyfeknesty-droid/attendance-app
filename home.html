@@ -8,10 +8,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Changa:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
 
-  <form>
+  <form onsubmit="return false;">
     <img src="logo.png" alt="اجازتي في كنيستي" class="logo">
 
     <h1 id="welcomeMessage">أهلاً بيك! 👋</h1>
@@ -31,7 +33,7 @@
     </div>
 
     <p class="qr-title">📱 كارت الحضور بتاعك</p>
-    <div id="qrcode"></div>
+    <div id="qrcode" style="display: flex; justify-content: center; margin: 15px 0;"></div>
   </form>
 
   <div class="bottom-nav">
@@ -46,20 +48,45 @@
   </div>
 
   <script>
-    const studentData = localStorage.getItem("loggedInStudent");
+    const firebaseConfig = {
+      apiKey: "AIzaSyBTlBr41Tl-GxnOwOsZvPkg26iQs2SGW3A",
+      authDomain: "agazty-feknesty.firebaseapp.com",
+      projectId: "agazty-feknesty",
+      storageBucket: "agazty-feknesty.firebasestorage.app",
+      messagingSenderId: "1065028327259",
+      appId: "1:1065028327259:web:c0b7c6f6fe39bc93b9ac7e"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
-    if (!studentData) {
+    const localStudentData = localStorage.getItem("loggedInStudent");
+
+    if (!localStudentData) {
       window.location.href = "index.html";
     } else {
-      const student = JSON.parse(studentData);
-      document.getElementById("welcomeMessage").textContent = "أهلاً بيك يا " + student.name + " 👋";
-      document.getElementById("pointsValue").textContent = student.points;
-      document.getElementById("streakValue").textContent = student.streak;
+      const loggedInUser = JSON.parse(localStudentData);
 
-      new QRCode(document.getElementById("qrcode"), {
-        text: student.code,
-        width: 160,
-        height: 160
+      // الاستماع للتغييرات في الفايربيس لايف (Real-time)
+      db.collection("students").doc(loggedInUser.code).onSnapshot(function(doc) {
+        if (doc.exists) {
+          const student = doc.data();
+          
+          // تحديث الواجهة فوراً بالأرقام الجديدة
+          document.getElementById("welcomeMessage").textContent = "أهلاً بيك يا " + student.name + " 👋";
+          document.getElementById("pointsValue").textContent = student.points || 0;
+          document.getElementById("streakValue").textContent = student.streak || 0;
+
+          // مسح الـ QR القديم وإعادة رسمه بالـ Code المظبوط
+          document.getElementById("qrcode").innerHTML = ""; 
+          new QRCode(document.getElementById("qrcode"), {
+            text: student.code,
+            width: 160,
+            height: 160
+          });
+          
+          // تحديث بيانات التخزين المحلي كاحتياطي
+          localStorage.setItem("loggedInStudent", JSON.stringify(student));
+        }
       });
     }
   </script>
