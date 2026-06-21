@@ -1,195 +1,193 @@
-body {
-  background-color: #FDF6E8;
-  font-family: 'Cairo', Arial, sans-serif;
-  display: flex;
-  justify-content: center;
-  padding: 40px 15px;
+/* ========================================================== */
+/* 1. الإعدادات العامة والخطوط (Reset & Global Styles)       */
+/* ========================================================== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
+body {
+  font-family: 'Cairo', sans-serif;
+  background-color: #FDF6E8; /* الخلفية الكريمي المريحة */
+  color: #15213E;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  padding-bottom: 90px; /* مسافة للأمان عشان الـ Bottom Nav تحت */
+}
+
+/* ========================================================== */
+/* 2. تنسيق الفورم والبطاقات الرئيسية (Form & Card Container) */
+/* ========================================================== */
 form {
-  background-color: white;
-  width: 340px;
-  padding: 30px;
-  border-radius: 28px;
-  border-top: 8px solid #F4B731;
-  box-shadow: 0 8px 24px rgba(21, 33, 62, 0.12);
+  background: #ffffff;
+  padding: 30px 25px;
+  border-radius: 24px;
+  box-shadow: 0 8px 24px rgba(21, 33, 62, 0.05);
+  width: 100%;
+  max-width: 360px;
   text-align: center;
+  border: 1px solid rgba(21, 33, 62, 0.05);
+  position: relative;
 }
 
 .logo {
-  width: 110px;
-  margin-bottom: 10px;
+  width: 70px;
+  height: auto;
+  margin-bottom: 15px;
 }
 
 h1 {
   font-family: 'Changa', sans-serif;
+  font-size: 24px;
   font-weight: 800;
   color: #15213E;
-  margin-top: 5px;
   margin-bottom: 5px;
 }
 
-p {
+p.sub-greeting {
+  font-size: 14px;
   color: #6b7280;
+  margin-bottom: 25px;
 }
 
+/* ========================================================== */
+/* 3. عناصر الإدخال والأزرار (Inputs & Buttons)             */
+/* ========================================================== */
 label {
   display: block;
   text-align: right;
-  margin-top: 18px;
-  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 8px;
   color: #15213E;
-  font-weight: 600;
 }
 
-input {
+input[type="text"],
+input[type="password"],
+input[type="tel"] {
   width: 100%;
-  padding: 12px;
-  border: 2px solid #f0e6cf;
+  padding: 14px 16px;
   border-radius: 14px;
-  box-sizing: border-box;
-  font-size: 16px;
+  border: 2px solid #eee;
+  background-color: #f9fafb;
   font-family: 'Cairo', sans-serif;
+  font-size: 15px;
+  margin-bottom: 18px;
+  outline: none;
+  transition: border-color 0.3s ease;
+  text-align: right;
 }
 
 input:focus {
-  outline: none;
   border-color: #36AEE0;
+  background-color: #ffffff;
 }
 
 button {
   width: 100%;
-  background-color: #15213E;
-  color: #F4B731;
-  border: none;
   padding: 14px;
   border-radius: 14px;
-  font-size: 17px;
+  border: none;
+  background-color: #15213E;
+  color: #ffffff;
+  font-family: 'Cairo', sans-serif;
+  font-size: 16px;
   font-weight: 700;
-  font-family: 'Changa', sans-serif;
-  margin-top: 22px;
   cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
 }
 
 button:hover {
-  background-color: #233258;
+  background-color: #23355f;
 }
 
+button:active {
+  transform: scale(0.98);
+}
+
+button:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* ========================================================== */
+/* 4. لوحة الإحصائيات (Stats & Streak Boxes)                  */
+/* ========================================================== */
 .stats {
   display: flex;
-  gap: 12px;
-  margin: 20px 0;
+  gap: 15px;
+  margin-bottom: 25px;
 }
 
-.stat-box {
+.stat-box, .streak-box {
   flex: 1;
+  padding: 15px;
   border-radius: 18px;
-  padding: 16px 8px;
-  color: white;
-}
-
-.stat-box.pink { background-color: #F2618C; }
-.stat-box.sky { background-color: #36AEE0; }
-
-.stat-number {
-  display: block;
-  font-family: 'Changa', sans-serif;
-  font-size: 28px;
-  font-weight: 800;
-}
-
-.stat-label {
-  font-size: 13px;
-}
-
-.qr-title {
-  font-weight: 600;
-  color: #15213E;
-  margin-top: 10px;
-}
-
-#qrcode {
-  display: flex;
-  justify-content: center;
-  margin-top: 10px;
-  padding: 12px;
-  background: #FDF6E8;
-  border-radius: 16px;
-}
-body {
-  padding-bottom: 110px;
-}
-
-.sub-greeting {
-  margin-top: -8px;
-}
-
-.stat-icon, .streak-flame {
-  display: block;
-  font-size: 22px;
-  margin-bottom: 2px;
-}
-
-.streak-box {
-  flex: 1;
-  border-radius: 18px;
-  padding: 16px 8px;
-  text-align: center;
-  color: white;
-  background: linear-gradient(135deg, #FF7A18, #FF3D3D);
-  box-shadow: 0 6px 16px rgba(255, 61, 61, 0.35);
-}
-
-.bottom-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: white;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  padding: 10px 0 16px;
-  box-shadow: 0 -4px 16px rgba(21, 33, 62, 0.12);
-  border-radius: 24px 24px 0 0;
-  max-width: 340px;
-  margin: 0 auto;
-}
-
-.nav-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 3px;
-  text-decoration: none;
-  color: #b5bccb;
-  font-size: 12px;
-  font-weight: 700;
-  font-family: 'Cairo', sans-serif;
+  justify-content: center;
 }
 
-.nav-item.active {
+.stat-box.pink {
+  background-color: #FCE8EE;
+}
+
+.streak-box {
+  background-color: #FFF3D6;
+}
+
+.stat-icon, .streak-flame {
+  font-size: 24px;
+  margin-bottom: 5px;
+}
+
+.stat-number {
+  font-family: 'Changa', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
   color: #15213E;
 }
 
-.nav-icon {
-  font-size: 22px;
+.stat-label {
+  font-size: 12px;
+  color: #6b7280;
+  font-weight: 600;
+  margin-top: 2px;
 }
 
+.qr-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #15213E;
+  margin-top: 10px;
+  margin-bottom: 8px;
+}
+
+/* ========================================================== */
+/* 5. لوحة الصدارة وقوائم الطلاب (Leaderboard rows)          */
+/* ========================================================== */
 .leader-row {
   display: flex;
   align-items: center;
-  gap: 10px;
-  background: #FDF6E8;
-  border-radius: 16px;
-  padding: 10px 12px;
+  background: #f9fafb;
+  padding: 12px;
+  border-radius: 14px;
   margin-bottom: 10px;
+  border: 1px solid #eee;
+  direction: rtl;
 }
 
 .leader-rank {
-  width: 26px;
-  text-align: center;
+  font-family: 'Changa', sans-serif;
+  font-size: 16px;
   font-weight: 800;
+  width: 30px;
+  text-align: center;
   color: #15213E;
 }
 
@@ -197,57 +195,101 @@ body {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  color: white;
+  color: #ffffff;
+  font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 800;
-  font-family: 'Changa', sans-serif;
-  flex-shrink: 0;
+  font-size: 16px;
+  margin-right: 10px;
+  margin-left: 12px;
 }
 
-.leader-name {
+.leader-info {
   flex: 1;
-  font-weight: 700;
-  color: #15213E;
   text-align: right;
 }
 
-.leader-points {
+.leader-name {
   font-weight: 700;
-  color: #F2618C;
-  white-space: nowrap;
+  font-size: 14px;
+  color: #15213E;
 }
 
-@keyframes popIn {
-  from { transform: scale(0.85); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+.leader-streak {
+  font-size: 11px;
+  color: #F4B731;
+  font-weight: 600;
 }
 
-.stat-box, .streak-box {
-  animation: popIn 0.4s ease;
+.leader-points {
+  font-family: 'Changa', sans-serif;
+  font-weight: 800;
+  color: #2BB673;
+  font-size: 15px;
 }
+
 /* ========================================================== */
-/* ستايل القائمة الجانبية المضافة (Sidebar) وصورة البروفايل */
+/* 6. شريط التنقل السفلي (Bottom Navigation Bar)             */
 /* ========================================================== */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  background-color: #ffffff;
+  box-shadow: 0 -4px 16px rgba(21, 33, 62, 0.06);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 50;
+  border-top: 1px solid #eee;
+}
 
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: #9ca3af;
+  transition: color 0.3s ease;
+}
+
+.nav-icon {
+  font-size: 20px;
+  margin-bottom: 2px;
+}
+
+.nav-label {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.nav-item.active {
+  color: #36AEE0;
+}
+
+/* ========================================================== */
+/* 7. القائمة الجانبية للبروفايل (Sidebar Menu CSS)           */
+/* ========================================================== */
 .sidebar {
   position: fixed;
   top: 0;
-  left: -280px; /* مخفية تماماً بره الشاشة على الشمال */
+  left: -280px; /* مخفية تماماً خارج الشاشة جهة اليسار */
   width: 280px;
   height: 100%;
-  background-color: white;
+  background-color: #ffffff;
   box-shadow: 4px 0 24px rgba(21, 33, 62, 0.15);
-  transition: left 0.4s ease; /* دي الحركة الناعمة لما تفتح وتقفل */
-  z-index: 100;
+  transition: left 0.4s ease-in-out; /* حركة فتح وغلق انسيابية */
+  z-index: 1000;
   display: flex;
   flex-direction: column;
 }
 
-/* الكلاس ده بيتزود بالـ JavaScript لما تدوس على الـ ☰ */
+/* هذا الكلاس يتم تفعيله برمجياً لفتح القائمة */
 .sidebar.open {
-  left: 0; 
+  left: 0 !important;
 }
 
 .sidebar-header {
@@ -257,6 +299,7 @@ body {
   justify-content: space-between;
   align-items: center;
   border-bottom: 2px solid #eee;
+  direction: rtl;
 }
 
 .sidebar-header h2 {
@@ -267,20 +310,22 @@ body {
 }
 
 .sidebar-content {
-  padding: 20px;
+  padding: 25px 20px;
   flex: 1;
   overflow-y: auto;
-  text-align: right; /* عشان معلومات الطالب تظهر من اليمين للشمال مظبوطة */
+  text-align: right;
+  direction: rtl;
 }
 
 .info-group p {
   font-size: 14px;
-  margin: 12px 0;
+  margin: 14px 0;
   color: #15213E;
-  border-bottom: 1px dashed #eee; /* خط منقّط شيك يفصل البيانات */
+  border-bottom: 1px dashed #eee;
   padding-bottom: 8px;
 }
 
 .info-group strong {
   color: #6b7280;
+  margin-left: 5px;
 }
