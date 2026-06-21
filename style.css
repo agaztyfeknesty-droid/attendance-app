@@ -227,3 +227,60 @@ body {
 .stat-box, .streak-box {
   animation: popIn 0.4s ease;
 }
+/* ========================================================== */
+/* ستايل القائمة الجانبية المضافة (Sidebar) وصورة البروفايل */
+/* ========================================================== */
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: -280px; /* مخفية تماماً بره الشاشة على الشمال */
+  width: 280px;
+  height: 100%;
+  background-color: white;
+  box-shadow: 4px 0 24px rgba(21, 33, 62, 0.15);
+  transition: left 0.4s ease; /* دي الحركة الناعمة لما تفتح وتقفل */
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+}
+
+/* الكلاس ده بيتزود بالـ JavaScript لما تدوس على الـ ☰ */
+.sidebar.open {
+  left: 0; 
+}
+
+.sidebar-header {
+  padding: 20px;
+  background-color: #FDF6E8;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #eee;
+}
+
+.sidebar-header h2 {
+  font-family: 'Changa', sans-serif;
+  font-size: 18px;
+  color: #15213E;
+  margin: 0;
+}
+
+.sidebar-content {
+  padding: 20px;
+  flex: 1;
+  overflow-y: auto;
+  text-align: right; /* عشان معلومات الطالب تظهر من اليمين للشمال مظبوطة */
+}
+
+.info-group p {
+  font-size: 14px;
+  margin: 12px 0;
+  color: #15213E;
+  border-bottom: 1px dashed #eee; /* خط منقّط شيك يفصل البيانات */
+  padding-bottom: 8px;
+}
+
+.info-group strong {
+  color: #6b7280;
+}
