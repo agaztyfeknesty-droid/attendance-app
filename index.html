@@ -7,35 +7,40 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Changa:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
 
-  <form>
+  <form id="loginForm">
     <img src="logo.png" alt="اجازتي في كنيستي" class="logo">
 
-    <h1>تسجيل الدخول</h1>
+    <h1>تسجيل الدخول 🚪</h1>
     <p>ادخل بياناتك عشان تتابع رحلتك</p>
 
     <label for="studentCode">كود الطالب أو الاسم</label>
-    <input type="text" id="studentCode" placeholder="مثال: G001">
+    <input type="text" id="studentCode" placeholder="مثال: M001" required>
 
     <label for="password">كلمة المرور</label>
-    <input type="password" id="password" placeholder="********">
+    <input type="password" id="password" placeholder="********" required>
 
-    <button type="submit">دخول إلى حسابي</button>
+    <div style="display: flex; align-items: center; gap: 8px; margin-top: 10px; justify-content: flex-start; width: 100%;">
+      <input type="checkbox" id="showPassword" style="width: auto; margin: 0; cursor: pointer;">
+      <label for="showPassword" style="margin: 0; font-size: 13px; color: #6b7280; font-weight: normal; cursor: pointer;">إظهار كلمة المرور 👁️</label>
+    </div>
+
+    <button type="submit" style="margin-top: 20px;">دخول إلى حسابي</button>
 
     <p style="margin-top:18px; font-size:14px;">
-      لسه معملتش حساب؟ <a href="signup.html" style="color:#36AEE0; font-weight:700;">سجل دلوقتي</a>
+      لسه معملتش حساب؟ <a href="signup.html" style="color:#36AEE0; font-weight:700; text-decoration:none;">سجل دلوقتي</a>
     </p>
     <p style="margin-top:8px; font-size:14px;">
-      نسيت كلمة السر؟ <a href="resetpassword.html" style="color:#F2618C; font-weight:700;">استرجعها من هنا</a>
+      نسيت كلمة السر؟ <a href="resetpassword.html" style="color:#F2618C; font-weight:700; text-decoration:none;">استرجعها من هنا</a>
     </p>
   </form>
 
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-
   <script>
+    // إعدادات الفايربيس
     const firebaseConfig = {
       apiKey: "AIzaSyBTlBr41Tl-GxnOwOsZvPkg26iQs2SGW3A",
       authDomain: "agazty-feknesty.firebaseapp.com",
@@ -44,12 +49,50 @@
       messagingSenderId: "1065028327259",
       appId: "1:1065028327259:web:c0b7c6f6fe39bc93b9ac7e"
     };
-
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
-  </script>
 
-  <script src="script.js"></script>
+    // لوجيك إظهار وإخفاء الباسورد
+    document.getElementById("showPassword").addEventListener("change", function() {
+      const passwordInput = document.getElementById("password");
+      if (this.checked) {
+        passwordInput.type = "text";
+      } else {
+        passwordInput.type = "password";
+      }
+    });
+
+    // لوجيك تسجيل الدخول القديم المظبوط
+    document.getElementById("loginForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      const enteredCode = document.getElementById("studentCode").value.trim();
+      const enteredPassword = document.getElementById("password").value.trim();
+
+      db.collection("students").doc(enteredCode).get().then(function(docSnap) {
+        if (docSnap.exists) {
+          checkPassword(docSnap.data(), enteredPassword);
+        } else {
+          db.collection("students").where("name", "==", enteredCode).get().then(function(querySnap) {
+            if (!querySnap.empty) {
+              checkPassword(querySnap.docs[0].data(), enteredPassword);
+            } else {
+              alert("الكود أو الاسم غير موجود ❌");
+            }
+          });
+        }
+      });
+    });
+
+    function checkPassword(student, enteredPassword) {
+      if (student.password === enteredPassword) {
+        localStorage.setItem("loggedInStudent", JSON.stringify(student));
+        window.location.href = "home.html";
+      } else {
+        alert("كلمة المرور غلط ❌");
+      }
+    }
+  </script>
 
 </body>
 </html>

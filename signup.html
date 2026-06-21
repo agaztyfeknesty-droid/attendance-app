@@ -23,7 +23,12 @@
     <label for="newPassword">اختار كلمة مرور (باسورد)</label>
     <input type="password" id="newPassword" placeholder="********" required>
 
-    <button type="submit" id="submitBtn">إنشاء الحساب وتوليد الكود 🚀</button>
+    <div style="display: flex; align-items: center; gap: 8px; margin-top: 10px; justify-content: flex-start; width: 100%;">
+      <input type="checkbox" id="showPassword" style="width: auto; margin: 0; cursor: pointer;">
+      <label for="showPassword" style="margin: 0; font-size: 13px; color: #6b7280; font-weight: normal; cursor: pointer;">إظهار كلمة المرور 👁️</label>
+    </div>
+
+    <button type="submit" id="submitBtn" style="margin-top: 20px;">إنشاء الحساب وتوليد الكود 🚀</button>
     
     <div id="successBox" style="display:none; margin-top:20px; padding:15px; background:#e8f5e9; border-radius:16px;">
       <p style="color:#2e7d32; font-weight:bold; margin-bottom:5px;">تم إنشاء الحساب بنجاح! ✅</p>
@@ -32,25 +37,34 @@
     </div>
 
     <p style="margin-top:18px; font-size:14px;">
-      عندك حساب بالفعل؟ <a href="index.html" style="color:#36AEE0; font-weight:700; text-decoration:none;">سجل دخول من هنا</a>
+      عندك حساب بالفعل? <a href="index.html" style="color:#36AEE0; font-weight:700; text-decoration:none;">سجل دخول من هنا</a>
     </p>
   </form>
 
   <script>
-    // إعدادات الفايربيس الخاصة ببروجكت "أجازتي في كنيستي"
     const firebaseConfig = {
       apiKey: "AIzaSyBTlBr41Tl-GxnOwOsZvPkg26iQs2SGW3A",
       authDomain: "agazty-feknesty.firebaseapp.com",
       projectId: "agazty-feknesty",
       storageBucket: "agazty-feknesty.firebasestorage.app",
       messagingSenderId: "1065028327259",
-      appId: "1:1:1065028327259:web:c0b7c6f6fe39bc93b9ac7e"
+      appId: "1:1065028327259:web:c0b7c6f6fe39bc93b9ac7e"
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
     const form = document.getElementById("signupForm");
     const submitBtn = document.getElementById("submitBtn");
+
+    // لوجيك إظهار وإخفاء الباسورد
+    document.getElementById("showPassword").addEventListener("change", function() {
+      const passwordInput = document.getElementById("newPassword");
+      if (this.checked) {
+        passwordInput.type = "text";
+      } else {
+        passwordInput.type = "password";
+      }
+    });
 
     form.addEventListener("submit", function(event) {
       event.preventDefault();
@@ -63,18 +77,14 @@
         return;
       }
 
-      // تعطيل الزرار مؤقتاً لمنع الضغط المتكرر
       submitBtn.disabled = true;
       submitBtn.textContent = "جاري إنشاء كودك الخاص... ⏳";
 
-      // 1. جلب عدد المخدومين الحاليين في قاعدة البيانات لتوليد كود متسلسل
       db.collection("students").get().then(function(querySnapshot) {
-        const currentCount = querySnapshot.size; // عدد الطلاب الحاليين
-        const nextNumber = currentCount + 1; // رقم الطالب الجديد
-        
-        // تحويل الرقم لصيغة شيك ثلاثية الأرقام (مثال: لو 5 يبقى 005، لو 23 يبقى 023)
+        const currentCount = querySnapshot.size;
+        const nextNumber = currentCount + 1;
         const paddedNumber = String(nextNumber).padStart(3, '0');
-        const generatedCode = "M" + paddedNumber; // الكود التلقائي النهائي (مثل: M001)
+        const generatedCode = "M" + paddedNumber;
 
         const newStudent = {
           code: generatedCode,
@@ -85,16 +95,12 @@
           lastAttendanceDate: ""
         };
 
-        // 2. حفظ الطالب الجديد في الـ Collection بالكود اللي السيستم عمله
         db.collection("students").doc(generatedCode).set(newStudent).then(function() {
-          // إظهار الكود للطالب في الشاشة بشكل واضح
           document.getElementById("generatedCode").textContent = generatedCode;
           document.getElementById("successBox").style.display = "block";
           
-          // حفظ بياناته في الـ LocalStorage عشان يدخل علطول
           localStorage.setItem("loggedInStudent", JSON.stringify(newStudent));
 
-          // تحويله للصفحة الرئيسية تلقائياً بعد 4 ثواني عشان يلحق يشوف الكود ويحفظه
           setTimeout(function() {
             window.location.href = "home.html";
           }, 4000);
