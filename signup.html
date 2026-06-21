@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>إنشاء حساب</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Changa:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+
+  <form id="signupForm">
+    <img src="logo.png" alt="اجازتي في كنيستي" class="logo">
+    <h1>إنشاء حساب جديد</h1>
+    <p>اعمل حسابك وابدأ رحلتك</p>
+
+    <label for="fullName">اسمك بالكامل</label>
+    <input type="text" id="fullName" placeholder="مثال: Mariam Samir" required>
+
+    <label for="newCode">اختار كود خاص بيك</label>
+    <input type="text" id="newCode" placeholder="مثال: M015" required>
+
+    <label for="newPassword">اختار كلمة مرور</label>
+    <input type="password" id="newPassword" placeholder="********" required>
+
+    <button type="submit">إنشاء الحساب</button>
+
+    <p style="margin-top:18px; font-size:14px;">
+      عندك حساب بالفعل؟ <a href="index.html" style="color:#36AEE0; font-weight:700;">سجل دخولك من هنا</a>
+    </p>
+  </form>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBTlBr41Tl-GxnOwOsZvPkg26iQs2SGW3A",
+      authDomain: "agazty-feknesty.firebaseapp.com",
+      projectId: "agazty-feknesty",
+      storageBucket: "agazty-feknesty.firebasestorage.app",
+      messagingSenderId: "1065028327259",
+      appId: "1:1065028327259:web:c0b7c6f6fe39bc93b9ac7e"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    const form = document.getElementById("signupForm");
+
+    form.addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      const fullName = document.getElementById("fullName").value.trim();
+      const newCode = document.getElementById("newCode").value.trim();
+      const newPassword = document.getElementById("newPassword").value.trim();
+
+      if (!fullName || !newCode || !newPassword) {
+        alert("لازم تملأ الخانات التلاتة ❌");
+        return;
+      }
+
+      // نتأكد الأول إن الكود ده مش مستخدم قبل كده
+      db.collection("students").doc(newCode).get().then(function(docSnap) {
+        if (docSnap.exists) {
+          alert("الكود ده مستخدم بالفعل، اختار كود تاني 🔁");
+          return;
+        }
+
+        const newStudent = {
+          code: newCode,
+          password: newPassword,
+          name: fullName,
+          points: 0,
+          streak: 0
+        };
+
+        db.collection("students").doc(newCode).set(newStudent).then(function() {
+          localStorage.setItem("loggedInStudent", JSON.stringify(newStudent));
+          window.location.href = "home.html";
+        });
+      });
+    });
+  </script>
+
+</body>
+</html>
