@@ -6,6 +6,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Changa:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 </head>
 <body>
@@ -13,15 +15,84 @@
   <form>
     <img src="logo.png" alt="اجازتي في كنيستي" class="logo">
     <h1>تسجيل الحضور</h1>
-    <p>وجّه الكاميرا لكارت الطالب</p>
+    <p id="instructions">وجّه الكاميرا لكارت الطالب</p>
 
     <div id="reader" style="width: 100%; margin-top: 10px;"></div>
+
+    <div id="resultBox" style="display:none; margin-top:15px;">
+      <p id="resultMessage" style="font-weight:700; color:#15213E;"></p>
+      <button type="button" id="scanAgainBtn">امسح طالب تاني</button>
+    </div>
   </form>
 
   <script>
-    function onScanSuccess(decodedText, decodedResult) {
-      alert("تم قراءة الكود: " + decodedText);
+    const firebaseConfig = {
+      apiKey: "AIzaSyBTlBr41Tl-GxnOwOsZvPkg26iQs2SGW3A",
+      authDomain: "agazty-feknesty.firebaseapp.com",
+      projectId: "agazty-feknesty",
+      storageBucket: "agazty-feknesty.firebasestorage.app",
+      messagingSenderId: "1065028327259",
+      appId: "1:1065028327259:web:c0b7c6f6fe39bc93b9ac7e"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    function getTodayString() {
+      const today = new Date();
+      return today.toISOString().slice(0, 10); // مثال: 2026-06-21
     }
+
+    function onScanSuccess(decodedText) {
+      scanner.clear(); // نوقف الكاميرا فورًا عشان متقراش نفس الكود كذا مرة
+
+      const studentCode = decodedText;
+      const todayString = getTodayString();
+
+      db.collection("students").doc(studentCode).get().then(function(docSnap) {
+        if (!docSnap.exists) {
+          showResult("الكود ده مش موجود ❌");
+          return;
+        }
+
+        const student = docSnap.data();
+
+        if (student.lastAttendanceDate === todayString) {
+          showResult("الطالب " + student.name + " اتسجل حضوره النهاردة بالفعل ✅");
+          return;
+        }
+
+        // حساب السلسلة: لو آخر حضور كان قريب، نزودها. لو بعيد أو أول مرة، تبدأ من 1
+        let newStreak = 1;
+        if (student.lastAttendanceDate) {
+          const lastDate = new Date(student.lastAttendanceDate);
+          const today = new Date(todayString);
+          const diffDays = Math.round((today - lastDate) / (1000 * 60 * 60 * 24));
+          if (diffDays <= 10) {
+            newStreak = (student.streak || 0) + 1;
+          }
+        }
+
+        const newPoints = (student.points || 0) + 10;
+
+        db.collection("students").doc(studentCode).update({
+          points: newPoints,
+          streak: newStreak,
+          lastAttendanceDate: todayString
+        }).then(function() {
+          showResult("تم تسجيل حضور " + student.name + " ✅ نقاطه دلوقتي: " + newPoints + " | السلسلة: " + newStreak + " يوم");
+        });
+      });
+    }
+
+    function showResult(message) {
+      document.getElementById("resultMessage").textContent = message;
+      document.getElementById("resultBox").style.display = "block";
+      document.getElementById("instructions").style.display = "none";
+    }
+
+    document.getElementById("scanAgainBtn").addEventListener("click", function() {
+      window.location.reload();
+    });
 
     const scanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 220 });
     scanner.render(onScanSuccess);
