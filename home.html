@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>الصفحة الرئيسية</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Changa:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+
+  <form>
+    <img src="logo.png" alt="اجازتي في كنيستي" class="logo">
+
+    <h1 id="welcomeMessage">أهلاً بيك!</h1>
+
+    <div class="stats">
+      <div class="stat-box pink">
+        <span class="stat-number" id="pointsValue">0</span>
+        <span class="stat-label">نقطة</span>
+      </div>
+      <div class="stat-box sky">
+        <span class="stat-number" id="streakValue">0</span>
+        <span class="stat-label">يوم التزام</span>
+      </div>
+    </div>
+
+    <p class="qr-title">كارت الحضور بتاعك</p>
+    <div id="qrcode"></div>
+
+  </form>
+
+  <script>
+    const studentData = localStorage.getItem("loggedInStudent");
+
+    if (!studentData) {
+      window.location.href = "index.html";
+    } else {
+      const student = JSON.parse(studentData);
+      document.getElementById("welcomeMessage").textContent = "أهلاً بيك يا " + student.name + " 👋";
+      document.getElementById("pointsValue").textContent = student.points;
+      document.getElementById("streakValue").textContent = student.streak;
+
+      new QRCode(document.getElementById("qrcode"), {
+        text: student.code,
+        width: 160,
+        height: 160
+      });
+    }
+  </script>
+
+</body>
+</html>
