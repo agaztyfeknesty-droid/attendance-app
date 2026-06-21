@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>إنشاء حساب</title>
+  <title>إنشاء حساب جديد</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Changa:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
@@ -14,69 +14,100 @@
 
   <form id="signupForm">
     <img src="logo.png" alt="اجازتي في كنيستي" class="logo">
-    <h1>إنشاء حساب جديد</h1>
-    <p>اعمل حسابك وابدأ رحلتك</p>
+    <h1>إنشاء حساب جديد ✨</h1>
+    <p class="sub-greeting">اكتب بياناتك والسيستم هيعملك كودك الخاص</p>
 
     <label for="fullName">اسمك بالكامل</label>
-    <input type="text" id="fullName" placeholder="مثال: Mariam Samir" required>
+    <input type="text" id="fullName" placeholder="مثال: جون مينا غالي" required>
 
-    <label for="newCode">اختار كود خاص بيك</label>
-    <input type="text" id="newCode" placeholder="مثال: M015" required>
-
-    <label for="newPassword">اختار كلمة مرور</label>
+    <label for="newPassword">اختار كلمة مرور (باسورد)</label>
     <input type="password" id="newPassword" placeholder="********" required>
 
-    <button type="submit">إنشاء الحساب</button>
+    <button type="submit" id="submitBtn">إنشاء الحساب وتوليد الكود 🚀</button>
+    
+    <div id="successBox" style="display:none; margin-top:20px; padding:15px; background:#e8f5e9; border-radius:16px;">
+      <p style="color:#2e7d32; font-weight:bold; margin-bottom:5px;">تم إنشاء الحساب بنجاح! ✅</p>
+      <p style="color:#15213E; font-weight:bold; font-size:18px;">كودك الخاص هو: <span id="generatedCode" style="color:#36AEE0; font-family:'Changa'; font-size:22px;"></span></p>
+      <p style="font-size:12px; color:#666;">احفظ الكود ده عشان هتعمل بيه تسجيل دخول بعد كده.</p>
+    </div>
 
     <p style="margin-top:18px; font-size:14px;">
-      عندك حساب بالفعل؟ <a href="index.html" style="color:#36AEE0; font-weight:700;">سجل دخولك من هنا</a>
+      عندك حساب بالفعل؟ <a href="index.html" style="color:#36AEE0; font-weight:700; text-decoration:none;">سجل دخول من هنا</a>
     </p>
   </form>
 
   <script>
+    // إعدادات الفايربيس الخاصة ببروجكت "أجازتي في كنيستي"
     const firebaseConfig = {
       apiKey: "AIzaSyBTlBr41Tl-GxnOwOsZvPkg26iQs2SGW3A",
       authDomain: "agazty-feknesty.firebaseapp.com",
       projectId: "agazty-feknesty",
       storageBucket: "agazty-feknesty.firebasestorage.app",
       messagingSenderId: "1065028327259",
-      appId: "1:1065028327259:web:c0b7c6f6fe39bc93b9ac7e"
+      appId: "1:1:1065028327259:web:c0b7c6f6fe39bc93b9ac7e"
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
     const form = document.getElementById("signupForm");
+    const submitBtn = document.getElementById("submitBtn");
 
     form.addEventListener("submit", function(event) {
       event.preventDefault();
 
       const fullName = document.getElementById("fullName").value.trim();
-      const newCode = document.getElementById("newCode").value.trim();
       const newPassword = document.getElementById("newPassword").value.trim();
 
-      if (!fullName || !newCode || !newPassword) {
-        alert("لازم تملأ الخانات التلاتة ❌");
+      if (!fullName || !newPassword) {
+        alert("لازم تملأ الخانات كلها ❌");
         return;
       }
 
-      db.collection("students").doc(newCode).get().then(function(docSnap) {
-        if (docSnap.exists) {
-          alert("الكود ده مستخدم بالفعل، اختار كود تاني 🔁");
-          return;
-        }
+      // تعطيل الزرار مؤقتاً لمنع الضغط المتكرر
+      submitBtn.disabled = true;
+      submitBtn.textContent = "جاري إنشاء كودك الخاص... ⏳";
+
+      // 1. جلب عدد المخدومين الحاليين في قاعدة البيانات لتوليد كود متسلسل
+      db.collection("students").get().then(function(querySnapshot) {
+        const currentCount = querySnapshot.size; // عدد الطلاب الحاليين
+        const nextNumber = currentCount + 1; // رقم الطالب الجديد
+        
+        // تحويل الرقم لصيغة شيك ثلاثية الأرقام (مثال: لو 5 يبقى 005، لو 23 يبقى 023)
+        const paddedNumber = String(nextNumber).padStart(3, '0');
+        const generatedCode = "M" + paddedNumber; // الكود التلقائي النهائي (مثل: M001)
 
         const newStudent = {
-          code: newCode,
-          password: newPassword,
+          code: generatedCode,
           name: fullName,
+          password: newPassword,
           points: 0,
-          streak: 0
+          streak: 0,
+          lastAttendanceDate: ""
         };
 
-        db.collection("students").doc(newCode).set(newStudent).then(function() {
+        // 2. حفظ الطالب الجديد في الـ Collection بالكود اللي السيستم عمله
+        db.collection("students").doc(generatedCode).set(newStudent).then(function() {
+          // إظهار الكود للطالب في الشاشة بشكل واضح
+          document.getElementById("generatedCode").textContent = generatedCode;
+          document.getElementById("successBox").style.display = "block";
+          
+          // حفظ بياناته في الـ LocalStorage عشان يدخل علطول
           localStorage.setItem("loggedInStudent", JSON.stringify(newStudent));
-          window.location.href = "home.html";
+
+          // تحويله للصفحة الرئيسية تلقائياً بعد 4 ثواني عشان يلحق يشوف الكود ويحفظه
+          setTimeout(function() {
+            window.location.href = "home.html";
+          }, 4000);
+          
+        }).catch(function(error) {
+          alert("حصل مشكلة أثناء التسجيل، جرب تاني ❌");
+          submitBtn.disabled = false;
+          submitBtn.textContent = "إنشاء الحساب وتوليد الكود 🚀";
         });
+
+      }).catch(function(error) {
+        console.error("Error generating code: ", error);
+        submitBtn.disabled = false;
       });
     });
   </script>
