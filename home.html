@@ -47,24 +47,24 @@
   <div id="sidebar" class="sidebar">
     <div class="sidebar-header">
       <h2>ملفي الشخصي 👤</h2>
-      <span id="closeBtn" style="font-size: 28px; cursor: pointer; font-weight: bold;">&times;</span>
+      <span id="closeBtn" style="font-size: 14px; cursor: pointer; font-weight: bold; color: #F2618C; background: #FCE8EE; padding: 4px 10px; border-radius: 8px;">إغلاق ❌</span>
     </div>
     
     <div class="sidebar-content">
       <div style="text-align: center; position: relative; margin-bottom: 20px;">
-        <img id="profileAvatar" src="https://via.placeholder.com/100" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 4px solid #36AEE0; margin: 0 auto;">
+        <img id="profileAvatar" src="https://via.placeholder.com/100" style="width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 4px solid #36AEE0; margin: 0 auto;">
         <label for="avatarUpload" style="display: block; color: #36AEE0; font-size: 13px; font-weight: bold; cursor: pointer; margin-top: 8px;">📷 تغيير الصورة الشخصية</label>
         <input type="file" id="avatarUpload" accept="image/*" style="display: none;">
       </div>
 
       <div class="info-group">
         <p><strong>الاسم:</strong> <span id="infoName">--</span></p>
-        <p><strong>كود الحساب:</strong> <span id="infoCode" style="color:#36AEE0; font-weight: bold;">--</span></p>
-        <p><strong>رقم الموبايل:</strong> <span id="infoPhone">--</span></p>
-        <p><strong>تليفون ولي الأمر:</strong> <span id="infoParent">--</span></p>
+        <p><strong>الكود:</strong> <span id="infoCode" style="color:#36AEE0; font-weight: bold;">--</span></p>
+        <p><strong>الموبايل:</strong> <span id="infoPhone">--</span></p>
+        <p><strong>ولي الأمر:</strong> <span id="infoParent">--</span></p>
       </div>
 
-      <button id="logoutBtn" style="background-color: #F2618C; color: white; border: none; border-radius: 12px; width: 100%; padding: 12px; font-size: 14px; font-weight: bold; cursor: pointer; margin-top: 30px;">تسجيل الخروج 🚪</button>
+      <button id="logoutBtn" style="background-color: #F2618C; color: white; border: none; border-radius: 12px; width: 100%; padding: 10px; font-size: 13px; font-weight: bold; cursor: pointer; margin-top: 25px;">تسجيل الخروج 🚪</button>
     </div>
   </div>
 
@@ -98,19 +98,16 @@
     } else {
       const student = JSON.parse(studentData);
 
-      // تأمين عرض البيانات الأساسية حتى لو في خانات قديمة مش موجودة
       document.getElementById("welcomeMessage").textContent = "أهلاً بيك يا " + (student.name || "بطل") + " 👋";
       document.getElementById("pointsValue").textContent = student.points !== undefined ? student.points : 0;
       document.getElementById("streakValue").textContent = student.streak !== undefined ? student.streak : 0;
 
-      // إظهار الصورة لو مرفوعة
       if (student.avatar) {
         document.getElementById("userHomeAvatar").src = student.avatar;
         document.getElementById("userHomeAvatar").style.display = "block";
         document.getElementById("profileAvatar").src = student.avatar;
       }
 
-      // توليد الـ QR Code بكود الطالب
       if (student.code) {
         new QRCode(document.getElementById("qrcode"), {
           text: student.code,
@@ -122,22 +119,38 @@
         });
       }
 
-      // ملء بيانات الـ Sidebar
       document.getElementById("infoName").textContent = student.name || "--";
       document.getElementById("infoCode").textContent = student.code || "--";
       document.getElementById("infoPhone").textContent = student.phone || "غير مسجل";
       document.getElementById("infoParent").textContent = student.parentPhone || "غير مسجل";
 
-      // تشغيل فتح وإغلاق القائمة الجانبية (شغالة حريق 🔥)
       const sidebar = document.getElementById("sidebar");
-      document.getElementById("menuBtn").addEventListener("click", function() {
+      const menuBtn = document.getElementById("menuBtn");
+      const closeBtn = document.getElementById("closeBtn");
+
+      // فتح القائمة
+      menuBtn.addEventListener("click", function(e) {
+        e.stopPropagation();
         sidebar.classList.add("open");
       });
-      document.getElementById("closeBtn").addEventListener("click", function() {
+
+      // قفل القائمة بالزرار
+      closeBtn.addEventListener("click", function(e) {
+        e.stopPropagation();
         sidebar.classList.remove("open");
       });
 
-      // لوجيك رفع وتحويل الصورة الشخصية
+      // القفل التلقائي الذكي عند الضغط في أي مكان خارجي
+      document.addEventListener("click", function(event) {
+        const isClickInsideSidebar = sidebar.contains(event.target);
+        const isClickOnMenuBtn = menuBtn.contains(event.target);
+
+        if (!isClickInsideSidebar && !isClickOnMenuBtn) {
+          sidebar.classList.remove("open");
+        }
+      });
+
+      // رفع الصورة الشخصية
       document.getElementById("avatarUpload").addEventListener("change", function(e) {
         const file = e.target.files[0];
         if (!file) return;
@@ -145,7 +158,6 @@
         const reader = new FileReader();
         reader.onloadend = function() {
           const base64Image = reader.result;
-          
           document.getElementById("profileAvatar").src = base64Image;
           document.getElementById("userHomeAvatar").src = base64Image;
           document.getElementById("userHomeAvatar").style.display = "block";
