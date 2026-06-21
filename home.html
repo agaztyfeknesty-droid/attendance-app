@@ -13,23 +13,36 @@
   <form>
     <img src="logo.png" alt="اجازتي في كنيستي" class="logo">
 
-    <h1 id="welcomeMessage">أهلاً بيك!</h1>
+    <h1 id="welcomeMessage">أهلاً بيك! 👋</h1>
+    <p class="sub-greeting">يلا نشوف رحلتك لحد دلوقتي ✨</p>
 
     <div class="stats">
       <div class="stat-box pink">
+        <span class="stat-icon">⭐</span>
         <span class="stat-number" id="pointsValue">0</span>
         <span class="stat-label">نقطة</span>
       </div>
-      <div class="stat-box sky">
+      <div class="streak-box">
+        <span class="streak-flame">🔥</span>
         <span class="stat-number" id="streakValue">0</span>
         <span class="stat-label">يوم التزام</span>
       </div>
     </div>
 
-    <p class="qr-title">كارت الحضور بتاعك</p>
+    <p class="qr-title">📱 كارت الحضور بتاعك</p>
     <div id="qrcode"></div>
-
   </form>
+
+  <div class="bottom-nav">
+    <a href="home.html" class="nav-item active">
+      <span class="nav-icon">🏠</span>
+      <span class="nav-label">الرئيسية</span>
+    </a>
+    <a href="leaderboard.html" class="nav-item">
+      <span class="nav-icon">🏆</span>
+      <span class="nav-label">الصدارة</span>
+    </a>
+  </div>
 
   <script>
     const studentData = localStorage.getItem("loggedInStudent");
