@@ -39,6 +39,10 @@
         </div>
       </div>
 
+      <button onclick="window.location.href='leaderboard.html'" style="background-color: #36AEE0; color: white; border: none; border-radius: 14px; padding: 12px; font-size: 14px; font-weight: bold; cursor: pointer; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 12px rgba(54, 174, 224, 0.2);">
+        🏆 عرض لوحة الصدارة والترتيب لايف
+      </button>
+
       <p class="qr-title">📱 كارت الحضور بتاعك</p>
       <div id="qrcode" style="display: flex; justify-content: center; margin-top: 10px; padding: 10px; background: white; border-radius: 12px;"></div>
     </form>
@@ -110,19 +114,15 @@
         });
       }
 
-      // -------------------------------------------------------------
-      // الرادار السحري اللايف 🛰️: بيراقب بيانات الطالب من الفايربيس مباشرة
-      // -------------------------------------------------------------
+      // الرادار السحري اللايف 🛰️
       db.collection("students").doc(student.code).onSnapshot(function(doc) {
         if (doc.exists) {
           const liveData = doc.data();
 
-          // تحديث الشاشة مَباشرةً أول ما الخادم يسجل حضور
           document.getElementById("welcomeMessage").textContent = "أهلاً بيك يا " + (liveData.name || "بطل") + " 👋";
           document.getElementById("pointsValue").textContent = liveData.points !== undefined ? liveData.points : 0;
           document.getElementById("streakValue").textContent = liveData.streak !== undefined ? liveData.streak : 0;
 
-          // تحديث الصور الشخصية لايف
           if (liveData.avatar) {
             document.getElementById("userHomeAvatar").src = liveData.avatar;
             document.getElementById("userHomeAvatar").style.display = "block";
@@ -132,13 +132,11 @@
             document.getElementById("profileAvatar").src = "https://via.placeholder.com/100";
           }
 
-          // تحديث كروت البيانات الجانبية
           document.getElementById("infoName").textContent = liveData.name || "--";
           document.getElementById("infoCode").textContent = liveData.code || "--";
           document.getElementById("infoPhone").textContent = liveData.phone || "غير مسجل";
           document.getElementById("infoParent").textContent = liveData.parentPhone || "غير مسجل";
 
-          // تحديث الـ LocalStorage برضه احتياطي عشان يفضل متزامن
           localStorage.setItem("loggedInStudent", JSON.stringify(liveData));
         }
       });
