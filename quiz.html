@@ -23,12 +23,7 @@
       flex-direction: column;
       align-items: center;
     }
-
-    .container {
-      width: 100%;
-      max-width: 350px;
-    }
-
+    .container { width: 100%; max-width: 350px; }
     .glass-card {
       background: rgba(255, 255, 255, 0.05);
       backdrop-filter: blur(15px);
@@ -39,100 +34,48 @@
       text-align: center;
       box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
     }
-
-    .progress-bar {
-      background: rgba(255, 255, 255, 0.1);
-      height: 8px;
-      border-radius: 4px;
-      margin-bottom: 20px;
-      overflow: hidden;
-    }
-
-    .progress-fill {
-      background: linear-gradient(90deg, #00f2fe, #4facfe);
-      height: 100%;
-      width: 20%;
-      transition: width 0.3s ease;
-    }
-
-    .question-title {
-      font-family: 'Changa', sans-serif;
-      font-size: 18px;
-      margin-bottom: 20px;
-      line-height: 1.4;
-    }
-
-    .options-list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
+    .progress-bar { background: rgba(255, 255, 255, 0.1); height: 8px; border-radius: 4px; margin-bottom: 20px; overflow: hidden; }
+    .progress-fill { background: linear-gradient(90deg, #00f2fe, #4facfe); height: 100%; width: 0%; transition: width 0.3s ease; }
+    .question-title { font-family: 'Changa', sans-serif; font-size: 18px; margin-bottom: 20px; line-height: 1.4; }
+    .options-list { display: flex; flex-direction: column; gap: 12px; }
     .option-btn {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: white;
-      padding: 14px;
-      border-radius: 16px;
-      font-family: 'Cairo';
-      font-size: 14px;
-      cursor: pointer;
-      text-align: right;
-      transition: all 0.2s ease;
+      background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.1);
+      color: white; padding: 14px; border-radius: 16px; font-family: 'Cairo'; font-size: 14px; cursor: pointer; text-align: right; transition: all 0.2s ease;
     }
-
-    /* إنيميشنات الإجابات الصح والغلط 😍 */
-    .option-btn.correct {
-      background: #2bb673 !important;
-      border-color: #2bb673 !important;
-      box-shadow: 0 0 15px rgba(43, 182, 115, 0.5);
-    }
-
-    .option-btn.wrong {
-      background: #f43f5e !important;
-      border-color: #f43f5e !important;
-      box-shadow: 0 0 15px rgba(244, 63, 94, 0.5);
-      animation: shake 0.3s ease;
-    }
-
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      25% { transform: translateX(-6px); }
-      75% { transform: translateX(6px); }
-    }
-
-    .back-btn {
-      background: #111827;
-      border: 1px solid rgba(255,255,255,0.1);
-      color: white;
-      padding: 12px;
-      border-radius: 16px;
-      font-family: 'Cairo';
-      font-weight: bold;
-      width: 100%;
-      cursor: pointer;
-      margin-top: 20px;
-    }
+    .option-btn.correct { background: #2bb673 !important; border-color: #2bb673 !important; box-shadow: 0 0 15px rgba(43, 182, 115, 0.5); }
+    .option-btn.wrong { background: #f43f5e !important; border-color: #f43f5e !important; box-shadow: 0 0 15px rgba(244, 63, 94, 0.5); animation: shake 0.3s ease; }
+    .countdown-timer { display: flex; justify-content: center; gap: 10px; margin: 20px 0; }
+    .timer-block { background: rgba(0, 242, 254, 0.1); border: 1px solid rgba(0, 242, 254, 0.3); padding: 10px; border-radius: 14px; min-width: 55px; }
+    .timer-num { font-family: 'Changa', sans-serif; font-size: 22px; font-weight: 800; color: #00f2fe; display: block; }
+    .timer-label { font-size: 10px; color: #cbd5e1; }
+    @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+    .back-btn { background: #111827; border: 1px solid rgba(255,255,255,0.1); color: white; padding: 12px; border-radius: 16px; font-family: 'Cairo'; font-weight: bold; width: 100%; cursor: pointer; margin-top: 20px; }
   </style>
 </head>
 <body>
 
   <div class="container">
-    
-    <div class="glass-card" id="quizBox">
+    <div class="glass-card" id="countdownBox" style="display: none;">
+      <span style="font-size: 50px;">⏳</span>
+      <h2 style="font-family: 'Changa'; color: #00f2fe; margin: 10px 0 5px 0;">التحدي مغلق حالياً</h2>
+      <p style="font-size: 12px; color: #cbd5e1; margin: 0;">الأسئلة الجديدة بتفتح تلقائياً كل يوم سبت.. مستعد؟</p>
+      <div class="countdown-timer">
+        <div class="timer-block"><span class="timer-num" id="days">0</span><span class="timer-label">أيام</span></div>
+        <div class="timer-block"><span class="timer-num" id="hours">0</span><span class="timer-label">ساعة</span></div>
+        <div class="timer-block"><span class="timer-num" id="minutes">0</span><span class="timer-label">دقيقة</span></div>
+        <div class="timer-block"><span class="timer-num" id="seconds">0</span><span class="timer-label">ثانية</span></div>
+      </div>
+      <button class="back-btn" onclick="window.location.href='home.html'">🏠 العودة للرئيسية</button>
+    </div>
+
+    <div class="glass-card" id="quizBox" style="display: none;">
       <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 8px; color: #36AEE0;">
         <span id="questionNum">السؤال 1 من 5</span>
-        <span>⏱️ تحدي السبت</span>
+        <span>⏱️ تحدي السبت لايف</span>
       </div>
-      
-      <div class="progress-bar">
-        <div class="progress-fill" id="progressFill"></div>
-      </div>
-
-      <div class="question-title" id="questionText">جاري تحميل السؤال... 🤔</div>
-
-      <div class="options-list" id="optionsContainer">
-        </div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="question-title" id="questionText">جاري تحميل الأسئلة الأسبوعية... 🌀</div>
+      <div class="options-list" id="optionsContainer"></div>
     </div>
 
     <div class="glass-card" id="resultBox" style="display: none;">
@@ -146,14 +89,12 @@
     <div class="glass-card" id="lockedBox" style="display: none;">
       <span style="font-size: 50px;">🔒</span>
       <h2 style="font-family: 'Changa'; color: #f43f5e; margin: 10px 0;">عفواً يا بطل!</h2>
-      <p style="font-size: 14px;">أنت حليت مسابقة السبت المخصصة للأسبوع ده خلاص. استنى السبت الجاي عشان ينزل تحدي جديد ونقط جديدة! 🔥</p>
+      <p style="font-size: 14px;">أنت حليت مسابقة السبت المخصصة للأسبوع ده خلاص. استنى السبت الجاي! 🔥</p>
       <button class="back-btn" onclick="window.location.href='home.html'">🏠 العودة للرئيسية</button>
     </div>
-
   </div>
 
   <script>
-    // تهيئة الفايربيز
     const firebaseConfig = {
       apiKey: "AIzaSyBTlBr41Tl-GxnOwOsZvPkg26iQs2SGW3A",
       authDomain: "agazty-feknesty.firebaseapp.com",
@@ -164,41 +105,79 @@
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
-
     const currentStudent = JSON.parse(localStorage.getItem("loggedInStudent"));
 
-    // 📋 هنا بنحط الـ 5 أسئلة بتوع كل أسبوع (تقدر تغيرهم من هنا بسهولة)
-    const quizQuestions = [
-      { q: "من هو كاتب سفر المزامير الرئيسي؟", options: ["سليمان الحكيم", "داود النبي", "موسى النبي", "إشعياء النبي"], correct: 1 },
-      { q: "كم عدد آيات المزمور الأول؟", options: ["5 آيات", "8 آيات", "6 آيات", "10 آيات"], correct: 2 },
-      { q: "مزمور 'الرب راعيّ فلا يعوزني شيء' هو المزمور رقم كم؟", options: ["23", "1", "50", "150"], correct: 0 },
-      { q: "في المزمور الأول، يكون الرجل البار كشجرة مغروسة عند...؟", options: ["الصحراء", "مجاري المياه", "الجبال", "الوديان"], correct: 1 },
-      { q: "ماذا يحدث لطريق الأشرار في نهاية المزمور الأول؟", options: ["تنجح", "تثبت", "تهلك", "تتغير"], correct: 2 }
-    ];
-
+    let quizQuestions = [];
     let currentQIndex = 0;
     let correctAnswersCount = 0;
     let canAnswer = true;
 
-    // تشييك الحماية: هل الولد حل المسابقة الأسبوع ده؟
-    db.collection("students").doc(currentStudent.code).get().then(doc => {
-      if (doc.exists) {
-        // تاريخ السبت الحالي (لو نفس تاريخ النهاردة متسجل يبقا قفل)
-        let todayStr = new Date().toLocaleDateString('en-US');
-        if (doc.data().lastQuizDate === todayStr) {
-          document.getElementById("quizBox").style.display = "none";
-          document.getElementById("lockedBox").style.display = "block";
-        } else {
-          loadQuestion();
+    // 🔒 الفحص الصارم والمؤمن فور فتح الصفحة
+    function checkQuizAccess() {
+      const now = new Date();
+      const currentDay = now.getDay(); // 6 يعني يوم السبت
+
+      if (currentDay === 6) {
+        // لو النهاردة السبت بالظبط ⬅️ ابدأ اسحب الداتا وافحص المخدوم
+        if (!currentStudent) {
+          alert("الرجاء تسجيل الدخول أولاً!");
+          window.location.href = "index.html";
+          return;
         }
+
+        db.collection("config").doc("weeklyQuiz").get().then(quizDoc => {
+          if (quizDoc.exists) {
+            quizQuestions = quizDoc.data().questions || [];
+            
+            db.collection("students").doc(currentStudent.code).get().then(doc => {
+              let todayStr = now.toLocaleDateString('en-US');
+              if (doc.exists && doc.data().lastQuizDate === todayStr) {
+                document.getElementById("lockedBox").style.display = "block";
+              } else {
+                document.getElementById("quizBox").style.display = "block";
+                loadQuestion();
+              }
+            });
+          }
+        });
+      } else {
+        // 🛑 لو مش يوم السبت (زي انهارده الاتنين مثلاً) ⬅️ اقفل فوراً وشغل العداد ومتحملش أي أسئلة!
+        document.getElementById("quizBox").style.display = "none";
+        document.getElementById("countdownBox").style.display = "block";
+        startCountdown();
       }
-    });
+    }
+
+    function startCountdown() {
+      function updateTimer() {
+        const now = new Date();
+        const nextSaturday = new Date();
+        // حساب يوم السبت القادم الساعة 12:00 صباحاً
+        nextSaturday.setDate(now.getDate() + (6 - now.getDay() + 7) % 7);
+        nextSaturday.setHours(0, 0, 0, 0);
+        if (nextSaturday <= now) nextSaturday.setDate(nextSaturday.getDate() + 7);
+        const diff = nextSaturday - now;
+        
+        document.getElementById("days").textContent = Math.floor(diff / (1000 * 60 * 60 * 24));
+        document.getElementById("hours").textContent = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        document.getElementById("minutes").textContent = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        document.getElementById("seconds").textContent = Math.floor((diff % (1000 * 60)) / 1000);
+
+        if (diff <= 0) location.reload();
+      }
+      updateTimer();
+      setInterval(updateTimer, 1000);
+    }
 
     function loadQuestion() {
+      if(quizQuestions.length === 0) {
+        document.getElementById("questionText").textContent = "لا توجد أسئلة مرفوعة لهذا الأسبوع بعد! ⚠️";
+        return;
+      }
       canAnswer = true;
       const currentQ = quizQuestions[currentQIndex];
-      document.getElementById("questionNum").textContent = `السؤال ${currentQIndex + 1} من 5`;
-      document.getElementById("progressFill").style.width = `${((currentQIndex + 1) / 5) * 100}%`;
+      document.getElementById("questionNum").textContent = `السؤال ${currentQIndex + 1} من ${quizQuestions.length}`;
+      document.getElementById("progressFill").style.width = `${((currentQIndex + 1) / quizQuestions.length) * 100}%`;
       document.getElementById("questionText").textContent = currentQ.q;
 
       const container = document.getElementById("optionsContainer");
@@ -216,47 +195,45 @@
     function checkAnswer(selectedIndex, clickedBtn) {
       if (!canAnswer) return;
       canAnswer = false;
-
       const currentQ = quizQuestions[currentQIndex];
       const buttons = document.querySelectorAll(".option-btn");
 
-      if (selectedIndex === currentQ.correct) {
+      if (selectedIndex === parseInt(currentQ.correct)) {
         clickedBtn.classList.add("correct");
         correctAnswersCount++;
       } else {
         clickedBtn.classList.add("wrong");
-        buttons[currentQ.correct].classList.add("correct"); // إظهار الصح فين
+        buttons[currentQ.correct].classList.add("correct");
       }
 
-      // الانتقال للسؤال التالي بعد ثانية ونصف للاستمتاع بالتأثير البصري
       setTimeout(() => {
         currentQIndex++;
-        if (currentQIndex < quizQuestions.length) {
-          loadQuestion();
-        } else {
-          finishQuiz();
-        }
+        if (currentQIndex < quizQuestions.length) loadQuestion();
+        else finishQuiz();
       }, 1500);
     }
 
     function finishQuiz() {
       document.getElementById("quizBox").style.display = "none";
       document.getElementById("resultBox").style.display = "block";
-
-      let pointsEarned = correctAnswersCount * 5; // 5 نقط لكل سؤال صح
-      document.getElementById("scoreText").textContent = `لقد أجبت على ${correctAnswersCount} من 5 أسئلة بشكل صحيح!`;
+      let pointsEarned = correctAnswersCount * 5;
+      document.getElementById("scoreText").textContent = `لقد أجبت على ${correctAnswersCount} من ${quizQuestions.length} أسئلة بشكل صحيح!`;
       document.getElementById("pointsText").textContent = `🎁 أُضيف إلى رصيدك +${pointsEarned} نقطة فوراً!`;
 
-      // تحديث الداتا في الفايربيز وقفل التحدي للأسبوع ده 🔐
-      const studentRef = db.collection("students").doc(currentStudent.code);
-      studentRef.get().then(doc => {
-        let currentPoints = doc.data().points || 0;
-        studentRef.update({
-          points: currentPoints + pointsEarned,
-          lastQuizDate: new Date().toLocaleDateString('en-US') // قفل التحدي
+      if(currentStudent) {
+        const studentRef = db.collection("students").doc(currentStudent.code);
+        studentRef.get().then(doc => {
+          let currentPoints = doc.data().points || 0;
+          studentRef.update({ 
+            points: currentPoints + pointsEarned, 
+            lastQuizDate: new Date().toLocaleDateString('en-US') 
+          });
         });
-      });
+      }
     }
+
+    // تشغيل نظام الفحص الآمن فوراً
+    checkQuizAccess();
   </script>
 </body>
 </html>
