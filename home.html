@@ -10,6 +10,80 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <style>
+    /* كارت المغامرات الكريتيف الجديد والمتحرك */
+    .adventure-launch-card {
+      background: linear-gradient(135deg, #ec4899, #8b5cf6, #3b82f6);
+      background-size: 200% 200%;
+      border: none;
+      border-radius: 24px;
+      padding: 20px;
+      margin-bottom: 25px;
+      cursor: pointer;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-sizing: border-box;
+      box-shadow: 0 10px 25px rgba(139, 92, 246, 0.4);
+      transition: all 0.3s ease;
+      animation: gradientShift 6s ease infinite, pulseCard 2s infinite ease-in-out;
+      text-align: right;
+    }
+
+    .adventure-launch-card:active {
+      transform: scale(0.97);
+    }
+
+    .card-info-text h3 {
+      font-family: 'Changa', sans-serif;
+      font-size: 18px;
+      color: #ffffff;
+      margin: 0 0 5px 0;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .card-info-text p {
+      font-size: 12px;
+      color: #f3f4f6;
+      margin: 0;
+      font-family: 'Cairo', sans-serif;
+    }
+
+    .card-graphic-icon {
+      font-size: 38px;
+      background: rgba(255, 255, 255, 0.2);
+      width: 65px;
+      height: 65px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: inset 0 0 10px rgba(255,255,255,0.2);
+      animation: floatIcon 3s infinite ease-in-out;
+    }
+
+    /* إنيميشن تحريك الألوان جوه الكارت */
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* إنيميشن نبض الكارت لخطف العين */
+    @keyframes pulseCard {
+      0% { box-shadow: 0 10px 25px rgba(139, 92, 246, 0.4); }
+      50% { box-shadow: 0 15px 35px rgba(236, 72, 153, 0.6); transform: translateY(-2px); }
+      100% { box-shadow: 0 10px 25px rgba(139, 92, 246, 0.4); }
+    }
+
+    /* إنيميشن طفو الأيقونة جوه الكارت */
+    @keyframes floatIcon {
+      0% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-5px) rotate(8deg); }
+      100% { transform: translateY(0) rotate(0deg); }
+    }
+  </style>
 </head>
 <body>
 
@@ -39,11 +113,17 @@
         </div>
       </div>
 
-      <button onclick="window.location.href='leaderboard.html'" style="background-color: #36AEE0; color: white; border: none; border-radius: 14px; padding: 12px; font-size: 14px; font-weight: bold; cursor: pointer; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; box-shadow: 0 4px 12px rgba(54, 174, 224, 0.2); font-family: 'Cairo';">
+      <button onclick="window.location.href='leaderboard.html'" style="background-color: #36AEE0; color: white; border: none; border-radius: 14px; padding: 12px; font-size: 14px; font-weight: bold; cursor: pointer; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; box-shadow: 0 4px 12px rgba(54, 174, 224, 0.2); font-family: 'Cairo';">
         🏆 عرض لوحة الصدارة والترتيب لايف
       </button>
 
-    
+      <div class="adventure-launch-card" onclick="window.location.href='rewards.html'">
+        <div class="card-info-text">
+          <h3>مركز الجوائز والمغامرات</h3>
+          <p>عجلة حظ، أوسمة، وبطل الأسبوع 🎡🎖️</p>
+        </div>
+        <div class="card-graphic-icon">🚀</div>
+      </div>
 
       <p class="qr-title">📱 كارت الحضور بتاعك</p>
       <div id="qrcode" style="display: flex; justify-content: center; margin-top: 10px; padding: 10px; background: white; border-radius: 12px;"></div>

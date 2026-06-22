@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مركز المغامرات والجوائز 🚀</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Changa:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <style>
+    body {
+      background: linear-gradient(135deg, #0b0f19, #111827, #1e1b4b);
+      min-height: 100vh;
+      font-family: 'Cairo', sans-serif;
+      color: #ffffff;
+      margin: 0;
+      padding: 20px 15px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .container { width: 100%; max-width: 350px; }
+    .neon-card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 28px;
+      padding: 20px;
+      margin-bottom: 20px;
+      text-align: center;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    }
+    .king-card {
+      background: linear-gradient(135deg, rgba(244, 183, 49, 0.15), rgba(219, 144, 12, 0.05));
+      border: 2px solid #F4B731;
+      box-shadow: 0 0 25px rgba(244, 183, 49, 0.25);
+    }
+    .king-crown { font-size: 45px; animation: floatCrown 2.5s infinite ease-in-out; display: inline-block; }
+    .wheel-container { position: relative; width: 220px; height: 220px; margin: 15px auto; }
+    .wheel {
+      width: 100%; height: 100%; border-radius: 50%; border: 6px solid #ffffff;
+      box-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+      background: conic-gradient(#FF007A 0deg 60deg, #7928CA 60deg 120deg, #36AEE0 120deg 180deg, #2BB673 180deg 240deg, #F4B731 240deg 300deg, #15213E 300deg 360deg);
+      transition: transform 4s cubic-bezier(0.1, 1, 0.1, 1);
+    }
+    .wheel-pointer {
+      position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+      width: 0; height: 0; border-left: 14px solid transparent; border-right: 14px solid transparent; border-top: 25px solid #ffffff; z-index: 10;
+    }
+    .spin-center-btn {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 55px; height: 55px; background: #ffffff; color: #111827; border-radius: 50%; font-weight: 800; border: none; cursor: pointer; font-family: 'Cairo';
+    }
+    .badges-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px; }
+    .badge-item { background: rgba(15, 23, 42, 0.5); border: 1px solid rgba(255, 255, 255, 0.05); padding: 15px 10px; border-radius: 20px; opacity: 0.3; transition: all 0.3s ease; }
+    .badge-item.unlocked { opacity: 1; border-color: #2BB673; background: linear-gradient(135deg, rgba(43, 182, 115, 0.15), transparent); }
+    .badge-icon { font-size: 30px; display: block; }
+    .badge-name { font-size: 12px; font-weight: bold; }
+    .badge-desc { font-size: 10px; color: #9ca3af; }
+    @keyframes floatCrown { 0% { transform: translateY(0); } 50% { transform: translateY(-8px); } 100% { transform: translateY(0); } }
+    .back-btn { background: #111827; border: 1px solid rgba(255,255,255,0.1); color: white; padding: 12px; border-radius: 16px; font-family: 'Cairo'; font-weight: bold; width: 100%; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="neon-card king-card">
+      <div class="king-crown">👑</div>
+      <h2 style="font-family:'Changa'; font-size: 18px; color:#F4B731; margin:0;">بطل الصدارة الحالي</h2>
+      <p id="kingName" style="font-size: 16px; font-weight: bold; margin: 5px 0;">جاري الكشف... 👑</p>
+    </div>
+    <div class="neon-card">
+      <h2 style="font-family:'Changa'; font-size: 18px; margin:0;">عجلة الحظ 🎡</h2>
+      <p id="spinStatus" style="font-size: 11px; color:#a7f3d0;">اضغط وابدأ اللف فوراً!</p>
+      <div class="wheel-container">
+        <div class="wheel-pointer"></div>
+        <div class="wheel" id="luckyWheel"></div>
+        <button class="spin-center-btn" id="spinBtn" onclick="spinTheWheel()">إبدأ 🚀</button>
+      </div>
+      <p id="wheelResult" style="font-weight: bold; font-size: 14px; color:#F4B731;"></p>
+    </div>
+    <div class="neon-card">
+      <h2 style="font-family:'Changa'; font-size: 18px; margin:0;">أوسمتك الروحية 🎖️</h2>
+      <div class="badges-grid">
+        <div class="badge-item" id="badgeStreak"><span class="badge-icon">🔥</span><span class="badge-name">الالتزام</span></div>
+        <div class="badge-item" id="badgePoints"><span class="badge-icon">👑</span><span class="badge-name">النجوم</span></div>
+      </div>
+    </div>
+    <button class="back-btn" onclick="window.location.href='home.html'">🏠 العودة للرئيسية</button>
+  </div>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBTlBr41Tl-GxnOwOsZvPkg26iQs2SGW3A",
+      authDomain: "agazty-feknesty.firebaseapp.com",
+      projectId: "agazty-feknesty",
+      storageBucket: "agazty-feknesty.firebasestorage.app",
+      messagingSenderId: "1065028327259",
+      appId: "1:1065028327259:web:c0b7c6f6fe39bc93b9ac7e"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const currentStudent = JSON.parse(localStorage.getItem("loggedInStudent"));
+
+    db.collection("students").orderBy("points", "desc").limit(1).onSnapshot(function(snap) {
+      snap.forEach(function(doc) { document.getElementById("kingName").textContent = `⚡ ${doc.data().name} (${doc.data().points} ن)`; });
+    });
+
+    db.collection("students").doc(currentStudent.code).onSnapshot(function(doc) {
+      if (doc.exists) {
+        const data = doc.data();
+        if (data.streak >= 3) document.getElementById("badgeStreak").classList.add("unlocked");
+        if (data.points >= 100) document.getElementById("badgePoints").classList.add("unlocked");
+        if (data.lastSpinDate === new Date().toLocaleDateString('en-US')) {
+          document.getElementById("spinBtn").disabled = true; document.getElementById("spinBtn").textContent = "🔒";
+        }
+      }
+    });
+
+    function spinTheWheel() {
+      const wheel = document.getElementById("luckyWheel");
+      const spinBtn = document.getElementById("spinBtn");
+      spinBtn.disabled = true;
+      const deg = Math.floor(Math.random() * 360) + 1800;
+      wheel.style.transform = `rotate(${deg}deg)`;
+      setTimeout(() => {
+        let pts = 10;
+        document.getElementById("wheelResult").textContent = `🎉 كسبت +${pts} نقطة!`;
+        db.collection("students").doc(currentStudent.code).get().then(d => {
+          db.collection("students").doc(currentStudent.code).update({ points: (d.data().points || 0) + pts, lastSpinDate: new Date().toLocaleDateString('en-US') });
+        });
+      }, 4000);
+    }
+  </script>
+</body>
+</html>
