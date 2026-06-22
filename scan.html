@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>لوحة تحكم الخادم - الحضور والطباعة</title>
+  <title>لوحة تحكم الخادم - التحكم الشامل والطباعة</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Changa:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
@@ -19,7 +19,7 @@
       border-radius: 24px;
       box-shadow: 0 8px 24px rgba(21, 33, 62, 0.05);
       width: 100%;
-      max-width: 600px;
+      max-width: 750px; /* كبرنا العرض شوية عشان الجدول ياخد الأرقام براحته */
       margin: 20px auto;
       text-align: center;
     }
@@ -27,11 +27,11 @@
       width: 100%;
       border-collapse: collapse;
       margin-top: 15px;
-      font-size: 14px;
+      font-size: 13px;
     }
     .student-table th, .student-table td {
       border-bottom: 1px solid #eee;
-      padding: 12px 8px;
+      padding: 10px 6px;
       text-align: center;
       vertical-align: middle;
     }
@@ -44,7 +44,7 @@
       background-color: #36AEE0;
       color: white;
       border: none;
-      padding: 6px 12px;
+      padding: 6px 10px;
       border-radius: 8px;
       font-size: 12px;
       cursor: pointer;
@@ -64,12 +64,29 @@
       font-weight: bold;
       cursor: pointer;
       margin-top: 15px;
-      display: none; /* مخفي وبيظهر بس لما الكاميرا تقفل */
+      display: none;
       width: 100%;
       transition: background-color 0.3s;
     }
-    .restart-camera-btn:hover {
-      background-color: #36AEE0;
+    .restart-camera-btn:hover { background-color: #36AEE0; }
+
+    /* زرار الصدارة المخصص للخدام */
+    .leaderboard-admin-btn {
+      background-color: #F4B731;
+      color: #15213E;
+      border: none;
+      border-radius: 14px;
+      padding: 12px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      box-shadow: 0 4px 12px rgba(244, 183, 49, 0.2);
     }
 
     #printArea { display: none; }
@@ -97,7 +114,7 @@
 </head>
 <body>
 
-  <div style="width: 100%; max-width: 600px; margin: 0 auto;">
+  <div style="width: 100%; max-width: 750px; margin: 0 auto;">
     
     <div class="admin-section">
       <img src="logo.png" alt="اللوجو" class="logo" style="width: 60px;">
@@ -108,12 +125,16 @@
       
       <button id="restartCamBtn" class="restart-camera-btn" onclick="startScanning()">📷 افتح الكاميرا لمسح كود آخر</button>
 
+      <button onclick="window.location.href='leaderboard.html'" class="leaderboard-admin-btn">
+        🏆 فتح لوحة الصدارة والترتيب الحالي
+      </button>
+
       <div id="result" style="margin-top: 15px; font-weight: bold; font-size: 16px; min-height: 40px; padding: 10px;"></div>
     </div>
 
     <div class="admin-section">
-      <h2 style="font-family: 'Changa'; font-size: 18px; text-align: right; color: #15213E; margin-bottom: 5px;">🖨️ كروت الـ QR والطباعة التلقائية</h2>
-      <p style="font-size: 12px; color: #6b7280; text-align: right; margin-bottom: 15px;">أي مخدوم يسجل جديد هيظهر هنا فوراً بالـ QR بتاعه وتقدر تطبعه</p>
+      <h2 style="font-family: 'Changa'; font-size: 18px; text-align: right; color: #15213E; margin-bottom: 5px;">📋 قاعدة بيانات المخدومين والطباعة</h2>
+      <p style="font-size: 12px; color: #6b7280; text-align: right; margin-bottom: 15px;">بيانات العيال وأرقام تليفوناتهم والـ QR بتنزل هنا لايف أول ما يسجلوا</p>
       
       <div style="overflow-x: auto;">
         <table class="student-table">
@@ -121,6 +142,8 @@
             <tr>
               <th>الاسم</th>
               <th>الكود</th>
+              <th>موبايل الطالب</th>
+              <th>موبايل ولي الأمر</th>
               <th>الـ QR Code</th>
               <th>التحكم</th>
             </tr>
@@ -156,7 +179,7 @@
     const db = firebase.firestore();
 
     // -------------------------------------------------------------
-    // أولاً: تشغيل قراءة المخدومين لايف وتوليد الـ QR
+    // أولاً: تشغيل قراءة بيانات المخدومين بالكامل لايف
     // -------------------------------------------------------------
     db.collection("students").onSnapshot(function(snapshot) {
       const tbody = document.getElementById("studentTableBody");
@@ -166,16 +189,29 @@
         const student = doc.data();
         const row = document.createElement("tr");
 
+        // الاسم
         const nameCell = document.createElement("td");
         nameCell.textContent = student.name;
         row.appendChild(nameCell);
 
+        // الكود
         const codeCell = document.createElement("td");
         codeCell.textContent = student.code;
         codeCell.style.fontWeight = "bold";
         codeCell.style.color = "#36AEE0";
         row.appendChild(codeCell);
 
+        // موبايل الطالب الجديد 📱
+        const phoneCell = document.createElement("td");
+        phoneCell.textContent = student.phone || "—";
+        row.appendChild(phoneCell);
+
+        // موبايل ولي الأمر الجديد 👨‍👩‍👦
+        const parentCell = document.createElement("td");
+        parentCell.textContent = student.parentPhone || "—";
+        row.appendChild(parentCell);
+
+        // الـ QR
         const qrCell = document.createElement("td");
         const qrDiv = document.createElement("div");
         qrDiv.style.display = "flex";
@@ -185,12 +221,13 @@
 
         new QRCode(qrDiv, {
           text: student.code,
-          width: 50,
-          height: 50,
+          width: 45,
+          height: 45,
           colorDark : "#15213E",
           colorLight : "#ffffff"
         });
 
+        // زرار الطباعة
         const actionCell = document.createElement("td");
         const printBtn = document.createElement("button");
         printBtn.className = "print-btn";
@@ -229,7 +266,7 @@
     }
 
     // -------------------------------------------------------------
-    // ثانياً: لوجيك الحضور الذكي مع القفل التلقائي للكاميرا 🛡️📷
+    // ثانياً: لوجيك الحضور الذكي والمنع من التكرار في نفس اليوم 🛡️📷
     // -------------------------------------------------------------
     let html5QrcodeScanner;
 
@@ -238,9 +275,8 @@
       resultDiv.innerHTML = `جاري فحص الكود: ${decodedText}.. ⏳`;
       resultDiv.style.color = "#15213E";
       
-      // بمجرد قراءة الكود بنجاح -> اقفل الكاميرا فوراً لإراحة الجهاز ومنع التكرار
       html5QrcodeScanner.clear().then(() => {
-        document.getElementById("restartCamBtn").style.display = "block"; // أظهر زرار فتح الكاميرا تاني
+        document.getElementById("restartCamBtn").style.display = "block"; 
       }).catch(error => console.error("Failed to clear scanner", error));
 
       const studentRef = db.collection("students").doc(decodedText);
@@ -284,16 +320,14 @@
       // سيبها فاضية
     }
 
-    // دالة لتشغيل الكاميرا من جديد
     function startScanning() {
-      document.getElementById("restartCamBtn").style.display = "none"; // اخفي زرار الفتح تاني طالما اشتغلت
-      document.getElementById("result").innerHTML = ""; // صفي ريزلت القديم لحين مسح جديد
+      document.getElementById("restartCamBtn").style.display = "none"; 
+      document.getElementById("result").innerHTML = ""; 
       
       html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 250 }, false);
       html5QrcodeScanner.render(onScanSuccess, onScanFailure);
     }
 
-    // تشغيل الكاميرا أول ما الصفحة تفتح أوتوماتيك لأول مرة
     startScanning();
   </script>
 </body>
