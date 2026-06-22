@@ -11,7 +11,30 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <style>
-    /* كروت المغامرات الكريتيف */
+    /* تصليح وضبط السنترة لكل العناصر */
+    body {
+      background: linear-gradient(135deg, #0f172a, #020617);
+      font-family: 'Cairo', sans-serif;
+      color: white;
+      margin: 0;
+      padding: 20px 15px 80px 15px; /* مسافة من تحت عشان البار السفلي */
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-sizing: border-box;
+    }
+
+    form {
+      width: 100%;
+      max-width: 360px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    /* كارت المغامرات الكريتيف */
     .adventure-launch-card {
       background: linear-gradient(135deg, #ec4899, #8b5cf6, #3b82f6);
       background-size: 200% 200%;
@@ -21,37 +44,29 @@
       color: white;
       text-align: center;
       margin-top: 20px;
+      width: 100%;
+      box-sizing: border-box;
       cursor: pointer;
       box-shadow: 0 10px 25px rgba(139, 92, 246, 0.4);
       transition: transform 0.2s, box-shadow 0.2s;
       animation: gradientBG 5s ease infinite;
     }
-    .adventure-launch-card:active {
-      transform: scale(0.98);
-    }
+    .adventure-launch-card:active { transform: scale(0.98); }
     @keyframes gradientBG {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
-    .adventure-launch-card h2 {
-      font-family: 'Changa', sans-serif;
-      font-size: 20px;
-      margin: 0 0 5px 0;
-    }
-    .adventure-launch-card p {
-      font-size: 13px;
-      margin: 0;
-      opacity: 0.9;
-    }
+    .adventure-launch-card h2 { font-family: 'Changa', sans-serif; font-size: 20px; margin: 0 0 5px 0; }
+    .adventure-launch-card p { font-size: 13px; margin: 0; opacity: 0.9; }
 
-    /* الستايلايز الجديد للكارت العائم للأفاتار */
+    /* ضبط حجم ومكان صورة الأفاتار الشخصية */
     .avatar-wrapper {
       position: relative;
       display: inline-block;
       width: 90px;
       height: 90px;
-      margin: 0 auto 15px auto;
+      margin: 20px auto 15px auto;
     }
     .profile-avatar {
       width: 100%;
@@ -78,10 +93,40 @@
       cursor: pointer;
       box-shadow: 0 2px 5px rgba(0,0,0,0.3);
       border: 2px solid #0f172a;
-      transition: transform 0.2s;
     }
-    .avatar-edit-label:active { transform: scale(0.85); }
     #avatarUpload { display: none; }
+
+    /* سنترة كود الـ QR والـ Container */
+    .qr-container {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 24px;
+      padding: 20px;
+      margin-top: 25px;
+      width: 100%;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    #qrcode {
+      background: white;
+      padding: 12px;
+      border-radius: 16px;
+      display: inline-block;
+      margin-top: 10px;
+    }
+    #qrcode img {
+      display: block;
+    }
+    
+    .info-card {
+      width: 100%;
+      box-sizing: border-box;
+    }
+    #welcomeName { margin: 10px 0 5px 0; font-family: 'Changa', sans-serif; font-size: 24px; }
+    .sub-greeting { margin: 0 0 20px 0; }
   </style>
 </head>
 <body>
@@ -102,7 +147,7 @@
   </div>
 
   <form onsubmit="return false;">
-    <div class="top-bar">
+    <div class="top-bar" style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
       <button id="menuBtn" class="menu-btn">☰</button>
       <img src="logo.png" alt="اجازتي في كنيستي" class="logo-mini">
     </div>
@@ -117,7 +162,7 @@
     <p class="sub-greeting">كودك الشخصي: <span id="userCode" style="color: #00f2fe; font-weight: bold;">---</span></p>
 
     <div class="info-card">
-      <p style="color:#2bb673; font-size: 18px; margin-bottom: 12px;">
+      <p style="color:#2bb673; font-size: 18px; margin-bottom: 12px; font-weight: bold;">
         🎯 رصيد نقاطك الحالي: <b id="userPoints">0</b> نقطة
       </p>
       <p style="color:#cbd5e1; font-size: 14px; margin: 0;">
@@ -131,7 +176,7 @@
     </div>
 
     <div class="qr-container">
-      <p style="margin-top:0; font-size:13px; color:#cbd5e1;">ورّي الكود ده للخادم في الاجتماع عشان تسجل حضورك وتربح النقط! 🥳</p>
+      <p style="margin-top:0; font-size:13px; color:#cbd5e1; text-align: center;">ورّي الكود ده للخادم في الاجتماع عشان تسجل حضورك وتربح النقط! 🥳</p>
       <div id="qrcode"></div>
     </div>
   </form>
@@ -156,7 +201,6 @@
   </div>
 
   <script>
-    // إعدادات الفايربيز الموحدة والثابتة منعا لأي تضارب
     const firebaseConfig = {
       apiKey: "AIzaSyBTlBr41Tl-GxnOwOsZvPkg26iQs2SGW3A",
       authDomain: "agazty-feknesty.firebaseapp.com",
@@ -168,14 +212,13 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    // جلب بيانات الطالب المسجل من اللوكال ستورج
     const student = JSON.parse(localStorage.getItem("loggedInStudent"));
 
     if (!student || !student.code) {
       alert("الرجاء تسجيل الدخول أولاً! ❌");
       window.location.href = "index.html";
     } else {
-      // توليد كود الـ QR للولد بناءً على كوده الشخصي
+      // توليد الـ QR كود بالسنترة الصحيحة
       new QRCode(document.getElementById("qrcode"), {
         text: student.code,
         width: 160,
@@ -185,31 +228,28 @@
         correctLevel : QRCode.CorrectLevel.H
       });
 
-      // المراقبة اللحظية (Live Snapshot) لتحديث البيانات والنقاط والالتزام فوراً بدون ريفريش
+      // مراقبة الداتا لايف عشان الأيام والنقط تزيد في ثانية
       db.collection("students").doc(student.code).onSnapshot(function(doc) {
         if (doc.exists) {
           const freshData = doc.data();
           
-          // تحديث الواجهة بالداتا الجديدة لايف
           document.getElementById("welcomeName").textContent = `يا بطل، ${freshData.name || 'مخدوم'}! ✨`;
           document.getElementById("userCode").textContent = student.code;
           document.getElementById("userPoints").textContent = freshData.points || 0;
           
-          // 🔥 هنا السحر: جلب العداد المحدث من السكنر وعرضه من 18 يوم أوتوماتيك
           let attendanceCount = freshData.attendanceCount || 0;
           document.getElementById("attendanceCounter").textContent = `${attendanceCount} / 18 يوم`;
 
-          // عرض صورة الأفاتار لو الولد مغيرها
           if (freshData.avatar) {
             document.getElementById("userAvatar").src = freshData.avatar;
           }
         }
       }, function(error) {
-        console.error("خطأ في المراقبة اللحظية للبيانات: ", error);
+        console.error("خطأ: ", error);
       });
     }
 
-    // تشغيل نظام فتح وإغلاق القائمة الجانبية (Sidebar)
+    // Sidebar التوجيه
     const sidebar = document.getElementById("sidebar");
     const menuBtn = document.getElementById("menuBtn");
     const closeBtn = document.getElementById("closeBtn");
@@ -225,15 +265,12 @@
     });
 
     document.addEventListener("click", function(event) {
-      const isClickInsideSidebar = sidebar.contains(event.target);
-      const isClickOnMenuBtn = menuBtn.contains(event.target);
-
-      if (!isClickInsideSidebar && !isClickOnMenuBtn) {
+      if (!sidebar.contains(event.target) && !menuBtn.contains(event.target)) {
         sidebar.classList.remove("open");
       }
     });
 
-    // كود رفع وتغيير صورة الأفاتار الشخصية وحفظها في السيرفر لايف
+    // رفع الصورة الشخصية
     document.getElementById("avatarUpload").addEventListener("change", function(e) {
       const file = e.target.files[0];
       if (!file) return;
@@ -241,7 +278,6 @@
       const reader = new FileReader();
       reader.onloadend = function() {
         const base64Image = reader.result;
-
         db.collection("students").doc(student.code).update({
           avatar: base64Image
         }).then(() => {
@@ -251,7 +287,7 @@
       reader.readAsDataURL(file);
     });
 
-    // تسجيل الخروج وتنظيف الدفتر
+    // الخروج
     document.getElementById("logoutBtn").addEventListener("click", function() {
       localStorage.removeItem("loggedInStudent");
       window.location.href = "index.html";
