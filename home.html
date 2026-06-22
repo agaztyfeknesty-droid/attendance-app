@@ -41,12 +41,13 @@
       align-items: center !important;
     }
 
-    /* البار العلوي: المنيو واللوجو الصغير */
+    /* البار العلوي: المنيو أقصى اليمين واللوجو أقصى الشمال */
     .custom-top-bar {
       width: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      display: flex !important;
+      flex-direction: row !important;
+      justify-content: space-between !important;
+      align-items: center !important;
       margin-bottom: 25px;
     }
 
@@ -62,6 +63,7 @@
       align-items: center;
       justify-content: center;
       box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      order: 1; /* يضمن بقائه على اليمين في اتجاه RTL */
     }
 
     .custom-mini-logo {
@@ -69,6 +71,7 @@
       height: 65px !important;
       object-fit: contain !important;
       border-radius: 12px;
+      order: 2; /* يضمن بقائه على الشمال في اتجاه RTL */
     }
 
     /* الأفاتار الشخصي المطور */
@@ -167,7 +170,6 @@
 </head>
 <body>
 
-  <!-- القائمة الجانبية (Sidebar) -->
   <div id="sidebar" class="sidebar">
     <div class="sidebar-header">
       <span class="sidebar-title">القائمة 📋</span>
@@ -183,28 +185,23 @@
     </div>
   </div>
 
-  <!-- الحاوية الأساسية المنسقة للموبايل -->
   <div class="main-container">
     <form onsubmit="return false;">
       
-      <!-- البار العلوي: زر الـ 3 شرط واللوجو المتصغر -->
       <div class="custom-top-bar">
         <button id="menuBtn" class="custom-menu-btn">☰</button>
         <img src="logo.png" alt="اجازتي في كنيستي" class="custom-mini-logo">
       </div>
 
-      <!-- الأفاتار الشخصي الدائري المظبوط -->
       <div class="avatar-container">
         <img id="userAvatar" src="https://via.placeholder.com/150" alt="Avatar" class="user-profile-avatar">
         <label for="avatarUpload" class="avatar-edit-badge">📸</label>
         <input type="file" id="avatarUpload" accept="image/*">
       </div>
 
-      <!-- نصوص الترحيب والكود الشخصي واضحة وملعلعة -->
       <h1 id="welcomeName" class="welcome-title">يا بطل! ✨</h1>
       <p class="code-subtitle">كودك الشخصي: <span id="userCode" style="color: #8b5cf6; font-weight: bold;">---</span></p>
 
-      <!-- كارت الرصيد والالتزام المحدث لايف من 18 يوم -->
       <div class="info-status-card">
         <p style="color:#16a34a; font-size: 18px; margin: 0 0 8px 0; font-weight: bold;">
           🎯 رصيد نقاطك الحالي: <b id="userPoints">0</b> نقطة
@@ -214,13 +211,11 @@
         </p>
       </div>
 
-      <!-- كارت تحدي السبت الأسبوعي السريع -->
       <div class="weekly-quiz-card" onclick="window.location.href='quiz.html'">
         <h2>🎯 تحدي السبت الأسبوعي لايف!</h2>
         <p>اضغط هنا وادخل حل أسئلة الأسبوع واكسب نقط فوراً 🚀</p>
       </div>
 
-      <!-- كارت الـ QR الشخصي متسنتر ورايق جداً -->
       <div class="info-status-card">
         <p style="margin: 0 0 10px 0; font-size: 13px; color:#64748b;">ورّي الكود ده للخادم في الاجتماع عشان تسجل حضورك وتربح النقط! 🥳</p>
         <div id="qrcode" class="qr-display-box"></div>
@@ -229,7 +224,6 @@
     </form>
   </div>
 
-  <!-- بار التنقل السفلي الثابت والأصلي بتاعك -->
   <div class="bottom-nav">
     <a href="home.html" class="nav-item active">
       <span class="nav-icon">🏠</span>
