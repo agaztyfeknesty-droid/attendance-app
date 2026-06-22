@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة تحكم أسئلة السبت 👑</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2 family=Cairo:wght@400;600;700&family=Changa:wght@600;700;800&display=swap" rel="stylesheet">
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <style>
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: #0f172a; /* نفس ستايل ألوان الأبلكيشن الغامق */
+      color: #ffffff;
+      padding: 20px 15px;
+      margin: 0;
+      direction: rtl;
+    }
+    .admin-container {
+      width: 100%;
+      max-width: 360px;
+      margin: 0 auto;
+    }
+    .header-box {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+    .header-box h1 {
+      font-family: 'Changa', sans-serif;
+      font-size: 22px;
+      color: #00f2fe;
+      margin: 0;
+      text-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
+    }
+    .header-box p {
+      font-size: 12px;
+      color: #94a3b8;
+      margin-top: 5px;
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+    }
+    .q-title-label {
+      font-family: 'Changa', sans-serif;
+      color: #4facfe;
+      font-size: 16px;
+      margin-bottom: 12px;
+      display: block;
+      border-right: 3px solid #4facfe;
+      padding-right: 8px;
+    }
+    label {
+      font-size: 12px;
+      color: #cbd5e1;
+      display: block;
+      margin-top: 10px;
+      font-weight: 600;
+    }
+    input, select {
+      width: 100%;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(15, 23, 42, 0.6);
+      color: white;
+      box-sizing: border-box;
+      font-family: 'Cairo';
+      margin-top: 5px;
+      font-size: 13px;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: #00f2fe;
+      box-shadow: 0 0 10px rgba(0, 242, 254, 0.2);
+    }
+    .btn-submit {
+      background: linear-gradient(135deg, #00f2fe, #4facfe);
+      color: #020617;
+      border: none;
+      padding: 15px;
+      width: 100%;
+      border-radius: 16px;
+      font-weight: bold;
+      font-size: 15px;
+      cursor: pointer;
+      margin-top: 10px;
+      font-family: 'Cairo';
+      box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4);
+      transition: all 0.2s ease;
+    }
+    .btn-submit:active {
+      transform: scale(0.98);
+    }
+    .btn-back {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #cbd5e1;
+      padding: 12px;
+      border-radius: 16px;
+      font-family: 'Cairo';
+      font-weight: bold;
+      width: 100%;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="admin-container">
+    
+    <div class="header-box">
+      <h1>👑 لوحة تحكم الخدام</h1>
+      <p>تحديث الـ 5 أسئلة الأسبوعية لتحدي السبت</p>
+    </div>
+
+    <div id="questionsForm">
+      </div>
+
+    <button class="btn-submit" onclick="saveQuestionsToFirebase()">💾 نشر وتحديث الأسئلة لايف 🚀</button>
+    <button class="btn-back" onclick="window.location.href='scan.html'">📸 العودة لقارئ الـ QR</button>
+
+  </div>
+
+  <script>
+    // نفس بيانات الفايربيز الموحدة بتاعة الأبلكيشن بتاعك عشان يربط على نفس الداتا
+    const firebaseConfig = {
+      apiKey: "AIzaSyBTlBr41Tl-GxnOwOsZvPkg26iQs2SGW3A",
+      authDomain: "agazty-feknesty.firebaseapp.com",
+      projectId: "agazty-feknesty",
+      storageBucket: "agazty-feknesty.firebasestorage.app",
+      messagingSenderId: "1065028327259",
+      appId: "1:1065028327259:web:c0b7c6f6fe39bc93b9ac7e"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    // رندر خانات الـ 5 أسئلة بستايل الأبلكيشن
+    const formContainer = document.getElementById("questionsForm");
+    for (let i = 1; i <= 5; i++) {
+      formContainer.innerHTML += `
+        <div class="glass-card">
+          <span class="q-title-label">تعديل السؤال رقم (${i})</span>
+          
+          <label>نص السؤال المطروح:</label>
+          <input type="text" id="q_${i}" placeholder="مثال: من هو كاتب سفر..." required>
+          
+          <label>الاختيارات الأربعة المتاحة للحل:</label>
+          <input type="text" id="q_${i}_o1" placeholder="الاختيار الأول" required style="margin-bottom:6px;">
+          <input type="text" id="q_${i}_o2" placeholder="الاختيار الثاني" required style="margin-bottom:6px;">
+          <input type="text" id="q_${i}_o3" placeholder="الاختيار الثالث" required style="margin-bottom:6px;">
+          <input type="text" id="q_${i}_o4" placeholder="الاختيار الرابع" required>
+          
+          <label>حدد الإجابة الصحيحة من بينهم:</label>
+          <select id="q_${i}_correct">
+            <option value="0">الاختيار الأول</option>
+            <option value="1">الاختيار الثاني</option>
+            <option value="2">الاختيار الثالث</option>
+            <option value="3">الاختيار الرابع</option>
+          </select>
+        </div>
+      `;
+    }
+
+    // جلب الأسئلة الحالية والقديمة عشان الخادم ميبدأش من الصفر ويعدل علطول
+    db.collection("config").doc("weeklyQuiz").get().then(doc => {
+      if (doc.exists) {
+        const data = doc.data().questions || [];
+        data.forEach((item, index) => {
+          let i = index + 1;
+          if(i <= 5) {
+            document.getElementById(`q_${i}`).value = item.q || "";
+            document.getElementById(`q_${i}_o1`).value = item.options[0] || "";
+            document.getElementById(`q_${i}_o2`).value = item.options[1] || "";
+            document.getElementById(`q_${i}_o3`).value = item.options[2] || "";
+            document.getElementById(`q_${i}_o4`).value = item.options[3] || "";
+            document.getElementById(`q_${i}_correct`).value = item.correct || "0";
+          }
+        });
+      }
+    });
+
+    // الحفظ والتحديث في ثانية لايف
+    function saveQuestionsToFirebase() {
+      let finalQuestions = [];
+      for (let i = 1; i <= 5; i++) {
+        let qValue = document.getElementById(`q_${i}`).value;
+        if(!qValue) {
+          alert(`⚠️ من فضلك كمل بيانات السؤال رقم ${i}`);
+          return;
+        }
+        finalQuestions.push({
+          q: qValue,
+          options: [
+            document.getElementById(`q_${i}_o1`).value,
+            document.getElementById(`q_${i}_o2`).value,
+            document.getElementById(`q_${i}_o3`).value,
+            document.getElementById(`q_${i}_o4`).value
+          ],
+          correct: parseInt(document.getElementById(`q_${i}_correct`).value)
+        });
+      }
+
+      db.collection("config").doc("weeklyQuiz").set({
+        questions: finalQuestions
+      }).then(() => {
+        alert("🎉 تم الحفظ بنجاح! الأسئلة اتحدثت لايف على السيرفر وستظهر للمخدومين يوم السبت أوتوماتيك.");
+      }).catch(err => {
+        alert("❌ فشل الحفظ: " + err.message);
+      });
+    }
+  </script>
+</body>
+</html>
