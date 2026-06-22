@@ -11,9 +11,29 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <style>
-    /* كارت المغامرات الكريتيف الجديد والمتحرك */
+    /* كروت المغامرات الكريتيف */
     .adventure-launch-card {
       background: linear-gradient(135deg, #ec4899, #8b5cf6, #3b82f6);
+      background-size: 200% 200%;
+      border: none;
+      border-radius: 24px;
+      padding: 20px;
+      margin-bottom: 15px;
+      cursor: pointer;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-sizing: border-box;
+      box-shadow: 0 10px 25px rgba(139, 92, 246, 0.4);
+      transition: all 0.3s ease;
+      animation: gradientShift 6s ease infinite;
+      text-align: right;
+    }
+
+    /* كارت مسابقة السبت الجديد المميز 🎯 */
+    .quiz-launch-card {
+      background: linear-gradient(135deg, #00f2fe, #4facfe, #000000);
       background-size: 200% 200%;
       border: none;
       border-radius: 24px;
@@ -25,13 +45,13 @@
       align-items: center;
       justify-content: space-between;
       box-sizing: border-box;
-      box-shadow: 0 10px 25px rgba(139, 92, 246, 0.4);
+      box-shadow: 0 10px 25px rgba(79, 172, 254, 0.4);
       transition: all 0.3s ease;
-      animation: gradientShift 6s ease infinite, pulseCard 2s infinite ease-in-out;
+      animation: gradientShift 4s ease infinite, pulseCard 2s infinite ease-in-out;
       text-align: right;
     }
 
-    .adventure-launch-card:active {
+    .adventure-launch-card:active, .quiz-launch-card:active {
       transform: scale(0.97);
     }
 
@@ -51,36 +71,32 @@
     }
 
     .card-graphic-icon {
-      font-size: 38px;
+      font-size: 35px;
       background: rgba(255, 255, 255, 0.2);
-      width: 65px;
-      height: 65px;
+      width: 60px;
+      height: 60px;
       border-radius: 18px;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: inset 0 0 10px rgba(255,255,255,0.2);
       animation: floatIcon 3s infinite ease-in-out;
     }
 
-    /* إنيميشن تحريك الألوان جوه الكارت */
     @keyframes gradientShift {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
 
-    /* إنيميشن نبض الكارت لخطف العين */
     @keyframes pulseCard {
-      0% { box-shadow: 0 10px 25px rgba(139, 92, 246, 0.4); }
-      50% { box-shadow: 0 15px 35px rgba(236, 72, 153, 0.6); transform: translateY(-2px); }
-      100% { box-shadow: 0 10px 25px rgba(139, 92, 246, 0.4); }
+      0% { transform: scale(1); box-shadow: 0 10px 25px rgba(79, 172, 254, 0.4); }
+      50% { transform: scale(1.02); box-shadow: 0 15px 35px rgba(0, 242, 254, 0.6); }
+      100% { transform: scale(1); box-shadow: 0 10px 25px rgba(79, 172, 254, 0.4); }
     }
 
-    /* إنيميشن طفو الأيقونة جوه الكارت */
     @keyframes floatIcon {
       0% { transform: translateY(0) rotate(0deg); }
-      50% { transform: translateY(-5px) rotate(8deg); }
+      50% { transform: translateY(-5px) rotate(6deg); }
       100% { transform: translateY(0) rotate(0deg); }
     }
   </style>
@@ -123,6 +139,14 @@
           <p>عجلة حظ، أوسمة، وبطل الأسبوع 🎡🎖️</p>
         </div>
         <div class="card-graphic-icon">🚀</div>
+      </div>
+
+      <div class="quiz-launch-card" onclick="window.location.href='quiz.html'">
+        <div class="card-info-text">
+          <h3>تحدي السبت الأسبوعي</h3>
+          <p>5 أسئلة بـ 25 نقطة.. ورّينا شطارتك! 🧠🎯</p>
+        </div>
+        <div class="card-graphic-icon">🔥</div>
       </div>
 
       <p class="qr-title">📱 كارت الحضور بتاعك</p>
