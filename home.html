@@ -11,62 +11,72 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <style>
-    /* تصليح وضبط السنترة لكل العناصر */
-    body {
-      background: linear-gradient(135deg, #0f172a, #020617);
-      font-family: 'Cairo', sans-serif;
-      color: white;
-      margin: 0;
-      padding: 20px 15px 80px 15px; /* مسافة من تحت عشان البار السفلي */
+    /* إعادة ضبط شاملة لإلغاء أي تضارب مع الملف القديم */
+    html, body {
+      background: #020617 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      width: 100% !important;
       min-height: 100vh;
+      font-family: 'Cairo', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* الحاوية الرئيسية مفرودة ومتسنترة صح */
+    .main-wrapper {
+      width: 100%;
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 15px 15px 100px 15px;
+      box-sizing: border-box;
       display: flex;
       flex-direction: column;
       align-items: center;
-      box-sizing: border-box;
     }
 
     form {
+      width: 100% !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+    }
+
+    /* تحجيم وإصلاح اللوجو الخربان */
+    .top-bar-custom {
       width: 100%;
-      max-width: 360px;
       display: flex;
-      flex-direction: column;
+      justify-content: space-between;
       align-items: center;
-      text-align: center;
-    }
-
-    /* كارت المغامرات الكريتيف */
-    .adventure-launch-card {
-      background: linear-gradient(135deg, #ec4899, #8b5cf6, #3b82f6);
-      background-size: 200% 200%;
-      border: none;
-      border-radius: 24px;
-      padding: 20px;
-      color: white;
-      text-align: center;
-      margin-top: 20px;
-      width: 100%;
+      margin-bottom: 15px;
+      padding: 5px 10px;
       box-sizing: border-box;
-      cursor: pointer;
-      box-shadow: 0 10px 25px rgba(139, 92, 246, 0.4);
-      transition: transform 0.2s, box-shadow 0.2s;
-      animation: gradientBG 5s ease infinite;
     }
-    .adventure-launch-card:active { transform: scale(0.98); }
-    @keyframes gradientBG {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-    .adventure-launch-card h2 { font-family: 'Changa', sans-serif; font-size: 20px; margin: 0 0 5px 0; }
-    .adventure-launch-card p { font-size: 13px; margin: 0; opacity: 0.9; }
 
-    /* ضبط حجم ومكان صورة الأفاتار الشخصية */
+    .fixed-logo {
+      width: 75px !important;
+      height: auto !important;
+      max-height: 75px !important;
+      object-fit: contain !important;
+      border-radius: 10px;
+    }
+
+    .menu-btn-custom {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      padding: 5px 12px;
+      border-radius: 8px;
+    }
+
+    /* الأفاتار الشخصي */
     .avatar-wrapper {
       position: relative;
       display: inline-block;
-      width: 90px;
-      height: 90px;
-      margin: 20px auto 15px auto;
+      width: 85px;
+      height: 85px;
+      margin: 10px auto;
     }
     .profile-avatar {
       width: 100%;
@@ -74,7 +84,7 @@
       border-radius: 50%;
       object-fit: cover;
       border: 3px solid #00f2fe;
-      box-shadow: 0 0 15px rgba(0, 242, 254, 0.5);
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
       background: #1e293b;
     }
     .avatar-edit-label {
@@ -83,54 +93,69 @@
       right: 0;
       background: #00f2fe;
       color: #020617;
-      width: 26px;
-      height: 26px;
+      width: 24px;
+      height: 24px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 14px;
+      font-size: 12px;
       cursor: pointer;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-      border: 2px solid #0f172a;
+      border: 2px solid #020617;
     }
     #avatarUpload { display: none; }
 
-    /* سنترة كود الـ QR والـ Container */
-    .qr-container {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 24px;
-      padding: 20px;
-      margin-top: 25px;
-      width: 100%;
-      box-sizing: border-box;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+    /* كروت البيانات وعرض النقاط */
+    .custom-card {
+      background: rgba(15, 23, 42, 0.6) !important;
+      border: 1px solid rgba(255, 255, 255, 0.08) !important;
+      border-radius: 20px !important;
+      padding: 20px !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+      text-align: center !important;
+      margin-top: 15px !important;
+      backdrop-filter: blur(10px);
     }
-    #qrcode {
-      background: white;
-      padding: 12px;
-      border-radius: 16px;
-      display: inline-block;
-      margin-top: 10px;
+
+    /* كارت المغامرات الملون */
+    .adventure-card {
+      background: linear-gradient(135deg, #ec4899, #8b5cf6, #3b82f6) !important;
+      background-size: 200% 200%;
+      border: none !important;
+      border-radius: 20px !important;
+      padding: 18px !important;
+      color: white !important;
+      text-align: center !important;
+      margin-top: 15px !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(139, 92, 246, 0.3) !important;
+      animation: gradientBG 5s ease infinite;
     }
-    #qrcode img {
-      display: block;
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* سنترة الـ QR بالملي */
+    .qr-box {
+      background: white !important;
+      padding: 12px !important;
+      border-radius: 16px !important;
+      display: inline-block !important;
+      margin: 15px auto 0 auto !important;
     }
     
-    .info-card {
-      width: 100%;
-      box-sizing: border-box;
-    }
-    #welcomeName { margin: 10px 0 5px 0; font-family: 'Changa', sans-serif; font-size: 24px; }
-    .sub-greeting { margin: 0 0 20px 0; }
+    #welcomeName { margin: 10px 0 2px 0; font-family: 'Changa', sans-serif; font-size: 22px; color: white; }
+    .sub-greeting { margin: 0 0 10px 0; color: #94a3b8; font-size: 13px; }
   </style>
 </head>
 <body>
 
+  <!-- القائمة الجانبية (Sidebar) -->
   <div id="sidebar" class="sidebar">
     <div class="sidebar-header">
       <span class="sidebar-title">القائمة 📋</span>
@@ -146,41 +171,51 @@
     </div>
   </div>
 
-  <form onsubmit="return false;">
-    <div class="top-bar" style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
-      <button id="menuBtn" class="menu-btn">☰</button>
-      <img src="logo.png" alt="اجازتي في كنيستي" class="logo-mini">
-    </div>
+  <div class="main-wrapper">
+    <form onsubmit="return false;">
+      
+      <!-- البار العلوي المحمي والمحدد المقاسات -->
+      <div class="top-bar-custom">
+        <button id="menuBtn" class="menu-btn-custom">☰</button>
+        <img src="logo.png" alt="اجازتي في كنيستي" class="fixed-logo">
+      </div>
 
-    <div class="avatar-wrapper">
-      <img id="userAvatar" src="https://via.placeholder.com/150" alt="Avatar" class="profile-avatar">
-      <label for="avatarUpload" class="avatar-edit-label">📸</label>
-      <input type="file" id="avatarUpload" accept="image/*">
-    </div>
+      <!-- الأفاتار الشخصي -->
+      <div class="avatar-wrapper">
+        <img id="userAvatar" src="https://via.placeholder.com/150" alt="Avatar" class="profile-avatar">
+        <label for="avatarUpload" class="avatar-edit-label">📸</label>
+        <input type="file" id="avatarUpload" accept="image/*">
+      </div>
 
-    <h1 id="welcomeName">يا بطل! ✨</h1>
-    <p class="sub-greeting">كودك الشخصي: <span id="userCode" style="color: #00f2fe; font-weight: bold;">---</span></p>
+      <h1 id="welcomeName">يا بطل! ✨</h1>
+      <p class="sub-greeting">كودك الشخصي: <span id="userCode" style="color: #00f2fe; font-weight: bold;">---</span></p>
 
-    <div class="info-card">
-      <p style="color:#2bb673; font-size: 18px; margin-bottom: 12px; font-weight: bold;">
-        🎯 رصيد نقاطك الحالي: <b id="userPoints">0</b> نقطة
-      </p>
-      <p style="color:#cbd5e1; font-size: 14px; margin: 0;">
-        📊 أيام الالتزام والمواظبة: <b id="attendanceCounter" style="color:#00f2fe;">0 / 18 يوم</b>
-      </p>
-    </div>
+      <!-- كارت النقاط والالتزام المحدث لايف (18 يوم) -->
+      <div class="custom-card">
+        <p style="color:#2bb673; font-size: 18px; margin: 0 0 10px 0; font-weight: bold;">
+          🎯 رصيد نقاطك الحالي: <b id="userPoints">0</b> نقطة
+        </p>
+        <p style="color:#cbd5e1; font-size: 14px; margin: 0;">
+          📊 أيام الالتزام والمواظبة: <b id="attendanceCounter" style="color:#00f2fe; font-size: 16px;">0 / 18 يوم</b>
+        </p>
+      </div>
 
-    <div class="adventure-launch-card" onclick="window.location.href='quiz.html'">
-      <h2>🎯 تحدي السبت الأسبوعي لايف!</h2>
-      <p>اضغط هنا وادخل حل أسئلة الأسبوع واكسب نقط فوراً 🚀</p>
-    </div>
+      <!-- كارت تحدي السبت -->
+      <div class="adventure-card" onclick="window.location.href='quiz.html'">
+        <h2 style="font-family: 'Changa', sans-serif; font-size: 18px; margin: 0 0 5px 0;">🎯 تحدي السبت الأسبوعي لايف!</h2>
+        <p style="font-size: 12px; margin: 0; opacity: 0.9;">اضغط هنا وادخل حل أسئلة الأسبوع واكسب نقط فوراً 🚀</p>
+      </div>
 
-    <div class="qr-container">
-      <p style="margin-top:0; font-size:13px; color:#cbd5e1; text-align: center;">ورّي الكود ده للخادم في الاجتماع عشان تسجل حضورك وتربح النقط! 🥳</p>
-      <div id="qrcode"></div>
-    </div>
-  </form>
+      <!-- حاوية الكود الشخصي الـ QR متسنترة ومحمية -->
+      <div class="custom-card">
+        <p style="margin: 0 0 10px 0; font-size: 13px; color:#cbd5e1;">ورّي الكود ده للخادم في الاجتماع عشان تسجل حضورك وتربح النقط! 🥳</p>
+        <div id="qrcode" class="qr-box"></div>
+      </div>
 
+    </form>
+  </div>
+
+  <!-- بار التنقل السفلي الثابت -->
   <div class="bottom-nav">
     <a href="home.html" class="nav-item active">
       <span class="nav-icon">🏠</span>
@@ -218,21 +253,20 @@
       alert("الرجاء تسجيل الدخول أولاً! ❌");
       window.location.href = "index.html";
     } else {
-      // توليد الـ QR كود بالسنترة الصحيحة
+      // توليد الـ QR
       new QRCode(document.getElementById("qrcode"), {
         text: student.code,
-        width: 160,
-        height: 160,
+        width: 150,
+        height: 150,
         colorDark : "#020617",
         colorLight : "#ffffff",
         correctLevel : QRCode.CorrectLevel.H
       });
 
-      // مراقبة الداتا لايف عشان الأيام والنقط تزيد في ثانية
+      // السحب والربط اللحظي مع الفايربيز
       db.collection("students").doc(student.code).onSnapshot(function(doc) {
         if (doc.exists) {
           const freshData = doc.data();
-          
           document.getElementById("welcomeName").textContent = `يا بطل، ${freshData.name || 'مخدوم'}! ✨`;
           document.getElementById("userCode").textContent = student.code;
           document.getElementById("userPoints").textContent = freshData.points || 0;
@@ -244,12 +278,10 @@
             document.getElementById("userAvatar").src = freshData.avatar;
           }
         }
-      }, function(error) {
-        console.error("خطأ: ", error);
       });
     }
 
-    // Sidebar التوجيه
+    // فتح وإغلاق القائمة
     const sidebar = document.getElementById("sidebar");
     const menuBtn = document.getElementById("menuBtn");
     const closeBtn = document.getElementById("closeBtn");
@@ -258,23 +290,20 @@
       e.stopPropagation();
       sidebar.classList.add("open");
     });
-
     closeBtn.addEventListener("click", function(e) {
       e.stopPropagation();
       sidebar.classList.remove("open");
     });
-
     document.addEventListener("click", function(event) {
       if (!sidebar.contains(event.target) && !menuBtn.contains(event.target)) {
         sidebar.classList.remove("open");
       }
     });
 
-    // رفع الصورة الشخصية
+    // رفع الأفاتار
     document.getElementById("avatarUpload").addEventListener("change", function(e) {
       const file = e.target.files[0];
       if (!file) return;
-
       const reader = new FileReader();
       reader.onloadend = function() {
         const base64Image = reader.result;
@@ -282,7 +311,7 @@
           avatar: base64Image
         }).then(() => {
           document.getElementById("userAvatar").src = base64Image;
-        }).catch(err => alert("عطل في حفظ الصورة ❌"));
+        });
       }
       reader.readAsDataURL(file);
     });
