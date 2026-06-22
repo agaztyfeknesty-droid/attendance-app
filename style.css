@@ -1,5 +1,5 @@
 /* ========================================================== */
-/* 1. الإعدادات العامة والخطوط (Reset & Global Styles)       */
+/* 1. الإعدادات العامة والخطوط                                */
 /* ========================================================== */
 * {
   box-sizing: border-box;
@@ -9,18 +9,18 @@
 
 body {
   font-family: 'Cairo', sans-serif;
-  background-color: #FDF6E8; 
+  background-color: #FDF6E8;
   color: #15213E;
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
   padding: 20px;
-  padding-bottom: 90px; 
+  padding-bottom: 90px;
 }
 
 /* ========================================================== */
-/* 2. تنسيق الفورم والبطاقات الرئيسية (Form & Card Container) */
+/* 2. الفورم والبطاقات                                        */
 /* ========================================================== */
 form {
   background: #ffffff;
@@ -55,7 +55,7 @@ p.sub-greeting {
 }
 
 /* ========================================================== */
-/* 3. عناصر الإدخال والأزرار (Inputs & Buttons)             */
+/* 3. الإدخال والأزرار                                        */
 /* ========================================================== */
 label {
   display: block;
@@ -101,21 +101,12 @@ button {
   transition: background-color 0.3s ease, transform 0.1s ease;
 }
 
-button:hover {
-  background-color: #23355f;
-}
-
-button:active {
-  transform: scale(0.98);
-}
-
-button:disabled {
-  background-color: #9ca3af;
-  cursor: not-allowed;
-}
+button:hover { background-color: #23355f; }
+button:active { transform: scale(0.98); }
+button:disabled { background-color: #9ca3af; cursor: not-allowed; }
 
 /* ========================================================== */
-/* 4. لوحة الإحصائيات (Stats & Streak Boxes)                  */
+/* 4. الإحصائيات                                              */
 /* ========================================================== */
 .stats {
   display: flex;
@@ -133,18 +124,9 @@ button:disabled {
   justify-content: center;
 }
 
-.stat-box.pink {
-  background-color: #FCE8EE;
-}
-
-.streak-box {
-  background-color: #FFF3D6;
-}
-
-.stat-icon, .streak-flame {
-  font-size: 24px;
-  margin-bottom: 5px;
-}
+.stat-box.pink { background-color: #FCE8EE; }
+.streak-box { background-color: #FFF3D6; }
+.stat-icon, .streak-flame { font-size: 24px; margin-bottom: 5px; }
 
 .stat-number {
   font-family: 'Changa', sans-serif;
@@ -153,23 +135,11 @@ button:disabled {
   color: #15213E;
 }
 
-.stat-label {
-  font-size: 12px;
-  color: #6b7280;
-  font-weight: 600;
-  margin-top: 2px;
-}
-
-.qr-title {
-  font-size: 15px;
-  font-weight: 700;
-  color: #15213E;
-  margin-top: 10px;
-  margin-bottom: 8px;
-}
+.stat-label { font-size: 12px; color: #6b7280; font-weight: 600; margin-top: 2px; }
+.qr-title { font-size: 15px; font-weight: 700; color: #15213E; margin-top: 10px; margin-bottom: 8px; }
 
 /* ========================================================== */
-/* 5. لوحة الصدارة وقوائم الطلاب (Leaderboard rows)          */
+/* 5. لوحة الصدارة                                            */
 /* ========================================================== */
 .leader-row {
   display: flex;
@@ -205,39 +175,20 @@ button:disabled {
   margin-left: 12px;
 }
 
-.leader-info {
-  flex: 1;
-  text-align: right;
-}
-
-.leader-name {
-  font-weight: 700;
-  font-size: 14px;
-  color: #15213E;
-}
-
-.leader-streak {
-  font-size: 11px;
-  color: #F4B731;
-  font-weight: 600;
-}
-
-.leader-points {
-  font-family: 'Changa', sans-serif;
-  font-weight: 800;
-  color: #2BB673;
-  font-size: 15px;
-}
+.leader-info { flex: 1; text-align: right; }
+.leader-name { font-weight: 700; font-size: 14px; color: #15213E; }
+.leader-streak { font-size: 11px; color: #F4B731; font-weight: 600; }
+.leader-points { font-family: 'Changa', sans-serif; font-weight: 800; color: #2BB673; font-size: 15px; }
 
 /* ========================================================== */
-/* 6. شريط التنقل السفلي (Bottom Navigation Bar)             */
+/* 6. شريط التنقل السفلي                                      */
 /* ========================================================== */
 .bottom-nav {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  height: 70px;
+  height: 65px;
   background-color: #ffffff;
   box-shadow: 0 -4px 16px rgba(21, 33, 62, 0.06);
   display: flex;
@@ -254,78 +205,35 @@ button:disabled {
   text-decoration: none;
   color: #9ca3af;
   transition: color 0.3s ease;
+  gap: 2px;
 }
 
-.nav-icon {
-  font-size: 20px;
-  margin-bottom: 2px;
-}
-
-.nav-label {
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.nav-item.active {
-  color: #36AEE0;
-}
+.nav-icon { font-size: 22px; }
+.nav-label, .nav-text { font-size: 11px; font-weight: 600; }
+.nav-item.active { color: #36AEE0; }
 
 /* ========================================================== */
-/* 7. القائمة الجانبية للبروفايل (Sidebar التعديل الجديد)       */
+/* 7. القائمة الجانبية (مصلحة تطلع من اليمين صح)             */
 /* ========================================================== */
 .sidebar {
   position: fixed;
-  top: 10px; 
-  bottom: 10px;
-  left: -280px; 
-  width: 260px; 
-  background-color: #ffffff;
-  box-shadow: 4px 4px 24px rgba(21, 33, 62, 0.15);
-  transition: left 0.3s ease-in-out;
+  top: 0;
+  bottom: 0;
+  right: -300px;
+  width: 270px;
+  background-color: #15213E;
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.2);
+  transition: right 0.3s ease-in-out;
   z-index: 1000;
   display: flex;
   flex-direction: column;
-  border-radius: 0 20px 20px 0; 
+  border-radius: 20px 0 0 20px;
 }
 
 .sidebar.open {
-  left: 0 !important;
+  right: 0 !important;
 }
 
 .sidebar-header {
   padding: 20px;
-  background-color: #FDF6E8;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 2px solid #eee;
-  direction: rtl;
-}
-
-.sidebar-header h2 {
-  font-family: 'Changa', sans-serif;
-  font-size: 18px;
-  color: #15213E;
-  margin: 0;
-}
-
-.sidebar-content {
-  padding: 25px 20px;
-  flex: 1;
-  overflow-y: auto;
-  text-align: right;
-  direction: rtl;
-}
-
-.info-group p {
-  font-size: 14px;
-  margin: 14px 0;
-  color: #15213E;
-  border-bottom: 1px dashed #eee;
-  padding-bottom: 8px;
-}
-
-.info-group strong {
-  color: #6b7280;
-  margin-left: 5px;
-}
+  background-color:

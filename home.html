@@ -11,77 +11,78 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <style>
-    /* فرض الخلفية البيضاء الشفافة والنظيفة والتناسق الكامل */
     html, body {
       background: #ffffff !important;
       margin: 0 !important;
       padding: 0 !important;
       width: 100% !important;
       min-height: 100vh;
-      font-family: 'Cairo', sans-serif;
-      color: #334155 !important;
+      display: block !important;
+      align-items: unset !important;
+      justify-content: unset !important;
     }
 
-    /* الحاوية الرئيسية مفرودة في المنتصف بالملي */
     .main-container {
       width: 100%;
       max-width: 420px;
       margin: 0 auto;
       padding: 20px 20px 90px 20px;
       box-sizing: border-box;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
     }
 
     form {
       width: 100% !important;
+      max-width: 100% !important;
+      box-shadow: none !important;
+      border: none !important;
+      padding: 0 !important;
+      background: transparent !important;
       display: flex !important;
       flex-direction: column !important;
-      align-items: center !important;
+      align-items: stretch !important;
     }
 
-    /* البار العلوي: المنيو أقصى اليمين واللوجو أقصى الشمال */
+    /* البار العلوي */
     .custom-top-bar {
       width: 100%;
-      display: flex !important;
-      flex-direction: row !important;
-      justify-content: space-between !important;
-      align-items: center !important;
-      margin-bottom: 25px;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
     }
 
     .custom-menu-btn {
-      background: #f1f5f9;
-      border: none;
-      color: #0f172a;
-      font-size: 26px;
-      cursor: pointer;
-      padding: 4px 14px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-      order: 1; /* يضمن بقائه على اليمين في اتجاه RTL */
+      background: #f1f5f9 !important;
+      border: none !important;
+      color: #0f172a !important;
+      font-size: 22px !important;
+      cursor: pointer !important;
+      padding: 8px 14px !important;
+      border-radius: 12px !important;
+      width: auto !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
     }
 
     .custom-mini-logo {
-      width: 65px !important;
-      height: 65px !important;
+      width: 60px !important;
+      height: 60px !important;
       object-fit: contain !important;
       border-radius: 12px;
-      order: 2; /* يضمن بقائه على الشمال في اتجاه RTL */
+      margin-bottom: 0 !important;
     }
 
-    /* الأفاتار الشخصي المطور */
+    /* الأفاتار */
     .avatar-container {
       position: relative;
       display: inline-block;
-      width: 95px;
-      height: 95px;
-      margin-bottom: 10px;
+      width: 90px;
+      height: 90px;
+      margin: 0 auto 10px auto;
     }
+
     .user-profile-avatar {
       width: 100%;
       height: 100%;
@@ -91,6 +92,7 @@
       box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
       background: #f8fafc;
     }
+
     .avatar-edit-badge {
       position: absolute;
       bottom: 2px;
@@ -106,63 +108,70 @@
       font-size: 13px;
       cursor: pointer;
       border: 2px solid white;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.15);
     }
+
     #avatarUpload { display: none; }
 
-    /* نصوص الترحيب الواضحة جداً فوق الكروت */
     .welcome-title {
       font-family: 'Changa', sans-serif;
-      font-size: 24px;
+      font-size: 22px;
       font-weight: 800;
-      color: #0f172a !important;
-      margin: 10px 0 2px 0;
+      color: #0f172a;
+      margin: 8px 0 2px 0;
       text-align: center;
     }
+
     .code-subtitle {
-      font-size: 14px;
+      font-size: 13px;
       color: #64748b;
-      margin: 0 0 20px 0;
+      margin: 0 0 16px 0;
       text-align: center;
     }
 
-    /* كروت البيانات المتناسقة مع الخلفية البيضاء */
-    .info-status-card {
-      background: #f8fafc !important;
-      border: 1px solid #e2e8f0 !important;
-      border-radius: 20px !important;
-      padding: 18px !important;
-      width: 100% !important;
-      box-sizing: border-box !important;
-      text-align: center !important;
-      margin-bottom: 15px !important;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    /* الكروت */
+    .info-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 20px;
+      padding: 16px;
+      width: 100%;
+      box-sizing: border-box;
+      margin-bottom: 14px;
     }
 
-    /* كارت تحدي السبت الملون والمبهج */
     .weekly-quiz-card {
-      background: linear-gradient(135deg, #ec4899, #8b5cf6, #3b82f6) !important;
-      border: none !important;
-      border-radius: 20px !important;
-      padding: 20px !important;
-      color: white !important;
-      text-align: center !important;
-      width: 100% !important;
-      box-sizing: border-box !important;
+      background: linear-gradient(135deg, #ec4899, #8b5cf6, #3b82f6);
+      border-radius: 20px;
+      padding: 18px;
+      color: white;
+      text-align: center;
+      width: 100%;
+      box-sizing: border-box;
       cursor: pointer;
-      box-shadow: 0 8px 20px rgba(139, 92, 246, 0.25) !important;
-      margin-bottom: 15px !important;
+      margin-bottom: 14px;
+      border: none;
     }
-    .weekly-quiz-card h2 { font-family: 'Changa', sans-serif; font-size: 18px; margin: 0 0 4px 0; color: white; }
-    .weekly-quiz-card p { font-size: 12px; margin: 0; opacity: 0.9; color: white; }
 
-    /* صندوق الـ QR المتسنتر والمحمي داخل كارت */
+    .weekly-quiz-card h2 {
+      font-family: 'Changa', sans-serif;
+      font-size: 17px;
+      margin: 0 0 4px 0;
+      color: white;
+    }
+
+    .weekly-quiz-card p {
+      font-size: 12px;
+      margin: 0;
+      opacity: 0.9;
+      color: white;
+    }
+
     .qr-display-box {
-      background: white !important;
-      padding: 12px !important;
-      border-radius: 16px !important;
-      display: inline-block !important;
-      margin-top: 10px !important;
+      background: white;
+      padding: 12px;
+      border-radius: 16px;
+      display: inline-block;
+      margin-top: 10px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.06);
       border: 1px solid #f1f5f9;
     }
@@ -170,9 +179,13 @@
 </head>
 <body>
 
+  <!-- الـ Overlay (الخلفية الداكنة ورا القائمة) -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- القائمة الجانبية (بتطلع من اليمين صح) -->
   <div id="sidebar" class="sidebar">
     <div class="sidebar-header">
-      <span class="sidebar-title">القائمة 📋</span>
+      <span class="sidebar-title">📋 القائمة</span>
       <button id="closeBtn" class="close-btn">×</button>
     </div>
     <div class="sidebar-menu">
@@ -180,50 +193,58 @@
       <a href="quiz.html" class="menu-item">🎯 تحدي السبت الأسبوعي</a>
       <a href="rewards.html" class="menu-item">🚀 مركز الجوائز والعجلات</a>
       <a href="leaderboard.html" class="menu-item">🏆 لوحة الصدارة</a>
-      <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 15px 0;">
+      <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 10px 0;">
       <button id="logoutBtn" class="logout-btn">🚪 تسجيل الخروج</button>
     </div>
   </div>
 
+  <!-- المحتوى الرئيسي -->
   <div class="main-container">
     <form onsubmit="return false;">
-      
+
+      <!-- البار العلوي: المنيو يمين، اللوجو شمال -->
       <div class="custom-top-bar">
         <button id="menuBtn" class="custom-menu-btn">☰</button>
         <img src="logo.png" alt="اجازتي في كنيستي" class="custom-mini-logo">
       </div>
 
-      <div class="avatar-container">
-        <img id="userAvatar" src="https://via.placeholder.com/150" alt="Avatar" class="user-profile-avatar">
-        <label for="avatarUpload" class="avatar-edit-badge">📸</label>
-        <input type="file" id="avatarUpload" accept="image/*">
+      <!-- الأفاتار والاسم -->
+      <div style="text-align:center;">
+        <div class="avatar-container">
+          <img id="userAvatar" src="https://via.placeholder.com/150/e2e8f0/94a3b8?text=+👤" alt="Avatar" class="user-profile-avatar">
+          <label for="avatarUpload" class="avatar-edit-badge">📸</label>
+          <input type="file" id="avatarUpload" accept="image/*">
+        </div>
+        <h1 id="welcomeName" class="welcome-title">يا بطل! ✨</h1>
+        <p class="code-subtitle">كودك الشخصي: <span id="userCode" style="color:#8b5cf6; font-weight:bold;">---</span></p>
       </div>
 
-      <h1 id="welcomeName" class="welcome-title">يا بطل! ✨</h1>
-      <p class="code-subtitle">كودك الشخصي: <span id="userCode" style="color: #8b5cf6; font-weight: bold;">---</span></p>
-
-      <div class="info-status-card">
-        <p style="color:#16a34a; font-size: 18px; margin: 0 0 8px 0; font-weight: bold;">
-          🎯 رصيد نقاطك الحالي: <b id="userPoints">0</b> نقطة
+      <!-- كارت النقاط والمواظبة -->
+      <div class="info-card">
+        <p style="color:#16a34a; font-size:17px; margin:0 0 8px 0; font-weight:bold; text-align:center;">
+          🎯 رصيد نقاطك: <b id="userPoints">0</b> نقطة
         </p>
-        <p style="color:#475569; font-size: 14px; margin: 0; font-weight: 600;">
-          📊 أيام الالتزام والمواظبة: <b id="attendanceCounter" style="color:#8b5cf6; font-size: 16px;">0 / 18 يوم</b>
+        <p style="color:#475569; font-size:14px; margin:0; font-weight:600; text-align:center;">
+          📊 أيام المواظبة: <b id="attendanceCounter" style="color:#8b5cf6;">0 / 18 يوم</b>
         </p>
       </div>
 
+      <!-- كارت تحدي السبت -->
       <div class="weekly-quiz-card" onclick="window.location.href='quiz.html'">
         <h2>🎯 تحدي السبت الأسبوعي لايف!</h2>
-        <p>اضغط هنا وادخل حل أسئلة الأسبوع واكسب نقط فوراً 🚀</p>
+        <p>اضغط هنا وحل أسئلة الأسبوع واكسب نقط فوراً 🚀</p>
       </div>
 
-      <div class="info-status-card">
-        <p style="margin: 0 0 10px 0; font-size: 13px; color:#64748b;">ورّي الكود ده للخادم في الاجتماع عشان تسجل حضورك وتربح النقط! 🥳</p>
+      <!-- كارت الـ QR -->
+      <div class="info-card" style="text-align:center;">
+        <p style="margin:0 0 8px 0; font-size:13px; color:#64748b;">ورّي الكود ده للخادم في الاجتماع عشان تسجل حضورك 🥳</p>
         <div id="qrcode" class="qr-display-box"></div>
       </div>
 
     </form>
   </div>
 
+  <!-- شريط التنقل السفلي -->
   <div class="bottom-nav">
     <a href="home.html" class="nav-item active">
       <span class="nav-icon">🏠</span>
@@ -244,7 +265,6 @@
   </div>
 
   <script>
-    // إعدادات قاعدة البيانات فايربيز
     const firebaseConfig = {
       apiKey: "AIzaSyBTlBr41Tl-GxnOwOsZvPkg26iQs2SGW3A",
       authDomain: "agazty-feknesty.firebaseapp.com",
@@ -259,29 +279,24 @@
     const student = JSON.parse(localStorage.getItem("loggedInStudent"));
 
     if (!student || !student.code) {
-      alert("الرجاء تسجيل الدخول أولاً! ❌");
       window.location.href = "index.html";
     } else {
-      // توليد كود الـ QR بدقة وسنترة كاملة
       new QRCode(document.getElementById("qrcode"), {
         text: student.code,
         width: 150,
         height: 150,
-        colorDark : "#0f172a",
-        colorLight : "#ffffff",
-        correctLevel : QRCode.CorrectLevel.H
+        colorDark: "#0f172a",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H
       });
 
-      // السحب والربط اللحظي المباشر دون عمل ريفريش للصفحة
       db.collection("students").doc(student.code).onSnapshot(function(doc) {
         if (doc.exists) {
           const freshData = doc.data();
-          document.getElementById("welcomeName").textContent = `يا بطل، ${freshData.name || 'مخدوم'}! ✨`;
+          document.getElementById("welcomeName").textContent = "يا بطل، " + (freshData.name || "مخدوم") + "! ✨";
           document.getElementById("userCode").textContent = student.code;
           document.getElementById("userPoints").textContent = freshData.points || 0;
-          
-          let attendanceCount = freshData.attendanceCount || 0;
-          document.getElementById("attendanceCounter").textContent = `${attendanceCount} / 18 يوم`;
+          document.getElementById("attendanceCounter").textContent = (freshData.attendanceCount || 0) + " / 18 يوم";
 
           if (freshData.avatar) {
             document.getElementById("userAvatar").src = freshData.avatar;
@@ -290,26 +305,31 @@
       });
     }
 
-    // تشغيل فتح وقفل السايد بار بسلاسة وحماية كاملة
+    // القائمة الجانبية
     const sidebar = document.getElementById("sidebar");
+    const overlay = document.getElementById("sidebarOverlay");
     const menuBtn = document.getElementById("menuBtn");
     const closeBtn = document.getElementById("closeBtn");
 
+    function openSidebar() {
+      sidebar.classList.add("open");
+      overlay.classList.add("show");
+    }
+
+    function closeSidebar() {
+      sidebar.classList.remove("open");
+      overlay.classList.remove("show");
+    }
+
     menuBtn.addEventListener("click", function(e) {
       e.stopPropagation();
-      sidebar.classList.add("open");
-    });
-    closeBtn.addEventListener("click", function(e) {
-      e.stopPropagation();
-      sidebar.classList.remove("open");
-    });
-    document.addEventListener("click", function(event) {
-      if (!sidebar.contains(event.target) && !menuBtn.contains(event.target)) {
-        sidebar.classList.remove("open");
-      }
+      openSidebar();
     });
 
-    // رفع صورة الأفاتار وحفظها لايف في السيستم
+    closeBtn.addEventListener("click", closeSidebar);
+    overlay.addEventListener("click", closeSidebar);
+
+    // رفع صورة الأفاتار
     document.getElementById("avatarUpload").addEventListener("change", function(e) {
       const file = e.target.files[0];
       if (!file) return;
@@ -325,11 +345,12 @@
       reader.readAsDataURL(file);
     });
 
-    // كود تسجيل الخروج
+    // تسجيل الخروج
     document.getElementById("logoutBtn").addEventListener("click", function() {
       localStorage.removeItem("loggedInStudent");
       window.location.href = "index.html";
     });
   </script>
+
 </body>
 </html>
