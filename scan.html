@@ -24,7 +24,6 @@
         }
         .container { width: 100%; max-width: 360px; }
         
-        /* زرار تعديل لوحة تحكم الأسئلة النيون كما بالصورة */
         .admin-nav-btn {
             background: linear-gradient(135deg, #00f2fe, #4facfe);
             color: #020617;
@@ -68,7 +67,6 @@
             border: 1px solid rgba(255,255,255,0.1);
         }
 
-        /* 📋 ستايل خانة بيانات المخدومين المسجلين الجداد */
         .students-list-card {
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(15px);
@@ -130,7 +128,6 @@
     </div>
 
     <script>
-        // ربط السيرفر وقاعدة البيانات الموحدة
         const firebaseConfig = {
             apiKey: "AIzaSyBTlBr41Tl-GxnOwOsZvPkg26iQs2SGW3A",
             authDomain: "agazty-feknesty.firebaseapp.com",
@@ -144,33 +141,50 @@
 
         let isScanning = true;
 
-        // 🔒 كود سحب الحضور والتأمين الأصلي والمقفل ضد خدع الـ QR
+        // 🔒 كود سحب الحضور المحدث والمقفل ضد التكرار اليومي وضد خدع الـ QR
         function onScanSuccess(decodedText, decodedResult) {
             if (!isScanning) return;
             isScanning = false; 
 
             const resultContainer = document.getElementById('result');
-            resultContainer.innerHTML = `<div style="text-align:center;">⏳ جاري فحص وتأمين الكود...</div>`;
+            resultContainer.innerHTML = `<div style="text-align:center;">⏳ جاري فحص الحضور والتأمين...</div>`;
             
+            const todayStr = new Date().toLocaleDateString('en-US'); // تاريخ اليوم الحالي بالظبط
+
             db.collection("students").doc(decodedText).get().then(doc => {
                 if(doc.exists) {
                     const student = doc.data();
-                    let currentPoints = student.points || 0;
-                    let newPoints = currentPoints + 10; 
-
-                    db.collection("students").doc(decodedText).update({
-                        points: newPoints
-                    }).then(() => {
+                    
+                    // 🚨 الفحص السحري: لو مسجل حضور النهاردة ارفض التكرار فوراً
+                    if (student.lastAttendanceDate === todayStr) {
                         resultContainer.innerHTML = `
-                            <div style="text-align:right; border-right: 3px solid #2bb673; padding-right:8px;">
-                                <p style="margin:0; font-weight:bold; color:#2bb673; font-size:15px;">✅ تم الحضور: ${student.name}</p>
-                                <p style="margin:4px 0 0 0; font-size:12px; color:#cbd5e1;">الرصيد الجديد: <b>${newPoints} نقطة</b></p>
+                            <div style="text-align:right; border-right: 3px solid #f43f5e; padding-right:8px;">
+                                <p style="margin:0; font-weight:bold; color:#f43f5e; font-size:15px;">⚠️ مسجل حضور بالفعل اليوم!</p>
+                                <p style="margin:4px 0 0 0; font-size:13px; color:white;">المخدوم: <b>${student.name}</b> مسجل مسبقاً.</p>
                             </div>
                         `;
-                    });
+                    } else {
+                        // لو أول مرة يسكن النهاردة ➡️ زود النقط واحفظ تاريخ الحضور
+                        let currentPoints = student.points || 0;
+                        let newPoints = currentPoints + 10; 
+
+                        db.collection("students").doc(decodedText).update({
+                            points: newPoints,
+                            lastAttendanceDate: todayStr // حفظ تاريخ حضور اليوم لمنع التكرار
+                        }).then(() => {
+                            resultContainer.innerHTML = `
+                                <div style="text-align:right; border-right: 3px solid #2bb673; padding-right:8px;">
+                                    <p style="margin:0; font-weight:bold; color:#2bb673; font-size:15px;">✅ تم تسجيل الحضور بنجاح</p>
+                                    <p style="margin:4px 0 0 0; font-size:13px; color:#cbd5e1;">المخدوم: <b>${student.name}</b></p>
+                                    <p style="margin:2px 0 0 0; font-size:12px; color:#00f2fe;">الرصيد الجديد: <b>${newPoints} نقطة</b> (+10)</p>
+                                </div>
+                            `;
+                        });
+                    }
                 } else {
                     resultContainer.innerHTML = `<div style="text-align:center; color:#f43f5e; font-weight:bold;">❌ كود تالف أو غير مسجل بالسيستم!</div>`;
                 }
+                // إعادة تفعيل السكنر بعد 3 ثواني للكارت اللي بعده
                 setTimeout(() => { isScanning = true; }, 3000);
             }).catch(err => {
                 resultContainer.innerHTML = `<div style="text-align:center; color:#f43f5e;">❌ عطل بالسيرفر: ${err.message}</div>`;
@@ -178,7 +192,6 @@
             });
         }
 
-        // 🔄 دالة جلب وعرض الحسابات الجديدة لايف فوراً
         function listenToNewStudents() {
             db.collection("students").onSnapshot(snapshot => {
                 const container = document.getElementById("studentsContainer");
@@ -194,7 +207,7 @@
 
                 snapshot.forEach(doc => {
                     const data = doc.data();
-                    const studentId = doc.id; // الكود الشخصي
+                    const studentId = doc.id;
                     
                     container.innerHTML += `
                         <div class="student-item">
@@ -210,7 +223,6 @@
             });
         }
 
-        // تشغيل السكنر وقائمة البيانات لايف
         let html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 15, qrbox: 230 });
         html5QrcodeScanner.render(onScanSuccess);
         listenToNewStudents();
