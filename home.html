@@ -18,178 +18,145 @@
       border: none;
       border-radius: 24px;
       padding: 20px;
-      margin-bottom: 15px;
+      color: white;
+      text-align: center;
+      margin-top: 20px;
       cursor: pointer;
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      box-sizing: border-box;
       box-shadow: 0 10px 25px rgba(139, 92, 246, 0.4);
-      transition: all 0.3s ease;
-      animation: gradientShift 6s ease infinite;
-      text-align: right;
+      transition: transform 0.2s, box-shadow 0.2s;
+      animation: gradientBG 5s ease infinite;
     }
-
-    /* كارت مسابقة السبت الجديد المميز 🎯 */
-    .quiz-launch-card {
-      background: linear-gradient(135deg, #00f2fe, #4facfe, #000000);
-      background-size: 200% 200%;
-      border: none;
-      border-radius: 24px;
-      padding: 20px;
-      margin-bottom: 25px;
-      cursor: pointer;
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      box-sizing: border-box;
-      box-shadow: 0 10px 25px rgba(79, 172, 254, 0.4);
-      transition: all 0.3s ease;
-      animation: gradientShift 4s ease infinite, pulseCard 2s infinite ease-in-out;
-      text-align: right;
+    .adventure-launch-card:active {
+      transform: scale(0.98);
     }
-
-    .adventure-launch-card:active, .quiz-launch-card:active {
-      transform: scale(0.97);
-    }
-
-    .card-info-text h3 {
-      font-family: 'Changa', sans-serif;
-      font-size: 18px;
-      color: #ffffff;
-      margin: 0 0 5px 0;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    }
-
-    .card-info-text p {
-      font-size: 12px;
-      color: #f3f4f6;
-      margin: 0;
-      font-family: 'Cairo', sans-serif;
-    }
-
-    .card-graphic-icon {
-      font-size: 35px;
-      background: rgba(255, 255, 255, 0.2);
-      width: 60px;
-      height: 60px;
-      border-radius: 18px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      animation: floatIcon 3s infinite ease-in-out;
-    }
-
-    @keyframes gradientShift {
+    @keyframes gradientBG {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
-
-    @keyframes pulseCard {
-      0% { transform: scale(1); box-shadow: 0 10px 25px rgba(79, 172, 254, 0.4); }
-      50% { transform: scale(1.02); box-shadow: 0 15px 35px rgba(0, 242, 254, 0.6); }
-      100% { transform: scale(1); box-shadow: 0 10px 25px rgba(79, 172, 254, 0.4); }
+    .adventure-launch-card h2 {
+      font-family: 'Changa', sans-serif;
+      font-size: 20px;
+      margin: 0 0 5px 0;
+    }
+    .adventure-launch-card p {
+      font-size: 13px;
+      margin: 0;
+      opacity: 0.9;
     }
 
-    @keyframes floatIcon {
-      0% { transform: translateY(0) rotate(0deg); }
-      50% { transform: translateY(-5px) rotate(6deg); }
-      100% { transform: translateY(0) rotate(0deg); }
+    /* الستايلايز الجديد للكارت العائم للأفاتار */
+    .avatar-wrapper {
+      position: relative;
+      display: inline-block;
+      width: 90px;
+      height: 90px;
+      margin: 0 auto 15px auto;
     }
+    .profile-avatar {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #00f2fe;
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.5);
+      background: #1e293b;
+    }
+    .avatar-edit-label {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      background: #00f2fe;
+      color: #020617;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      border: 2px solid #0f172a;
+      transition: transform 0.2s;
+    }
+    .avatar-edit-label:active { transform: scale(0.85); }
+    #avatarUpload { display: none; }
   </style>
 </head>
 <body>
 
-  <div style="max-width: 340px; margin: 0 auto; position: relative;">
-    <form style="position: relative;" onsubmit="event.preventDefault();">
-      <div id="menuBtn" style="position: absolute; left: 20px; top: 20px; font-size: 26px; cursor: pointer; color: #15213E; z-index: 10;">☰</div>
-
-      <img src="logo.png" alt="اجازتي في كنيستي" class="logo">
-
-      <div style="text-align: center; margin-bottom: 10px;">
-        <img id="userHomeAvatar" src="" style="width: 75px; height: 75px; border-radius: 50%; object-fit: cover; border: 3px solid #F4B731; display: none; margin: 0 auto 10px;">
-        <h1 id="welcomeMessage">أهلاً بيك! 👋</h1>
-      </div>
-      
-      <p class="sub-greeting">يلا نشوف رحلتك لحد دلوقتي ✨</p>
-
-      <div class="stats">
-        <div class="stat-box pink">
-          <span class="stat-icon">⭐</span>
-          <span class="stat-number" id="pointsValue">0</span>
-          <span class="stat-label">نقطة</span>
-        </div>
-        <div class="streak-box">
-          <span class="streak-flame">🔥</span>
-          <span class="stat-number" id="streakValue">0</span>
-          <span class="stat-label">يوم التزام</span>
-        </div>
-      </div>
-
-      <button onclick="window.location.href='leaderboard.html'" style="background-color: #36AEE0; color: white; border: none; border-radius: 14px; padding: 12px; font-size: 14px; font-weight: bold; cursor: pointer; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; box-shadow: 0 4px 12px rgba(54, 174, 224, 0.2); font-family: 'Cairo';">
-        🏆 عرض لوحة الصدارة والترتيب لايف
-      </button>
-
-      <div class="adventure-launch-card" onclick="window.location.href='rewards.html'">
-        <div class="card-info-text">
-          <h3>مركز الجوائز والمغامرات</h3>
-          <p>عجلة حظ، أوسمة، وبطل الأسبوع 🎡🎖️</p>
-        </div>
-        <div class="card-graphic-icon">🚀</div>
-      </div>
-
-      <div class="quiz-launch-card" onclick="window.location.href='quiz.html'">
-        <div class="card-info-text">
-          <h3>تحدي السبت الأسبوعي</h3>
-          <p>5 أسئلة بـ 25 نقطة.. ورّينا شطارتك! 🧠🎯</p>
-        </div>
-        <div class="card-graphic-icon">🔥</div>
-      </div>
-
-      <p class="qr-title">📱 كارت الحضور بتاعك</p>
-      <div id="qrcode" style="display: flex; justify-content: center; margin-top: 10px; padding: 10px; background: white; border-radius: 12px;"></div>
-    </form>
-  </div>
-
   <div id="sidebar" class="sidebar">
     <div class="sidebar-header">
-      <h2>ملفي الشخصي 👤</h2>
-      <span id="closeBtn" style="font-size: 14px; cursor: pointer; font-weight: bold; color: #F2618C; background: #FCE8EE; padding: 4px 10px; border-radius: 8px;">إغلاق ❌</span>
+      <span class="sidebar-title">القائمة 📋</span>
+      <button id="closeBtn" class="close-btn">×</button>
     </div>
-    
-    <div class="sidebar-content">
-      <div style="text-align: center; position: relative; margin-bottom: 20px;">
-        <img id="profileAvatar" src="https://via.placeholder.com/100" style="width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 4px solid #36AEE0; margin: 0 auto;">
-        <label for="avatarUpload" style="display: block; color: #36AEE0; font-size: 13px; font-weight: bold; cursor: pointer; margin-top: 8px;">📷 تغيير الصورة الشخصية</label>
-        <input type="file" id="avatarUpload" accept="image/*" style="display: none;">
-      </div>
-
-      <div class="info-group">
-        <p><strong>الاسم:</strong> <span id="infoName">--</span></p>
-        <p><strong>الكود:</strong> <span id="infoCode" style="color:#36AEE0; font-weight: bold;">--</span></p>
-        <p><strong>الموبايل:</strong> <span id="infoPhone">--</span></p>
-        <p><strong>ولي الأمر:</strong> <span id="infoParent">--</span></p>
-      </div>
-
-      <button id="logoutBtn" style="background-color: #F2618C; color: white; border: none; border-radius: 12px; width: 100%; padding: 10px; font-size: 13px; font-weight: bold; cursor: pointer; margin-top: 25px;">تسجيل الخروج 🚪</button>
+    <div class="sidebar-menu">
+      <a href="home.html" class="menu-item active">🏠 الرئيسية</a>
+      <a href="quiz.html" class="menu-item">🎯 تحدي السبت الأسبوعي</a>
+      <a href="rewards.html" class="menu-item">🚀 مركز الجوائز والعجلات</a>
+      <a href="leaderboard.html" class="menu-item">🏆 لوحة الصدارة</a>
+      <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 15px 0;">
+      <button id="logoutBtn" class="logout-btn">🚪 تسجيل الخروج</button>
     </div>
   </div>
+
+  <form onsubmit="return false;">
+    <div class="top-bar">
+      <button id="menuBtn" class="menu-btn">☰</button>
+      <img src="logo.png" alt="اجازتي في كنيستي" class="logo-mini">
+    </div>
+
+    <div class="avatar-wrapper">
+      <img id="userAvatar" src="https://via.placeholder.com/150" alt="Avatar" class="profile-avatar">
+      <label for="avatarUpload" class="avatar-edit-label">📸</label>
+      <input type="file" id="avatarUpload" accept="image/*">
+    </div>
+
+    <h1 id="welcomeName">يا بطل! ✨</h1>
+    <p class="sub-greeting">كودك الشخصي: <span id="userCode" style="color: #00f2fe; font-weight: bold;">---</span></p>
+
+    <div class="info-card">
+      <p style="color:#2bb673; font-size: 18px; margin-bottom: 12px;">
+        🎯 رصيد نقاطك الحالي: <b id="userPoints">0</b> نقطة
+      </p>
+      <p style="color:#cbd5e1; font-size: 14px; margin: 0;">
+        📊 أيام الالتزام والمواظبة: <b id="attendanceCounter" style="color:#00f2fe;">0 / 18 يوم</b>
+      </p>
+    </div>
+
+    <div class="adventure-launch-card" onclick="window.location.href='quiz.html'">
+      <h2>🎯 تحدي السبت الأسبوعي لايف!</h2>
+      <p>اضغط هنا وادخل حل أسئلة الأسبوع واكسب نقط فوراً 🚀</p>
+    </div>
+
+    <div class="qr-container">
+      <p style="margin-top:0; font-size:13px; color:#cbd5e1;">ورّي الكود ده للخادم في الاجتماع عشان تسجل حضورك وتربح النقط! 🥳</p>
+      <div id="qrcode"></div>
+    </div>
+  </form>
 
   <div class="bottom-nav">
     <a href="home.html" class="nav-item active">
       <span class="nav-icon">🏠</span>
-      <span class="nav-label">الرئيسية</span>
+      <span class="nav-text">الرئيسية</span>
+    </a>
+    <a href="quiz.html" class="nav-item">
+      <span class="nav-icon">🎯</span>
+      <span class="nav-text">المسابقة</span>
+    </a>
+    <a href="rewards.html" class="nav-item">
+      <span class="nav-icon">🚀</span>
+      <span class="nav-text">الجوائز</span>
     </a>
     <a href="leaderboard.html" class="nav-item">
       <span class="nav-icon">🏆</span>
-      <span class="nav-label">الصدارة</span>
+      <span class="nav-text">الصدارة</span>
     </a>
   </div>
 
   <script>
+    // إعدادات الفايربيز الموحدة والثابتة منعا لأي تضارب
     const firebaseConfig = {
       apiKey: "AIzaSyBTlBr41Tl-GxnOwOsZvPkg26iQs2SGW3A",
       authDomain: "agazty-feknesty.firebaseapp.com",
@@ -201,93 +168,94 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    const studentData = localStorage.getItem("loggedInStudent");
+    // جلب بيانات الطالب المسجل من اللوكال ستورج
+    const student = JSON.parse(localStorage.getItem("loggedInStudent"));
 
-    if (!studentData) {
+    if (!student || !student.code) {
+      alert("الرجاء تسجيل الدخول أولاً! ❌");
       window.location.href = "index.html";
     } else {
-      let student = JSON.parse(studentData);
+      // توليد كود الـ QR للولد بناءً على كوده الشخصي
+      new QRCode(document.getElementById("qrcode"), {
+        text: student.code,
+        width: 160,
+        height: 160,
+        colorDark : "#020617",
+        colorLight : "#ffffff",
+        correctLevel : QRCode.CorrectLevel.H
+      });
 
-      if (student.code) {
-        new QRCode(document.getElementById("qrcode"), {
-          text: student.code,
-          width: 160,
-          height: 160,
-          colorDark : "#15213E",
-          colorLight : "#ffffff",
-          correctLevel : QRCode.CorrectLevel.H
-        });
-      }
-
+      // المراقبة اللحظية (Live Snapshot) لتحديث البيانات والنقاط والالتزام فوراً بدون ريفريش
       db.collection("students").doc(student.code).onSnapshot(function(doc) {
         if (doc.exists) {
-          const liveData = doc.data();
+          const freshData = doc.data();
+          
+          // تحديث الواجهة بالداتا الجديدة لايف
+          document.getElementById("welcomeName").textContent = `يا بطل، ${freshData.name || 'مخدوم'}! ✨`;
+          document.getElementById("userCode").textContent = student.code;
+          document.getElementById("userPoints").textContent = freshData.points || 0;
+          
+          // 🔥 هنا السحر: جلب العداد المحدث من السكنر وعرضه من 18 يوم أوتوماتيك
+          let attendanceCount = freshData.attendanceCount || 0;
+          document.getElementById("attendanceCounter").textContent = `${attendanceCount} / 18 يوم`;
 
-          document.getElementById("welcomeMessage").textContent = "أهلاً بيك يا " + (liveData.name || "بطل") + " 👋";
-          document.getElementById("pointsValue").textContent = liveData.points !== undefined ? liveData.points : 0;
-          document.getElementById("streakValue").textContent = liveData.streak !== undefined ? liveData.streak : 0;
-
-          if (liveData.avatar) {
-            document.getElementById("userHomeAvatar").src = liveData.avatar;
-            document.getElementById("userHomeAvatar").style.display = "block";
-            document.getElementById("profileAvatar").src = liveData.avatar;
-          } else {
-            document.getElementById("userHomeAvatar").style.display = "none";
-            document.getElementById("profileAvatar").src = "https://via.placeholder.com/100";
+          // عرض صورة الأفاتار لو الولد مغيرها
+          if (freshData.avatar) {
+            document.getElementById("userAvatar").src = freshData.avatar;
           }
-
-          document.getElementById("infoName").textContent = liveData.name || "--";
-          document.getElementById("infoCode").textContent = liveData.code || "--";
-          document.getElementById("infoPhone").textContent = liveData.phone || "غير مسجل";
-          document.getElementById("infoParent").textContent = liveData.parentPhone || "غير مسجل";
-
-          localStorage.setItem("loggedInStudent", JSON.stringify(liveData));
         }
-      });
-
-      const sidebar = document.getElementById("sidebar");
-      const menuBtn = document.getElementById("menuBtn");
-      const closeBtn = document.getElementById("closeBtn");
-
-      menuBtn.addEventListener("click", function(e) {
-        e.stopPropagation();
-        sidebar.classList.add("open");
-      });
-
-      closeBtn.addEventListener("click", function(e) {
-        e.stopPropagation();
-        sidebar.classList.remove("open");
-      });
-
-      document.addEventListener("click", function(event) {
-        const isClickInsideSidebar = sidebar.contains(event.target);
-        const isClickOnMenuBtn = menuBtn.contains(event.target);
-
-        if (!isClickInsideSidebar && !isClickOnMenuBtn) {
-          sidebar.classList.remove("open");
-        }
-      });
-
-      document.getElementById("avatarUpload").addEventListener("change", function(e) {
-        const file = e.target.files[0];
-        if (!file) return;
-
-        const reader = new FileReader();
-        reader.onloadend = function() {
-          const base64Image = reader.result;
-
-          db.collection("students").doc(student.code).update({
-            avatar: base64Image
-          }).catch(err => alert("عطل في حفظ الصورة ❌"));
-        }
-        reader.readAsDataURL(file);
-      });
-
-      document.getElementById("logoutBtn").addEventListener("click", function() {
-        localStorage.removeItem("loggedInStudent");
-        window.location.href = "index.html";
+      }, function(error) {
+        console.error("خطأ في المراقبة اللحظية للبيانات: ", error);
       });
     }
+
+    // تشغيل نظام فتح وإغلاق القائمة الجانبية (Sidebar)
+    const sidebar = document.getElementById("sidebar");
+    const menuBtn = document.getElementById("menuBtn");
+    const closeBtn = document.getElementById("closeBtn");
+
+    menuBtn.addEventListener("click", function(e) {
+      e.stopPropagation();
+      sidebar.classList.add("open");
+    });
+
+    closeBtn.addEventListener("click", function(e) {
+      e.stopPropagation();
+      sidebar.classList.remove("open");
+    });
+
+    document.addEventListener("click", function(event) {
+      const isClickInsideSidebar = sidebar.contains(event.target);
+      const isClickOnMenuBtn = menuBtn.contains(event.target);
+
+      if (!isClickInsideSidebar && !isClickOnMenuBtn) {
+        sidebar.classList.remove("open");
+      }
+    });
+
+    // كود رفع وتغيير صورة الأفاتار الشخصية وحفظها في السيرفر لايف
+    document.getElementById("avatarUpload").addEventListener("change", function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onloadend = function() {
+        const base64Image = reader.result;
+
+        db.collection("students").doc(student.code).update({
+          avatar: base64Image
+        }).then(() => {
+          document.getElementById("userAvatar").src = base64Image;
+        }).catch(err => alert("عطل في حفظ الصورة ❌"));
+      }
+      reader.readAsDataURL(file);
+    });
+
+    // تسجيل الخروج وتنظيف الدفتر
+    document.getElementById("logoutBtn").addEventListener("click", function() {
+      localStorage.removeItem("loggedInStudent");
+      window.location.href = "index.html";
+    });
   </script>
 </body>
 </html>
