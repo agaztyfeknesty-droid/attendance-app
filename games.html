@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ركن القراءة والأنشطة 🎮</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Changa:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      background-color: #F3F4F6;
+      font-family: 'Cairo', sans-serif;
+    }
+    /* ستايل الكارت العصري الجديد مائل الحواف والملون */
+    .dynamic-card {
+      background: #ffffff;
+      padding: 24px;
+      border-radius: 28px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+      margin-top: 25px;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(10px);
+    }
+    /* ستايل وقور ومريح مخصص لنص السفر المبارك */
+    .spiritual-box {
+      background: #F9FAFB;
+      border: 2px solid #E5E7EB;
+      border-right: 6px solid #8B5CF6;
+      padding: 18px;
+      border-radius: 20px;
+      text-align: right;
+      font-size: 15px;
+      line-height: 1.9;
+      color: #1F2937;
+      margin-bottom: 22px;
+      max-height: 280px;
+      overflow-y: auto;
+      font-weight: 600;
+    }
+    /* دروب داون منسق وحديث */
+    .modern-select {
+      width: 100%;
+      padding: 12px;
+      margin-top: 8px;
+      border-radius: 14px;
+      border: 2px solid #E5E7EB;
+      font-family: 'Cairo';
+      font-size: 14px;
+      color: #4B5563;
+      background-color: #FAFAFA;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+    .modern-select:focus {
+      border-color: #8B5CF6;
+    }
+    /* زرار حركي وتفاعلي ه ه */
+    .gradient-btn {
+      background: linear-gradient(135deg, #8B5CF6, #6D28D9);
+      color: white;
+      border: none;
+      border-radius: 16px;
+      padding: 14px;
+      font-size: 15px;
+      font-weight: bold;
+      width: 100%;
+      cursor: pointer;
+      margin-top: 15px;
+      box-shadow: 0 4px 12px rgba(139, 92, 246, 0.25);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .gradient-btn:active {
+      transform: scale(0.98);
+    }
+    /* أزرار الألعاب الملونة الجذابة */
+    .game-link-btn {
+      color: white;
+      border: none;
+      border-radius: 16px;
+      padding: 15px;
+      font-size: 14px;
+      font-weight: bold;
+      width: 100%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      text-decoration: none;
+      margin-bottom: 14px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      transition: transform 0.2s;
+    }
+    .game-link-btn:active {
+      transform: scale(0.98);
+    }
+  </style>
+</head>
+<body>
+
+  <div style="max-width: 340px; margin: 0 auto; padding: 10px;">
+    
+    <div class="dynamic-card" id="readingSection">
+      <div style="background: rgba(139, 92, 246, 0.1); width: 65px; height: 65px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
+        <span style="font-size: 32px;">📖</span>
+      </div>
+      <h1 style="font-family:'Changa'; font-size: 19px; color:#111827; margin-bottom: 8px;">مطالعة مزمور اليوم أولاً</h1>
+      <p style="font-size: 12px; color:#6B7280; margin-bottom: 20px;">اقرأ بتمهل وتركيز لتفتح لك الأنشطة التفاعلية تلقائياً ✨</p>
+      
+      <div class="spiritual-box">
+        <strong>اَلْمَزْمُورُ الأَوَّلُ</strong><br><br>
+        طُوبَى لِلرَّجُلِ الَّذِي لَمْ يَسْلُكْ فِي مَشُورَةِ الأَشْرَارِ، وَفِي طَرِيقِ الْخُطَاةِ لَمْ يَقِفْ، وَفِي مَجْلِسِ الْمُسْتَهْزِئِينَ لَمْ يَجْلِسْ. <br>
+        بَلْ فِي نَامُوسِ الرَّبِّ مَسَرَّتُهُ، وَفِي نَامُوسِهِ يَلْهَجُ نَهَاراً وَلَيْلاً. <br>
+        فَيَكُونُ كَشَجَرَةٍ مَغْرُوسَةٍ عِنْدَ مَجَارِي الْمِيَاهِ، الَّتِي تُعْطِي ثَمَرَهَا فِي أَوَانِهِ، وَوَرَقُهَا لاَ يَذْبُلُ. وَكُلُّ مَا يَصْنَعُهُ يَنْجَحُ.
+      </div>
+
+      <div style="text-align: right; margin-bottom: 18px;">
+        <label style="font-weight: 700; font-size: 13px; color: #374151;">سؤال تأملي: الشجرة المغروسة عند مجاري المياه تعطي ثمرها في...؟</label>
+        <select id="quizAnswer" class="modern-select">
+          <option value="wrong1">توقيت عشوائي</option>
+          <option value="correct">أوانه المحدود</option>
+          <option value="wrong2">فصل الصيف فقط</option>
+        </select>
+      </div>
+
+      <button class="gradient-btn" onclick="unlockGames()">تأكيد القراءة والانطلاق للأنشطة 🎮</button>
+    </div>
+
+    <div class="dynamic-card" id="gamesSection" style="display: none; animation: fadeIn 0.5s ease-in-out;">
+      <div style="background: rgba(16, 185, 129, 0.1); width: 65px; height: 65px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
+        <span style="font-size: 32px;">🎉</span>
+      </div>
+      <h1 style="font-family:'Changa'; font-size: 19px; color:#10B981; margin-bottom: 6px;">أحسنت يا بطل! فتحت الأنشطة</h1>
+      <p style="font-size: 12px; color:#6B7280; margin-bottom: 25px;">استمتع بالأنشطة التفاعلية الروحية الحين</p>
+
+      <a href="https://wordwall.net/play/12345/678/910" target="_blank" class="game-link-btn" style="background: linear-gradient(135deg, #EC4899, #F43F5E);">
+        🚀 نشاط تفاعلي: مسابقة استخراج الآيات
+      </a>
+
+      <a href="https://wordwall.net/play/9876/543/210" target="_blank" class="game-link-btn" style="background: linear-gradient(135deg, #36AEE0, #1D4ED8);">
+        🧩 نشاط تفاعلي: فرز وترتيب الأحداث التاريخية
+      </a>
+
+      <button class="gradient-btn" style="background: #111827; margin-top: 15px;" onclick="window.location.href='home.html'">العودة للرئيسية 🏠</button>
+    </div>
+
+  </div>
+
+  <script>
+    const studentData = localStorage.getItem("loggedInStudent");
+    if (!studentData) { window.location.href = "index.html"; }
+
+    function unlockGames() {
+      const userAnswer = document.getElementById("quizAnswer").value;
+
+      if (userAnswer === "correct") {
+        document.getElementById("readingSection").style.display = "none";
+        document.getElementById("gamesSection").style.display = "block";
+      } else {
+        alert("تنبيه: الإجابة غير دقيقة، يرجى إعادة تأمل وقراءة السفر بعناية ثم المحاولة مجدداً الالتزام 📖.");
+      }
+    }
+  </script>
+</body>
+</html>

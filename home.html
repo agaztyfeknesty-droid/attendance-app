@@ -39,8 +39,12 @@
         </div>
       </div>
 
-      <button onclick="window.location.href='leaderboard.html'" style="background-color: #36AEE0; color: white; border: none; border-radius: 14px; padding: 12px; font-size: 14px; font-weight: bold; cursor: pointer; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 12px rgba(54, 174, 224, 0.2);">
+      <button onclick="window.location.href='leaderboard.html'" style="background-color: #36AEE0; color: white; border: none; border-radius: 14px; padding: 12px; font-size: 14px; font-weight: bold; cursor: pointer; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; box-shadow: 0 4px 12px rgba(54, 174, 224, 0.2); font-family: 'Cairo';">
         🏆 عرض لوحة الصدارة والترتيب لايف
+      </button>
+
+      <button onclick="window.location.href='games.html'" style="background: linear-gradient(135deg, #8B5CF6, #EC4899); color: white; border: none; border-radius: 14px; padding: 14px; font-size: 14px; font-weight: bold; cursor: pointer; margin-bottom: 25px; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; box-shadow: 0 6px 16px rgba(236, 72, 153, 0.3); font-family: 'Cairo'; text-shadow: 0 1px 2px rgba(0,0,0,0.15);">
+        🎮 ركن القراءة والأنشطة التفاعلية
       </button>
 
       <p class="qr-title">📱 كارت الحضور بتاعك</p>
@@ -102,7 +106,6 @@
     } else {
       let student = JSON.parse(studentData);
 
-      // إنشاء الـ QR كود المبدئي للكارت
       if (student.code) {
         new QRCode(document.getElementById("qrcode"), {
           text: student.code,
@@ -114,7 +117,6 @@
         });
       }
 
-      // الرادار السحري اللايف 🛰️
       db.collection("students").doc(student.code).onSnapshot(function(doc) {
         if (doc.exists) {
           const liveData = doc.data();
@@ -145,19 +147,16 @@
       const menuBtn = document.getElementById("menuBtn");
       const closeBtn = document.getElementById("closeBtn");
 
-      // فتح القائمة
       menuBtn.addEventListener("click", function(e) {
         e.stopPropagation();
         sidebar.classList.add("open");
       });
 
-      // قفل القائمة بالزرار
       closeBtn.addEventListener("click", function(e) {
         e.stopPropagation();
         sidebar.classList.remove("open");
       });
 
-      // القفل التلقائي الذكي
       document.addEventListener("click", function(event) {
         const isClickInsideSidebar = sidebar.contains(event.target);
         const isClickOnMenuBtn = menuBtn.contains(event.target);
@@ -167,7 +166,6 @@
         }
       });
 
-      // رفع الصورة الشخصية
       document.getElementById("avatarUpload").addEventListener("change", function(e) {
         const file = e.target.files[0];
         if (!file) return;
@@ -183,7 +181,6 @@
         reader.readAsDataURL(file);
       });
 
-      // تسجيل الخروج
       document.getElementById("logoutBtn").addEventListener("click", function() {
         localStorage.removeItem("loggedInStudent");
         window.location.href = "index.html";
