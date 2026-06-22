@@ -96,18 +96,9 @@
     if (!studentData) {
       window.location.href = "index.html";
     } else {
-      const student = JSON.parse(studentData);
+      let student = JSON.parse(studentData);
 
-      document.getElementById("welcomeMessage").textContent = "أهلاً بيك يا " + (student.name || "بطل") + " 👋";
-      document.getElementById("pointsValue").textContent = student.points !== undefined ? student.points : 0;
-      document.getElementById("streakValue").textContent = student.streak !== undefined ? student.streak : 0;
-
-      if (student.avatar) {
-        document.getElementById("userHomeAvatar").src = student.avatar;
-        document.getElementById("userHomeAvatar").style.display = "block";
-        document.getElementById("profileAvatar").src = student.avatar;
-      }
-
+      // إنشاء الـ QR كود المبدئي للكارت
       if (student.code) {
         new QRCode(document.getElementById("qrcode"), {
           text: student.code,
@@ -119,10 +110,38 @@
         });
       }
 
-      document.getElementById("infoName").textContent = student.name || "--";
-      document.getElementById("infoCode").textContent = student.code || "--";
-      document.getElementById("infoPhone").textContent = student.phone || "غير مسجل";
-      document.getElementById("infoParent").textContent = student.parentPhone || "غير مسجل";
+      // -------------------------------------------------------------
+      // الرادار السحري اللايف 🛰️: بيراقب بيانات الطالب من الفايربيس مباشرة
+      // -------------------------------------------------------------
+      db.collection("students").doc(student.code).onSnapshot(function(doc) {
+        if (doc.exists) {
+          const liveData = doc.data();
+
+          // تحديث الشاشة مَباشرةً أول ما الخادم يسجل حضور
+          document.getElementById("welcomeMessage").textContent = "أهلاً بيك يا " + (liveData.name || "بطل") + " 👋";
+          document.getElementById("pointsValue").textContent = liveData.points !== undefined ? liveData.points : 0;
+          document.getElementById("streakValue").textContent = liveData.streak !== undefined ? liveData.streak : 0;
+
+          // تحديث الصور الشخصية لايف
+          if (liveData.avatar) {
+            document.getElementById("userHomeAvatar").src = liveData.avatar;
+            document.getElementById("userHomeAvatar").style.display = "block";
+            document.getElementById("profileAvatar").src = liveData.avatar;
+          } else {
+            document.getElementById("userHomeAvatar").style.display = "none";
+            document.getElementById("profileAvatar").src = "https://via.placeholder.com/100";
+          }
+
+          // تحديث كروت البيانات الجانبية
+          document.getElementById("infoName").textContent = liveData.name || "--";
+          document.getElementById("infoCode").textContent = liveData.code || "--";
+          document.getElementById("infoPhone").textContent = liveData.phone || "غير مسجل";
+          document.getElementById("infoParent").textContent = liveData.parentPhone || "غير مسجل";
+
+          // تحديث الـ LocalStorage برضه احتياطي عشان يفضل متزامن
+          localStorage.setItem("loggedInStudent", JSON.stringify(liveData));
+        }
+      });
 
       const sidebar = document.getElementById("sidebar");
       const menuBtn = document.getElementById("menuBtn");
@@ -140,7 +159,7 @@
         sidebar.classList.remove("open");
       });
 
-      // القفل التلقائي الذكي عند الضغط في أي مكان خارجي
+      // القفل التلقائي الذكي
       document.addEventListener("click", function(event) {
         const isClickInsideSidebar = sidebar.contains(event.target);
         const isClickOnMenuBtn = menuBtn.contains(event.target);
@@ -158,15 +177,9 @@
         const reader = new FileReader();
         reader.onloadend = function() {
           const base64Image = reader.result;
-          document.getElementById("profileAvatar").src = base64Image;
-          document.getElementById("userHomeAvatar").src = base64Image;
-          document.getElementById("userHomeAvatar").style.display = "block";
 
           db.collection("students").doc(student.code).update({
             avatar: base64Image
-          }).then(() => {
-            student.avatar = base64Image;
-            localStorage.setItem("loggedInStudent", JSON.stringify(student));
           }).catch(err => alert("عطل في حفظ الصورة ❌"));
         }
         reader.readAsDataURL(file);

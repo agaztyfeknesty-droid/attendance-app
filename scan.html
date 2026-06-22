@@ -13,7 +13,6 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
   <style>
-    /* ستايل مخصص لجدول الطباعة والكروت داخل صفحة الخادم */
     .admin-section {
       background: #ffffff;
       padding: 20px;
@@ -53,7 +52,26 @@
     }
     .print-btn:hover { background-color: #2da1d0; }
     
-    /* ستايل ورقة الطباعة المخفية - يظهر فقط عند أمر الطباعة */
+    /* زرار إعادة تشغيل الكاميرا */
+    .restart-camera-btn {
+      background-color: #15213E;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-family: 'Cairo', sans-serif;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 15px;
+      display: none; /* مخفي وبيظهر بس لما الكاميرا تقفل */
+      width: 100%;
+      transition: background-color 0.3s;
+    }
+    .restart-camera-btn:hover {
+      background-color: #36AEE0;
+    }
+
     #printArea { display: none; }
     @media print {
       body * { display: none !important; }
@@ -87,7 +105,10 @@
       <p class="sub-greeting">امسح كارت المخدوم لتسجيل الحضور لايف</p>
       
       <div id="reader" style="width: 100%; border-radius: 16px; overflow: hidden; border: none; background: #fafafa;"></div>
-      <div id="result" style="margin-top: 15px; font-weight: bold; color: #2BB673;"></div>
+      
+      <button id="restartCamBtn" class="restart-camera-btn" onclick="startScanning()">📷 افتح الكاميرا لمسح كود آخر</button>
+
+      <div id="result" style="margin-top: 15px; font-weight: bold; font-size: 16px; min-height: 40px; padding: 10px;"></div>
     </div>
 
     <div class="admin-section">
@@ -123,7 +144,6 @@
   </div>
 
   <script>
-    // إعدادات الفايربيس الخاصة بيك
     const firebaseConfig = {
       apiKey: "AIzaSyBTlBr41Tl-GxnOwOsZvPkg26iQs2SGW3A",
       authDomain: "agazty-feknesty.firebaseapp.com",
@@ -136,31 +156,26 @@
     const db = firebase.firestore();
 
     // -------------------------------------------------------------
-    // أولاً: تشغيل قراءة المخدومين لايف وتوليد الـ QR لكل واحد تلقائياً
+    // أولاً: تشغيل قراءة المخدومين لايف وتوليد الـ QR
     // -------------------------------------------------------------
     db.collection("students").onSnapshot(function(snapshot) {
       const tbody = document.getElementById("studentTableBody");
-      tbody.innerHTML = ""; // تصفية الجدول عشان نحدثه بالجديد لايف
+      tbody.innerHTML = ""; 
 
       snapshot.forEach(function(doc) {
         const student = doc.data();
-        
-        // إنشاء سطر جديد في الجدول لكل طالب
         const row = document.createElement("tr");
 
-        // خانة الاسم
         const nameCell = document.createElement("td");
         nameCell.textContent = student.name;
         row.appendChild(nameCell);
 
-        // خانة الكود
         const codeCell = document.createElement("td");
         codeCell.textContent = student.code;
         codeCell.style.fontWeight = "bold";
         codeCell.style.color = "#36AEE0";
         row.appendChild(codeCell);
 
-        // خانة الـ QR Code (هنولد فيها صباع QR صغير للمعاينة)
         const qrCell = document.createElement("td");
         const qrDiv = document.createElement("div");
         qrDiv.style.display = "flex";
@@ -168,7 +183,6 @@
         qrCell.appendChild(qrDiv);
         row.appendChild(qrCell);
 
-        // توليد الـ QR Code الخاص بالطالب فوراً داخل الجدول
         new QRCode(qrDiv, {
           text: student.code,
           width: 50,
@@ -177,13 +191,11 @@
           colorLight : "#ffffff"
         });
 
-        // خانة زرار الطباعة
         const actionCell = document.createElement("td");
         const printBtn = document.createElement("button");
         printBtn.className = "print-btn";
         printBtn.textContent = "طباعة 🖨️";
         
-        // عند الضغط على زرار الطباعة الخاص بالطالب
         printBtn.addEventListener("click", function() {
           triggerPrintCard(student.name, student.code);
         });
@@ -195,15 +207,13 @@
       });
     });
 
-    // دالة تشغيل طباعة الكارت الفردي
     function triggerPrintCard(name, code) {
       document.getElementById("printName").textContent = name;
       document.getElementById("printCode").textContent = code;
       
       const printQrContainer = document.getElementById("printQrContainer");
-      printQrContainer.innerHTML = ""; // تنظيف الـ QR القديم للطباعة
+      printQrContainer.innerHTML = ""; 
 
-      // توليد QR بحجم كبير مخصص للورقة المطبوعة
       new QRCode(printQrContainer, {
         text: code,
         width: 150,
@@ -213,53 +223,78 @@
         correctLevel : QRCode.CorrectLevel.H
       });
 
-      // استدعاء أمر طباعة المتصفح
       setTimeout(() => {
         window.print();
       }, 300);
     }
 
     // -------------------------------------------------------------
-    // ثانياً: تشغيل كاميرا السكانر لتسجيل الحضور (القديمة بتاعتك)
+    // ثانياً: لوجيك الحضور الذكي مع القفل التلقائي للكاميرا 🛡️📷
     // -------------------------------------------------------------
+    let html5QrcodeScanner;
+
     function onScanSuccess(decodedText, decodedResult) {
-      document.getElementById("result").innerHTML = `جاري فحص الكود: ${decodedText}.. ⏳`;
+      const resultDiv = document.getElementById("result");
+      resultDiv.innerHTML = `جاري فحص الكود: ${decodedText}.. ⏳`;
+      resultDiv.style.color = "#15213E";
       
+      // بمجرد قراءة الكود بنجاح -> اقفل الكاميرا فوراً لإراحة الجهاز ومنع التكرار
+      html5QrcodeScanner.clear().then(() => {
+        document.getElementById("restartCamBtn").style.display = "block"; // أظهر زرار فتح الكاميرا تاني
+      }).catch(error => console.error("Failed to clear scanner", error));
+
       const studentRef = db.collection("students").doc(decodedText);
       
       studentRef.get().then((doc) => {
         if (doc.exists) {
           const data = doc.data();
+          const todayDate = new Date().toLocaleDateString('en-US');
+          
+          if (data.lastAttendanceDate === todayDate) {
+            resultDiv.innerHTML = `❌ المخدوم: <span style="color:#F2618C;">${data.name}</span> <br> مسجل حضور النهاردة بالفعل!`;
+            resultDiv.style.color = "#F2618C";
+            return; 
+          }
+
           let currentPoints = data.points || 0;
           let currentStreak = data.streak || 0;
           
-          // زيادة النقاط وأيام الالتزام
           currentPoints += 10;
           currentStreak += 1;
 
           studentRef.update({
             points: currentPoints,
             streak: currentStreak,
-            lastAttendanceDate: new Date().toLocaleDateString('en-US')
+            lastAttendanceDate: todayDate 
           }).then(() => {
-            document.getElementById("result").innerHTML = `✅ تم تسجيل حضور المخدوم: <br> <span style="color:#15213E;">${data.name}</span> <br> وأخد +10 نقاط! 🎉`;
+            resultDiv.innerHTML = `✅ تم تسجيل حضور المخدوم: <br> <span style="color:#15213E;">${data.name}</span> <br> وأخد +10 نقاط! 🎉`;
+            resultDiv.style.color = "#2BB673";
           });
         } else {
-          document.getElementById("result").innerHTML = `❌ الكود ده مش مسجل في السيستم!`;
+          resultDiv.innerHTML = `❌ الكود ده مش مسجل في السيستم!`;
+          resultDiv.style.color = "#F2618C";
         }
       }).catch((error) => {
-        document.getElementById("result").innerHTML = `❌ حدث خطأ أثناء الاتصال بالسيستم.`;
+        resultDiv.innerHTML = `❌ حدث خطأ أثناء الاتصال بالسيستم.`;
+        resultDiv.style.color = "#F2618C";
       });
     }
 
     function onScanFailure(error) {
-      // سيبها فاضية عشان ميعملش إزعاج في الـ Console أثناء البحث عن كود
+      // سيبها فاضية
     }
 
-    let html5QrcodeScanner = new Html5QrcodeScanner(
-      "reader", { fps: 10, qrbox: 250 }, false);
-    html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+    // دالة لتشغيل الكاميرا من جديد
+    function startScanning() {
+      document.getElementById("restartCamBtn").style.display = "none"; // اخفي زرار الفتح تاني طالما اشتغلت
+      document.getElementById("result").innerHTML = ""; // صفي ريزلت القديم لحين مسح جديد
+      
+      html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 250 }, false);
+      html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+    }
 
+    // تشغيل الكاميرا أول ما الصفحة تفتح أوتوماتيك لأول مرة
+    startScanning();
   </script>
 </body>
 </html>
