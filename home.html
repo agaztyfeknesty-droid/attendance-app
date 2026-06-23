@@ -3,28 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>الصفحة الرئيسية</title>
+  <title>الصفحة الرئيسية 🏠</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Changa:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2 family=Cairo:wght@400;600;700&family=Changa:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css"> 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <style>
+    /* الألوان المستوحاة بالملي من اللوجو الرسمي */
     html, body {
-      background: #ffffff !important;
+      background: linear-gradient(135deg, #09162a, #040a15) !important; /* الكحلي الغامق من أرضية اللوجو */
       margin: 0 !important;
       padding: 0 !important;
       width: 100% !important;
       min-height: 100vh;
       font-family: 'Cairo', sans-serif;
-      color: #334155 !important;
+      color: #f1f5f9 !important;
     }
     .main-container {
       width: 100%;
       max-width: 420px;
       margin: 0 auto;
-      padding: 20px 20px 90px 20px;
+      padding: 20px 20px 100px 20px;
       box-sizing: border-box;
       display: flex;
       flex-direction: column;
@@ -45,48 +46,43 @@
       margin-bottom: 25px;
     }
     .custom-menu-btn {
-      background: #f1f5f9;
-      border: none;
-      color: #0f172a;
-      font-size: 26px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: white;
+      font-size: 24px;
       cursor: pointer;
-      padding: 4px 14px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      padding: 6px 16px;
+      border-radius: 14px;
       order: 1;
     }
     .custom-mini-logo {
       width: 65px !important;
       height: 65px !important;
       object-fit: contain !important;
-      border-radius: 12px;
       order: 2;
     }
     .avatar-container {
       position: relative;
       display: inline-block;
-      width: 95px;
-      height: 95px;
-      margin-bottom: 10px;
+      width: 100px;
+      height: 100px;
+      margin-bottom: 12px;
     }
     .user-profile-avatar {
       width: 100%;
       height: 100%;
       border-radius: 50%;
       object-fit: cover;
-      border: 3px solid #8b5cf6;
-      box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
-      background: #f8fafc;
+      border: 3px solid #ffcc00; /* الإطار باللون الذهبي من كلمة إجازتي */
+      box-shadow: 0 0 15px rgba(255, 204, 0, 0.2);
+      background: #0d203d;
     }
     .avatar-edit-badge {
       position: absolute;
       bottom: 2px;
       right: 2px;
-      background: #8b5cf6;
-      color: white;
+      background: #ffcc00;
+      color: #09162a;
       width: 26px;
       height: 26px;
       border-radius: 50%;
@@ -95,77 +91,93 @@
       justify-content: center;
       font-size: 13px;
       cursor: pointer;
-      border: 2px solid white;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+      border: 2px solid #09162a;
     }
     #avatarUpload { display: none; }
+    
     .welcome-title {
       font-family: 'Changa', sans-serif;
       font-size: 24px;
       font-weight: 800;
-      color: #0f172a !important;
+      color: #ffcc00 !important; /* اللون الذهبي الفاخر */
       margin: 10px 0 2px 0;
       text-align: center;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
     }
     .code-subtitle {
       font-size: 14px;
-      color: #64748b;
-      margin: 0 0 5px 0;
+      color: #94a3b8;
+      margin: 0 0 8px 0;
       text-align: center;
     }
     .class-badge {
       font-size: 12px;
-      background: #e0f2fe;
-      color: #0369a1;
-      padding: 4px 12px;
+      background: rgba(0, 188, 255, 0.1);
+      border: 1px solid rgba(0, 188, 255, 0.2);
+      color: #00bcff; /* لون أزرق سماوي مستوحى من لبس الولد */
+      padding: 5px 14px;
       border-radius: 20px;
       font-weight: bold;
-      margin-bottom: 20px;
+      margin-bottom: 25px;
       display: inline-block;
     }
+    
+    /* كروت البيانات الكحلية */
     .info-status-card {
-      background: #f8fafc !important;
-      border: 1px solid #e2e8f0 !important;
-      border-radius: 20px !important;
+      background: rgba(13, 32, 61, 0.5) !important;
+      border: 1px solid rgba(255, 255, 255, 0.05) !important;
+      backdrop-filter: blur(8px);
+      border-radius: 22px !important;
       padding: 18px !important;
       width: 100% !important;
       box-sizing: border-box !important;
       text-align: center !important;
       margin-bottom: 15px !important;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
     }
-    .weekly-quiz-card {
-      background: linear-gradient(135deg, #ec4899, #8b5cf6, #3b82f6) !important;
+    
+    /* كارت ستريك الإنجيل - واخد روح الوردي الفاقع (كلمة في + لبس البنت) مدموج بالذهبي */
+    .bible-streak-card {
+      background: linear-gradient(135deg, #ff2a7f, #ffcc00) !important;
       border: none !important;
-      border-radius: 20px !important;
-      padding: 20px !important;
+      border-radius: 22px !important;
+      padding: 18px !important;
+      color: #09162a !important; /* الكتابة غامقة عشان التباين والوضوح */
+      text-align: center !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(255, 42, 127, 0.25) !important;
+      margin-bottom: 15px !important;
+    }
+    .bible-streak-card h2 { font-family: 'Changa', sans-serif; font-size: 18px; margin: 0 0 4px 0; color: #09162a !important; font-weight: 800; }
+    .bible-streak-card p { font-size: 12px; margin: 0; font-weight: 700; color: #09162a !important; }
+
+    /* كارت التحدي الأسبوعي - واخد الأزرق السماوي بتاع الولد */
+    .weekly-quiz-card {
+      background: linear-gradient(135deg, #0055ff, #00bcff) !important;
+      border: none !important;
+      border-radius: 22px !important;
+      padding: 18px !important;
       color: white !important;
       text-align: center !important;
       width: 100% !important;
       box-sizing: border-box !important;
       cursor: pointer;
-      box-shadow: 0 8px 20px rgba(139, 92, 246, 0.25) !important;
+      box-shadow: 0 6px 20px rgba(0, 188, 255, 0.25) !important;
       margin-bottom: 15px !important;
     }
     .weekly-quiz-card h2 { font-family: 'Changa', sans-serif; font-size: 18px; margin: 0 0 4px 0; color: white; }
-    .weekly-quiz-card p { font-size: 12px; margin: 0; opacity: 0.9; color: white; }
+    .weekly-quiz-card p { font-size: 12px; margin: 0; opacity: 0.95; color: white; }
+
     .qr-display-box {
       background: white !important;
-      padding: 12px !important;
-      border-radius: 16px !important;
+      padding: 14px !important;
+      border-radius: 18px !important;
       display: inline-block !important;
       margin-top: 10px !important;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
-      border: 1px solid #f1f5f9;
+      box-shadow: 0 0 20px rgba(255,255,255,0.02);
     }
-    .sidebar-overlay {
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.4);
-      z-index: 999;
-      display: none;
-    }
-    .sidebar-overlay.show { display: block; }
   </style>
 </head>
 <body>
@@ -179,10 +191,11 @@
     </div>
     <div class="sidebar-menu">
       <a href="home.html" class="menu-item active">🏠 الرئيسية</a>
+      <a href="bible.html" class="menu-item">📖 التحدي اليومي (الستريك)</a>
       <a href="quiz.html" class="menu-item">🎯 تحدي السبت الأسبوعي</a>
-      <a href="rewards.html" class="menu-item">🚀 مركز الجوائز والعجلات</a>
+      <a href="rewards.html" class="menu-item">🚀 micro-service مركز الجوائز</a>
       <a href="leaderboard.html" class="menu-item">🏆 لوحة الصدارة</a>
-      <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 15px 0;">
+      <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.05); margin: 15px 0;">
       <button id="logoutBtn" class="logout-btn">🚪 تسجيل الخروج</button>
     </div>
   </div>
@@ -202,26 +215,33 @@
       </div>
 
       <h1 id="welcomeName" class="welcome-title">يا بطل! ✨</h1>
-      <p class="code-subtitle">كودك الشخصي: <span id="userCode" style="color: #8b5cf6; font-weight: bold;">---</span></p>
+      <p class="code-subtitle">كودك الشخصي: <span id="userCode" style="color: #ffcc00; font-weight: bold;">---</span></p>
       
       <div id="userClassGroup" class="class-badge">جاري جلب الفصل والمجموعة... ⏳</div>
 
       <div class="info-status-card">
-        <p style="color:#16a34a; font-size: 18px; margin: 0 0 8px 0; font-weight: bold;">
-          🎯 رصيد نقاطك الحالي: <b id="userPoints">0</b> نقطة
+        <p style="color:#ffcc00; font-size: 19px; margin: 0 0 8px 0; font-weight: bold; font-family: 'Changa', sans-serif;">
+          🪙 حصالة نقاطك: <b id="userPoints">0</b> نقطة
         </p>
-        <p style="color:#475569; font-size: 14px; margin: 0; font-weight: 600;">
-          📊 أيام الالتزام والمواظبة: <b id="attendanceCounter" style="color:#8b5cf6; font-size: 16px;">0 / 18 يوم</b>
+        <p style="color:#94a3b8; font-size: 13px; margin: 0; font-weight: 600;">
+          📊 أيام حضور الاجتماع: <b id="attendanceCounter" style="color:#00bcff; font-size: 15px;">0 / 18 يوم</b>
         </p>
       </div>
 
+      <!-- كارت الستريك بالوردي والذهبي المبهج -->
+      <div class="bible-streak-card" onclick="window.location.href='bible.html'">
+        <h2>📖 تحدي الستريك والأصحاح اليومي!</h2>
+        <p>اضغط هنا واقرا أصحاح النهاردة وحل التحدي عشان تولع الستريك! 🔥</p>
+      </div>
+
+      <!-- كارت التحدي الأسبوعي بالأزرق السماوي -->
       <div class="weekly-quiz-card" onclick="window.location.href='quiz.html'">
         <h2>🎯 تحدي السبت الأسبوعي لايف!</h2>
         <p>اضغط هنا وادخل حل أسئلة الأسبوع واكسب نقط فوراً 🚀</p>
       </div>
 
       <div class="info-status-card">
-        <p style="margin: 0 0 10px 0; font-size: 13px; color:#64748b;">ورّي الكود ده للخادم في الاجتماع عشان تسجل حضورك وتربح النقط! 🥳</p>
+        <p style="margin: 0 0 10px 0; font-size: 12px; color:#94a3b8;">ورّي الكود ده للخادم في الاجتماع عشان تسجل حضورك وتربح النقط! 🥳</p>
         <div id="qrcode" class="qr-display-box"></div>
       </div>
 
@@ -267,9 +287,9 @@
     } else {
       new QRCode(document.getElementById("qrcode"), {
         text: student.code,
-        width: 150,
-        height: 150,
-        colorDark : "#0f172a",
+        width: 140,
+        height: 140,
+        colorDark : "#09162a",
         colorLight : "#ffffff",
         correctLevel : QRCode.CorrectLevel.H
       });
@@ -281,7 +301,6 @@
           document.getElementById("userCode").textContent = student.code;
           document.getElementById("userPoints").textContent = freshData.points || 0;
           
-          // عرض الفصل والمجموعة
           const userClass = freshData.class || "مش محدد";
           const userGroup = freshData.group || "مش محدد";
           document.getElementById("userClassGroup").textContent = `📍 ${userClass} - ${userGroup}`;
