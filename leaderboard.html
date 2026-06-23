@@ -10,29 +10,53 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <style>
+    body {
+      background: linear-gradient(135deg, #0f172a, #020617);
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px 15px 90px 15px;
+      box-sizing: border-box;
+      font-family: 'Cairo', sans-serif;
+    }
+    form {
+      width: 100%;
+      max-width: 400px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+    }
     .section-title {
       font-family: 'Changa', sans-serif;
       font-size: 18px;
       color: #00f2fe;
-      margin: 20px 0 10px 0;
+      margin: 25px 0 12px 0;
       text-align: right;
       border-right: 4px solid #00f2fe;
       padding-right: 8px;
     }
+    /* ستايل كروت المجموعات المبتكر */
     .group-row {
       display: flex;
       align-items: center;
-      background: rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.06);
       border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 14px;
-      padding: 12px;
-      margin-bottom: 10px;
+      border-radius: 16px;
+      padding: 14px;
+      margin-bottom: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
-    .group-rank { font-weight: bold; font-size: 16px; width: 35px; text-align: center; }
-    .group-info { flex: 1; text-align: right; margin-right: 10px; }
-    .group-name { font-weight: bold; color: white; font-size: 15px; }
-    .group-class { font-size: 12px; color: #94a3b8; }
-    .group-points { font-weight: bold; color: #10b981; font-size: 16px; }
+    .group-rank { 
+      font-family: 'Changa', sans-serif;
+      font-weight: 800; 
+      font-size: 18px; 
+      width: 40px; 
+      text-align: center; 
+      color: #cbd5e1;
+    }
+    .group-info { flex: 1; text-align: right; margin-right: 12px; }
+    .group-name { font-weight: bold; color: white; font-size: 16px; }
+    .group-class { font-size: 12px; color: #94a3b8; margin-top: 2px; }
+    .group-points { font-family: 'Changa', sans-serif; font-weight: bold; color: #10b981; font-size: 17px; }
   </style>
 </head>
 <body>
@@ -40,9 +64,9 @@
   <form onsubmit="return false;">
     <img src="logo.png" alt="اجازتي في كنيستي" class="logo">
     <h1>لوحة الصدارة 🏆</h1>
-    <p class="sub-greeting">مين أكتر مجموعة وفرد ملتزمين؟ ✨</p>
+    <p class="sub-greeting">مين أكتر مجموعة وفرد ملتزمين ومجمعين نقط؟ ✨</p>
 
-    <div class="section-title">🏆 صدارة المجموعات (إجمالي النقط)</div>
+    <div class="section-title">👥 صدارة المجموعات (إجمالي النقط)</div>
     <div id="groupsList"></div>
 
     <div class="section-title">👤 صدارة الأبطال (فردي)</div>
@@ -84,6 +108,7 @@
     const groupsListDiv = document.getElementById("groupsList");
     const avatarColors = ["#ff4757", "#2ed573", "#1e90ff", "#ffa502", "#9b59b6"];
 
+    // الاستماع اللحظي لكل الطلاب وترتيبهم حسب النقاط فردياً
     db.collection("students").orderBy("points", "desc").onSnapshot(function(querySnapshot) {
       listDiv.innerHTML = "";
       groupsListDiv.innerHTML = "";
@@ -91,7 +116,7 @@
       let rank = 1;
       const medals = ["🥇", "🥈", "🥉"];
       
-      // كائن لتجميع نقاط المجموعات ديناميكياً
+      // كائن (Object) ذكي لتجميع نقاط المجموعات لايف من حسابات العيال
       let groupScores = {};
 
       querySnapshot.forEach(function(doc) {
@@ -100,7 +125,7 @@
         const sClass = student.class || "بدون فصل";
         const sGroup = student.group || "بدون مجموعة";
 
-        // تجميع نقاط المجموعة
+        // تجميع نقاط المجموعة لو البيانات كاملة
         if(student.class && student.group) {
           const groupKey = `${sClass} - ${sGroup}`;
           if(!groupScores[groupKey]) {
@@ -109,7 +134,7 @@
           groupScores[groupKey].points += sPoints;
         }
 
-        // رسم صدارة الأفراد
+        // رسم صدارة الأفراد (القديمة بتاعتك مع تعديل إظهار الفصل والمجموعة)
         const medal = rank <= 3 ? medals[rank - 1] : rank;
         const initial = student.name ? student.name.charAt(0).toUpperCase() : "⭐";
         const color = avatarColors[(rank - 1) % avatarColors.length];
@@ -117,19 +142,19 @@
         const row = document.createElement("div");
         row.className = "leader-row";
         row.innerHTML = `
-          <div class=\"leader-rank\">${medal}</div>
-          <div class=\"leader-avatar\" style=\"background-color: ${color};\">${initial}</div>
-          <div class=\"leader-info\">
-            <div class=\"leader-name\">${student.name}</div>
-            <div class=\"leader-streak\" style="font-size:11px; color:#94a3b8;">📍 ${sClass} | ${sGroup}</div>
+          <div class="leader-rank">${medal}</div>
+          <div class="leader-avatar" style="background-color: ${color};">${initial}</div>
+          <div class="leader-info">
+            <div class="leader-name">${student.name}</div>
+            <div class="leader-streak" style="font-size:11px; color:#94a3b8;">📍 ${sClass} | ${sGroup}</div>
           </div>
-          <div class=\"leader-points\">${sPoints} ⭐</div>
+          <div class="leader-points">${sPoints} ⭐</div>
         `;
         listDiv.appendChild(row);
         rank++;
       });
 
-      // تحويل المجموعات لمصفوفة وترتيبها من الكبير للصغير
+      // تحويل كائن المجموعات لمصفوفة وترتيبها أوتوماتيك من الكبير للصغير
       let sortedGroups = Object.values(groupScores).sort((a, b) => b.points - a.points);
       
       let gRank = 1;
@@ -150,7 +175,7 @@
       });
       
       if(sortedGroups.length === 0) {
-        groupsListDiv.innerHTML = `<p style="text-align:center; color:#94a3b8; font-size:13px;">في انتظار تجميع نقاط المجموعات...</p>`;
+        groupsListDiv.innerHTML = `<p style="text-align:center; color:#94a3b8; font-size:13px;">في انتظار تجميع نقاط المجموعات من حسابات الأبطال...</p>`;
       }
     });
   </script>
