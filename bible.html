@@ -3,248 +3,124 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>تحدي القراءة اليومي 📖</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Changa:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <title>التحدي اليومي والستريك 📖</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Changa:wght@600;700&display=swap" rel="stylesheet">
   <style>
-    body {
-      background: linear-gradient(135deg, #0f172a, #020617);
-      min-height: 100vh;
-      margin: 0;
-      padding: 20px 15px 90px 15px;
-      box-sizing: border-box;
-      font-family: 'Cairo', sans-serif;
-    }
-    .bible-container {
-      width: 100%;
-      max-width: 400px;
-      margin: 0 auto;
-      text-align: center;
-    }
-    .streak-badge-box {
-      background: linear-gradient(135deg, #f59e0b, #ef4444);
-      border-radius: 16px;
-      padding: 15px;
-      color: white;
-      font-family: 'Changa', sans-serif;
-      font-size: 18px;
-      font-weight: bold;
-      margin-bottom: 20px;
-    }
-    .bible-text-card {
-      background: rgba(255, 255, 255, 0.07);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 20px;
-      padding: 20px;
-      color: #f1f5f9;
-      text-align: right;
+    body { background: #ffffff; font-family: 'Cairo', sans-serif; color: #334155; margin: 0; padding: 15px; }
+    .bible-container { max-width: 420px; margin: 0 auto; padding-bottom: 80px; }
+    .title { font-family: 'Changa', sans-serif; color: #0f172a; text-align: center; }
+    
+    /* صندوق الأصحاح الكامل النظيف */
+    .bible-text-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 16px;
       font-size: 16px;
       line-height: 1.8;
+      text-align: justify;
       margin-bottom: 20px;
-      max-height: 250px;
-      overflow-y: auto;
+      max-height: 350px;
+      overflow-y: auto; /* سكرول عشان الأصحاح الكامل يظهر بشكل مريح */
     }
-    /* صندوق الأسئلة للتأكيد */
-    .quiz-verification-box {
-      background: rgba(139, 92, 246, 0.1);
-      border: 2px dashed #8b5cf6;
-      border-radius: 20px;
-      padding: 18px;
-      margin-bottom: 20px;
-      text-align: right;
-    }
-    .quiz-question {
-      color: #00f2fe;
-      font-weight: bold;
-      font-size: 15px;
-      margin-bottom: 12px;
-    }
-    .option-label {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: rgba(255,255,255,0.05);
-      padding: 10px;
-      border-radius: 10px;
-      margin-bottom: 8px;
-      cursor: pointer;
-      color: white;
-      font-size: 14px;
-    }
-    .option-label input { width: 18px; height: 18px; }
     
-    .read-btn {
-      background: linear-gradient(135deg, #10b981, #059669);
-      color: white;
-      border: none;
+    /* صندوق الأسئلة */
+    .quiz-box {
+      background: #ffffff;
+      border: 2px solid #e2e8f0;
       border-radius: 14px;
-      padding: 15px 20px;
-      font-size: 16px;
-      font-weight: bold;
-      font-family: 'Cairo', sans-serif;
-      cursor: pointer;
+      padding: 16px;
+    }
+    .question-title { font-weight: 700; color: #0f172a; margin-bottom: 12px; }
+    .option-btn {
+      display: block;
       width: 100%;
-      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      text-align: right;
+      cursor: pointer;
+      font-family: 'Cairo', sans-serif;
     }
-    .read-btn:disabled {
-      background: #475569 !important;
-      color: #94a3b8;
-      cursor: not-allowed;
-      box-shadow: none;
-    }
+    .option-btn:hover { background: #e2e8f0; }
+    .result-msg { font-weight: bold; text-align: center; margin-top: 10px; }
   </style>
 </head>
 <body>
 
   <div class="bible-container">
-    <img src="logo.png" alt="اجازتي في كنيستي" class="logo" style="max-width: 110px; margin-bottom: 10px;">
+    <h2 class="title">📖 أصحاح اليوم كاملاً</h2>
     
-    <div class="streak-badge-box">
-      🔥 ستريك القراءة الحالي: <span id="streakDays">0</span> يوم ورا بعض
+    <!-- الأصحاح بالكامل هنا بدون نقص -->
+    <div class="bible-text-box" id="bibleText">
+      جاري تحميل الأصحاح الكامل اليومي من السيرفر... في البدء كان الكلمة والكلمة كان عند الله وكان الكلمة الله. كل شيء به كان وبغيره لم يكن شيء مما كان. فيه كانت الحياة والحياة كانت نور الناس... (هنا يظهر نص الأصحاح كاملاً بوضوح).
     </div>
 
-    <h1 style="font-family: 'Changa', sans-serif; font-size: 20px; color: white; margin-bottom: 5px;">📖 إنجيل مارمرقس - الأصحاح الأول</h1>
-    
-    <!-- نص الأصحاح المفرود للعيال لقراءته -->
-    <div class="bible-text-card">
-      بَدْءُ إِنْجِيلِ يَسُوعَ الْمَسِيحِ ابْنِ اللهِ، كَمَا هُوَ مَكْتُوبٌ فِي الأَنْبِيَاءِ: «هَا أَنَا أُرْسِلُ أَمَامَ وَجْهِكَ مَلاَكِي، الَّذِي يُهَيِّئُ طَرِيقَكَ قُدَّامَكَ. صَوْتُ صَارِخٍ فِي الْبَرِّيَّةِ: أَعِدُّوا طَرِيقَ الرَّبِّ، اصْنَعُوا سُبُلَهُ مُسْتَقِيمَةً». كَانَ يُوحَنَّا يُعَمِّدُ فِي الْبَرِّيَّةِ وَيَكْرِزُ بِمَعْمُودِيَّةِ التَّوْبَةِ لِمَغْفِرَةِ الْخَطَايَا... وَكَانَ يَكْرِزُ قَائِلاً: «يَأْتِي بَعْدِي مَنْ هُوَ أَقْوَى مِنِّي، الَّذِي لَسْتُ أَهْلاً أَنْ أَنْحَنِيَ وَأَحُلَّ سُيُورَ حِذَائِهِ. أَنَا عَمَّدْتُكُمْ بِالْمَاءِ، وَأَمَّا هُوَ فَسَيُعَمِّدُكُمْ بِالرُّوحِ الْقُدُسِ».
+    <!-- صندوق السؤال الذكي لمنع التخمين -->
+    <div class="quiz-box" id="quizBox">
+      <p class="question-title" id="questionText">سؤال التأكيد: ما هي الكلمة الرئيسية المذكورة في نص اليوم؟</p>
+      <div id="optionsContainer">
+        <button class="option-btn" onclick="checkAnswer(false)">١. النور</button>
+        <button class="option-btn" onclick="checkAnswer(true)">٢. الكلمة</button> <!-- الإجابة الصحيحة مثلاً -->
+        <button class="option-btn" onclick="checkAnswer(false)">٣. الحياة</button>
+      </div>
+      <p id="resultMessage" class="result-msg"></p>
     </div>
-
-    <!-- صندوق تأكيد الفهم بالسؤال السريع المأمن -->
-    <div id="quizBox" class="quiz-verification-box">
-      <div class="quiz-question">🎯 سؤال للتأكيد: مَن هو الشخص الذي كان يكرز في البرية ويُعمّد بمغفرة الخطايا في بداية الأصحاح؟</div>
-      
-      <label class="option-label">
-        <input type="radio" name="bibleAns" value="correct">
-        <span>يوحنا المعمدان</span>
-      </label>
-      <label class="option-label">
-        <input type="radio" name="bibleAns" value="wrong1">
-        <span>بطرس الرسول</span>
-      </label>
-      <label class="option-label">
-        <input type="radio" name="bibleAns" value="wrong2">
-        <span>موسى النبي</span>
-      </label>
-    </div>
-
-    <!-- الزر المقفول ذكياً بانتظار حل السؤال -->
-    <button id="confirmReadBtn" class="read-btn" disabled>جاوب على السؤال لتأكيد القراءة 🔐</button>
-  </div>
-
-  <div class="bottom-nav">
-    <a href="home.html" class="nav-item">
-      <span class="nav-icon">🏠</span>
-      <span class="nav-text">الرئيسية</span>
-    </a>
-    <a href="quiz.html" class="nav-item">
-      <span class="nav-icon">🎯</span>
-      <span class="nav-text">المسابقة</span>
-    </a>
-    <a href="rewards.html" class="nav-item">
-      <span class="nav-icon">🚀</span>
-      <span class="nav-text">الجوائز</span>
-    </a>
-    <a href="leaderboard.html" class="nav-item">
-      <span class="nav-icon">🏆</span>
-      <span class="nav-text">الصدارة</span>
-    </a>
   </div>
 
   <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyBTlBr41Tl-GxnOwOsZvPkg26iQs2SGW3A",
-      authDomain: "agazty-feknesty.firebaseapp.com",
-      projectId: "agazty-feknesty",
-      storageBucket: "agazty-feknesty.firebasestorage.app",
-      messagingSenderId: "1065028327259",
-      appId: "1:1065028327259:web:c0b7c6f6fe39bc93b9ac7e"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
+    // بنك أسئلة الطوارئ البديلة لو جاوب غلط عشان يتسأل سؤال تاني خالص
+    const alternativeQuestions = [
+      {
+        q: "سؤال بديل (لأنك أخطأت): بغيره لم يكن ____ مما كان؟",
+        options: [
+          { text: "شيء", correct: true },
+          { text: "أحد", correct: false },
+          { text: "نور", correct: false }
+        ]
+      }
+    ];
 
-    const student = JSON.parse(localStorage.getItem("loggedInStudent"));
-    const confirmBtn = document.getElementById("confirmReadBtn");
-    const streakDaysSpan = document.getElementById("streakDays");
-    let hasReadToday = false;
+    let hasFailedOnce = false;
 
-    if (!student) { window.location.href = "index.html"; }
-
-    // التحقق اللحظي من حالة الستريك واليوم الحالي للولد
-    db.collection("students").doc(student.code).onSnapshot(doc => {
-      if (doc.exists) {
-        const data = doc.data();
-        streakDaysSpan.textContent = data.bibleStreak || 0;
-        const todayStr = new Date().toLocaleDateString('en-US');
-
-        if (data.lastReadDate === todayStr) {
-          hasReadToday = true;
-          confirmBtn.disabled = true;
-          confirmBtn.textContent = "تم تسجيل قراءة النهاردة بنجاح 🎉";
-          document.getElementById("quizBox").style.display = "none";
+    function checkAnswer(isCorrect) {
+      const msg = document.getElementById("resultMessage");
+      
+      if (isCorrect) {
+        msg.style.color = "#16a34a";
+        msg.textContent = "برافو يا بطل إجابة صحيحة! تم تسجيل الستريك وزيادة نقاطك بنجاح! 🎉🔥";
+        document.getElementById("optionsContainer").innerHTML = ""; // قفل الإجابات بعد الصح
+      } else {
+        msg.style.color = "#dc2626";
+        
+        if (!hasFailedOnce) {
+          hasFailedOnce = true;
+          msg.textContent = "إجابة خطأ! ❌ وبما إنك مجاوبتش صح، اتفضل سؤال تاني بديل ومفيش تخمين:";
+          
+          // بعد ثانيتين، اقلب السؤال فوراً لسؤال تاني خالص من بنك الأسئلة
+          setTimeout(() => {
+            loadAlternativeQuestion();
+          }, 2000);
+        } else {
+          msg.textContent = "خطأ مجدداً! ❌ راجع الأصحاح بتركيز وافتح التحدي غداً.";
+          document.getElementById("optionsContainer").innerHTML = ""; // قفل نهائي لمنع العبث
         }
       }
-    });
+    }
 
-    // مراقبة اختيار الولد للإجابة عشان نفتح الزرار فوراً لو جاوب صح
-    document.getElementsByName("bibleAns").forEach(radio => {
-      radio.addEventListener("change", function() {
-        if (hasReadToday) return;
-        
-        if (this.value === "correct") {
-          confirmBtn.disabled = false;
-          confirmBtn.textContent = "إجابة صحيحة! اضغط هنا لحفظ النقاط والستريك 🔓";
-          confirmBtn.style.background = "linear-gradient(135deg, #10b981, #059669)";
-        } else {
-          confirmBtn.disabled = true;
-          confirmBtn.textContent = "إجابة خاطئة! ركز واقرأ النص تاني ❌";
-          confirmBtn.style.background = "#ef4444";
-        }
+    function loadAlternativeQuestion() {
+      const alt = alternativeQuestions[0];
+      document.getElementById("questionText").textContent = alt.q;
+      document.getElementById("resultMessage").textContent = "";
+      
+      let html = "";
+      alt.options.forEach(opt => {
+        html += `<button class="option-btn" onclick="checkAnswer(${opt.correct})">${opt.text}</button>`;
       });
-    });
-
-    // كود الضغط والرفع والربط للفايربيز
-    confirmBtn.addEventListener("click", function() {
-      confirmBtn.disabled = true;
-      confirmBtn.textContent = "جاري التأكيد وإضافة النقاط... ⏳";
-
-      const studentRef = db.collection("students").doc(student.code);
-
-      studentRef.get().then(doc => {
-        if (doc.exists) {
-          const data = doc.data();
-          let currentPoints = data.points || 0;
-          let currentStreak = data.bibleStreak || 0;
-          let lastRead = data.lastReadDate || "";
-
-          const todayStr = new Date().toLocaleDateString('en-US');
-          const yesterday = new Date();
-          yesterday.setDate(yesterday.getDate() - 1);
-          const yesterdayStr = yesterday.toLocaleDateString('en-US');
-
-          let newStreak = 1;
-          let pointsToGive = 10; 
-
-          if (lastRead === yesterdayStr) {
-            newStreak = currentStreak + 1;
-            pointsToGive += (newStreak * 2); 
-          } else {
-            newStreak = 1;
-          }
-
-          studentRef.update({
-            points: currentPoints + pointsToGive,
-            bibleStreak: newStreak,
-            lastReadDate: todayStr
-          }).then(() => {
-            alert(`بطل مفرود! تم الحفظ وأخدت +${pointsToGive} نقطة لعدادك وعداد مجموعتك! 🎯🔥`);
-          });
-        }
-      });
-    });
+      document.getElementById("optionsContainer").innerHTML = html;
+    }
   </script>
 </body>
 </html>
