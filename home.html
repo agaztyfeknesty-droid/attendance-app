@@ -6,8 +6,14 @@
   <title>الرئيسية 🏠</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Changa:wght@600;700&display=swap" rel="stylesheet">
+  
+  <!-- استدعاء المكتبات الأساسية عشان الـ QR والـ Firebase يشتغلوا -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
   <style>
-    /* إلغاء القرف والألوان العشوائية - خلفية بيضاء سادة */
+    /* خلفية بيضاء سادة ونظيفة تماماً */
     html, body {
       background: #ffffff !important;
       margin: 0 !important;
@@ -24,7 +30,7 @@
       padding: 15px 15px 100px 15px;
       box-sizing: border-box;
     }
-    /* البار العلوي: الزرار يمين واللوجو شمال */
+    /* البار العلوي: الثلاث شرط يمين واللوجو شمال */
     .top-header-bar {
       display: flex;
       justify-content: space-between;
@@ -99,7 +105,7 @@
       border-radius: 20px;
       display: inline-block;
     }
-    /* الكروت المنتظمة الهادية */
+    /* الكروت */
     .clean-info-card {
       background: #f8fafc;
       border: 1px solid #e2e8f0;
@@ -108,9 +114,8 @@
       margin-bottom: 15px;
       text-align: center;
     }
-    /* كارت التحديات بألوان هادية رسمية */
     .action-link-card {
-      background: #0f172a; /* كحلي رسمي مريح للعين */
+      background: #0f172a;
       color: #ffffff;
       border-radius: 16px;
       padding: 18px;
@@ -123,9 +128,7 @@
     .action-link-card h3 { margin: 0 0 6px 0; font-size: 17px; font-family: 'Changa', sans-serif; color: #ffcc00; }
     .action-link-card p { margin: 0; font-size: 13px; color: #cbd5e1; }
 
-    .secondary-card {
-      background: #1e3a8a;
-    }
+    .secondary-card { background: #1e3a8a; }
     .secondary-card h3 { color: #ffffff; }
 
     .qr-container {
@@ -136,7 +139,7 @@
       display: inline-block;
       margin-top: 10px;
     }
-    /* البار السفلي الثابت المنظم */
+    /* البار السفلي الثابت */
     .bottom-navbar {
       position: fixed;
       bottom: 0;
@@ -158,13 +161,72 @@
     }
     .nav-link.active { color: #0f172a; font-weight: bold; }
     .nav-icon { display: block; font-size: 20px; margin-bottom: 2px; }
+
+    /* ستايل المنيو الجانبية (Sidebar) الحقيقية */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      right: -280px;
+      width: 280px;
+      height: 100%;
+      background: #ffffff;
+      box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+      z-index: 1000;
+      transition: right 0.3s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    .sidebar.open { right: 0; }
+    .sidebar-header {
+      padding: 15px;
+      border-bottom: 1px solid #f1f5f9;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .sidebar-title { font-weight: bold; color: #0f172a; }
+    .close-btn { background: none; border: none; font-size: 24px; cursor: pointer; color: #64748b; }
+    .sidebar-menu { padding: 15px; display: flex; flex-direction: column; gap: 10px; }
+    .menu-item { text-decoration: none; color: #334155; padding: 10px; border-radius: 8px; display: block; }
+    .menu-item.active { background: #f1f5f9; color: #0f172a; font-weight: bold; }
+    .sidebar-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.4);
+      z-index: 999;
+      display: none;
+    }
+    .sidebar-overlay.show { display: block; }
+    .logout-btn { background: none; border: none; color: #ef4444; text-align: right; padding: 10px; cursor: pointer; font-family: 'Cairo', sans-serif; font-size: 16px; }
   </style>
 </head>
 <body>
 
+  <!-- الأوفرلاي والمنيو الجانبية الحقيقية الفاتحة ونظيفة -->
+  <div id="sidebarOverlay" class="sidebar-overlay"></div>
+  <div id="sidebar" class="sidebar">
+    <div class="sidebar-header">
+      <span class="sidebar-title">القائمة 📋</span>
+      <button id="closeBtn" class="close-btn">×</button>
+    </div>
+    <div class="sidebar-menu">
+      <a href="home.html" class="menu-item active">🏠 الرئيسية</a>
+      <a href="bible.html" class="menu-item">📖 التحدي اليومي (الستريك)</a>
+      <a href="quiz.html" class="menu-item">🎯 تحدي السبت الأسبوعي</a>
+      <a href="rewards.html" class="menu-item">🚀 مركز الجوائز</a>
+      <a href="leaderboard.html" class="menu-item">🏆 لوحة الصدارة</a>
+      <hr style="border: 0; border-top: 1px solid #f1f5f9; margin: 10px 0;">
+      <button id="logoutBtn" class="logout-btn">🚪 تسجيل الخروج</button>
+    </div>
+  </div>
+
   <div class="main-container">
+    <!-- البار العلوي مع المنيو اليمين واللوجو الشمال بجد -->
     <div class="top-header-bar">
-      <button class="menu-trigger-btn" onclick="alert('تفتح القائمة الجانبية')">☰</button>
+      <button id="menuBtn" class="menu-trigger-btn">☰</button>
       <img src="logo.png" class="main-app-logo" alt="اللوجو">
     </div>
 
@@ -179,7 +241,7 @@
       <div id="userClassGroup" class="group-tag">جاري تحميل الفصل...</div>
     </div>
 
-    <!-- كارت النقاط والمواظبة العادي الهادي -->
+    <!-- كارت حصالة النقاط والمواظبة الحقيقي من الداتا -->
     <div class="clean-info-card">
       <p style="font-size: 18px; margin: 0 0 6px 0; font-weight: bold; color: #0f172a;">
         🪙 حصالة نقاطك: <span id="userPoints" style="color: #b45309;">0</span> نقطة
@@ -189,7 +251,6 @@
       </p>
     </div>
 
-    <!-- كروت التنقل النظيفة -->
     <a href="bible.html" class="action-link-card">
       <h3>📖 تحدي الستريك والأصحاح اليومي</h3>
       <p>اقرأ أصحاح اليوم كاملاً وجاوب على سؤال التأكيد 🔥</p>
@@ -200,14 +261,14 @@
       <p>ادخل حل أسئلة المسابقة واكسب نقط إضافية 🚀</p>
     </a>
 
-    <!-- كارت الـ QR -->
+    <!-- كارت الـ QR الحقيقي اللي هيظهر بعد الربط -->
     <div class="clean-info-card">
       <p style="margin: 0 0 6px 0; font-size: 12px; color: #64748b;">امسح الكود مع الخادم لتسجيل الحضور</p>
       <div id="qrcode" class="qr-container"></div>
     </div>
   </div>
 
-  <!-- البار السفلي المظبوط والمطلوب -->
+  <!-- البار السفلي الثابت المظبوط -->
   <div class="bottom-navbar">
     <a href="home.html" class="nav-link active"><span class="nav-icon">🏠</span>الرئيسية</a>
     <a href="quiz.html" class="nav-link"><span class="nav-icon">🎯</span>المسابقة</a>
@@ -216,12 +277,99 @@
   </div>
 
   <script>
-    // ربط الفايربيز الأساسي والـ QR كود العادي
+    // إعدادات الفايربيز بتاعتك الأصلية عشان الداتا ترجع لايف
+    const firebaseConfig = {
+      apiKey: "AIzaSyBTlBr41Tl-GxnOwOsZvPkg26iQs2SGW3A",
+      authDomain: "agazty-feknesty.firebaseapp.com",
+      projectId: "agazty-feknesty",
+      storageBucket: "agazty-feknesty.firebasestorage.app",
+      messagingSenderId: "1065028327259",
+      appId: "1:1065028327259:web:c0b7c6f6fe39bc93b9ac7e"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
     const student = JSON.parse(localStorage.getItem("loggedInStudent"));
-    if(student) {
-      document.getElementById("userCode").textContent = student.code;
-      // توليد الـ QR كود هنا تلقائيًا...
+
+    if (!student || !student.code) {
+      alert("الرجاء تسجيل الدخول أولاً! ❌");
+      window.location.href = "index.html";
+    } else {
+      // توليد الـ QR كود الحقيقي بناءً على كود المخدوم
+      new QRCode(document.getElementById("qrcode"), {
+        text: student.code,
+        width: 130,
+        height: 130,
+        colorDark : "#0f172a",
+        colorLight : "#ffffff",
+        correctLevel : QRCode.CorrectLevel.H
+      });
+
+      // جلب اسم المخدوم وباقي الداتا لايف وعرضها فوراً
+      db.collection("students").doc(student.code).onSnapshot(function(doc) {
+        if (doc.exists) {
+          const freshData = doc.data();
+          document.getElementById("welcomeName").textContent = `يا بطل، ${freshData.name || 'مخدوم'}! ✨`;
+          document.getElementById("userCode").textContent = student.code;
+          document.getElementById("userPoints").textContent = freshData.points || 0;
+          
+          const userClass = freshData.class || "مش محدد";
+          const userGroup = freshData.group || "مش محدد";
+          document.getElementById("userClassGroup").textContent = `📍 ${userClass} - ${userGroup}`;
+
+          let attendanceCount = freshData.attendanceCount || 0;
+          document.getElementById("attendanceCounter").textContent = `${attendanceCount} / 18 يوم`;
+
+          if (freshData.avatar) {
+            document.getElementById("userAvatar").src = freshData.avatar;
+          }
+        }
+      });
     }
+
+    // الـ Logic الحقيقي لتشغيل فتح وقفل المنيو الجانبية (Sidebar) من غير الـ Alert البايظ
+    const sidebar = document.getElementById("sidebar");
+    const overlay = document.getElementById("sidebarOverlay");
+    const menuBtn = document.getElementById("menuBtn");
+    const closeBtn = document.getElementById("closeBtn");
+
+    function openSidebar() {
+      sidebar.classList.add("open");
+      overlay.classList.add("show");
+    }
+    function closeSidebar() {
+      sidebar.classList.remove("open");
+      overlay.classList.remove("show");
+    }
+
+    menuBtn.addEventListener("click", function(e) {
+      e.stopPropagation();
+      openSidebar();
+    });
+    closeBtn.addEventListener("click", closeSidebar);
+    overlay.addEventListener("click", closeSidebar);
+
+    // رفع وتحميل الأفاتار
+    document.getElementById("avatarUpload").addEventListener("change", function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onloadend = function() {
+        const base64Image = reader.result;
+        db.collection("students").doc(student.code).update({
+          avatar: base64Image
+        }).then(() => {
+          document.getElementById("userAvatar").src = base64Image;
+        });
+      }
+      reader.readAsDataURL(file);
+    });
+
+    // تسجيل الخروج
+    document.getElementById("logoutBtn").addEventListener("click", function() {
+      localStorage.removeItem("loggedInStudent");
+      window.location.href = "index.html";
+    });
   </script>
 </body>
 </html>
