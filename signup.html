@@ -23,14 +23,30 @@
       width: 18px !important;
       height: 18px !important;
       margin: 0 !important;
-      cursor: pointer !important;
+      cursor: pointer;
     }
     .show-pass-container label {
       margin: 0 !important;
       font-size: 14px !important;
-      color: #6b7280 !important;
-      font-weight: 600 !important;
-      cursor: pointer !important;
+      color: #cbd5e1 !important;
+      cursor: pointer;
+    }
+    select {
+      width: 100%;
+      padding: 12px;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      color: white;
+      font-family: 'Cairo', sans-serif;
+      font-size: 14px;
+      margin-top: 8px;
+      margin-bottom: 15px;
+      box-sizing: border-box;
+    }
+    select option {
+      background: #0f172a;
+      color: white;
     }
   </style>
 </head>
@@ -38,40 +54,61 @@
 
   <form id="signupForm">
     <img src="logo.png" alt="اجازتي في كنيستي" class="logo">
-    <h1>إنشاء حساب جديد ✨</h1>
-    <p class="sub-greeting">سجل بياناتك والسيستم هيميزك بكود خاص</p>
+    <h1>حساب جديد 🚀</h1>
+    <p class="sub-greeting">سجل بياناتك عشان تدخل المغامرة معنا!</p>
 
-    <label for="fullName">اسمك بالكامل</label>
-    <input type="text" id="fullName" placeholder="مثال: جون مينا غالي" required>
+    <label for="fullName">اسمك الرباعي بالعربي</label>
+    <input type="text" id="fullName" placeholder="مثال: ستيفن امجد عدلي .." required>
 
-    <label for="studentPhone">رقم تليفونك (الموبايل)</label>
-    <input type="tel" id="studentPhone" placeholder="012xxxxxxxx" required>
+    <label for="studentPhone">رقم موبايلك (إن وجد)</label>
+    <input type="tel" id="studentPhone" placeholder="01234567890">
 
-    <label for="parentPhone">رقم تليفون ولي الأمر</label>
-    <input type="tel" id="parentPhone" placeholder="010xxxxxxxx" required>
+    <label for="parentPhone">رقم موبايل ولي الأمر</label>
+    <input type="tel" id="parentPhone" placeholder="01234567890" required>
 
-    <label for="newPassword">اختار كلمة مرور (باسورد)</label>
-    <input type="password" id="newPassword" placeholder="********" required>
+    <label for="studentClass">اختر فصلك 🏫</label>
+    <select id="studentClass" required>
+      <option value="">-- اختر الفصل --</option>
+      <option value="فصل 1">فصل 1</option>
+      <option value="فصل 2">فصل 2</option>
+      <option value="فصل 3">فصل 3</option>
+      <option value="فصل 4">فصل 4</option>
+    </select>
+
+    <div id="groupWrapper" style="display: none; width: 100%;">
+      <label for="studentGroup">اختر مجموعتك جوه الفصل 👥</label>
+      <select id="studentGroup" required>
+        </select>
+    </div>
+
+    <label for="newPassword">عمل كلمة مرور (باسورد)</label>
+    <input type="password" id="newPassword" placeholder="اكتب رقم أو كلمة تفتكرها" required>
 
     <div class="show-pass-container">
       <input type="checkbox" id="showPassword">
-      <label for="showPassword">إظهار كلمة المرور 👁️</label>
+      <label for="showPassword">إظهار كلمة المرور</label>
     </div>
 
-    <button type="submit" id="submitBtn" style="margin-top: 10px;">إنشاء الحساب وتوليد الكود 🚀</button>
+    <button type="submit" id="submitBtn">إنشاء الحساب وحفظ كودي 🎯</button>
     
-    <div id="successBox" style="display:none; margin-top:20px; padding:15px; background:#e8f5e9; border-radius:16px;">
-      <p style="color:#2e7d32; font-weight:bold; margin-bottom:5px;">تم إنشاء الحساب بنجاح! ✅</p>
-      <p style="color:#15213E; font-weight:bold; font-size:18px;">كودك الخاص هو: <span id="generatedCode" style="color:#36AEE0; font-family:'Changa'; font-size:22px;"></span></p>
-      <p style="font-size:12px; color:#666;">احفظ الكود ده عشان هتعمل بيه تسجيل دخول بعد كده.</p>
-    </div>
-
-    <p style="margin-top:18px; font-size:14px;">
-      عندك حساب بالفعل؟ <a href="index.html" style="color:#36AEE0; font-weight:700; text-decoration:none;">سجل دخول من هنا</a>
+    <p style="text-align: center; margin-top: 15px; font-size: 14px;">
+      عندك حساب؟ <a href="index.html" style="color: #00f2fe; text-decoration: none; font-weight: bold;">سجل دخول من هنا</a>
     </p>
   </form>
 
+  <div id="successBox" class="success-overlay" style="display: none;">
+    <div class="success-card">
+      <div class="success-icon">🎉</div>
+      <h2>مبروك يا بطل! تم التسجيل</h2>
+      <p>كودك الشخصي السري هو:</p>
+      <div id="generatedCode" class="code-badge">M000</div>
+      <p style="font-size: 12px; color: #94a3b8; margin-top: 10px;">خذ لقطة شاشة (Screenshot) للكود ده عشان هتدخل بيه كل مرة!</p>
+      <div class="loading-bar"><div class="progress"></div></div>
+    </div>
+  </div>
+
   <script>
+    // إعدادات الفايربيز الأساسية لمشروعك
     const firebaseConfig = {
       apiKey: "AIzaSyBTlBr41Tl-GxnOwOsZvPkg26iQs2SGW3A",
       authDomain: "agazty-feknesty.firebaseapp.com",
@@ -83,17 +120,49 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
+    // تشغيل وإظهار الباسورد
     document.getElementById("showPassword").addEventListener("change", function() {
-      const passwordInput = document.getElementById("newPassword");
-      passwordInput.type = this.checked ? "text" : "password";
+      const passInput = document.getElementById("newPassword");
+      passInput.type = this.checked ? "text" : "password";
     });
 
+    // سكريبت الحركة الذكية للمجموعات بناءً على الفصل
+    const classSelect = document.getElementById("studentClass");
+    const groupWrapper = document.getElementById("groupWrapper");
+    const groupSelect = document.getElementById("studentGroup");
+
+    classSelect.addEventListener("change", function() {
+      const selectedClass = classSelect.value;
+      if (!selectedClass) {
+        groupWrapper.style.display = "none";
+        groupSelect.innerHTML = "";
+        return;
+      }
+
+      // تجهيز الخيارات أوتوماتيكياً للمجموعات
+      groupSelect.innerHTML = '<option value="">-- اختر المجموعة --</option>';
+      const groups = ["مجموعة 1", "مجموعة 2", "مجموعة 3"];
+      
+      groups.forEach(group => {
+        const opt = document.createElement("option");
+        opt.value = group;
+        opt.textContent = group;
+        groupSelect.appendChild(opt);
+      });
+
+      groupWrapper.style.display = "block";
+    });
+
+    // معالجة وحفظ الفورم في الفايربيز لايف
     document.getElementById("signupForm").addEventListener("submit", function(event) {
       event.preventDefault();
+      
       const fullName = document.getElementById("fullName").value.trim();
       const studentPhone = document.getElementById("studentPhone").value.trim();
       const parentPhone = document.getElementById("parentPhone").value.trim();
       const newPassword = document.getElementById("newPassword").value.trim();
+      const selectedClass = classSelect.value;
+      const selectedGroup = groupSelect.value;
 
       const submitBtn = document.getElementById("submitBtn");
       submitBtn.disabled = true;
@@ -109,8 +178,11 @@
           phone: studentPhone,
           parentPhone: parentPhone,
           password: newPassword,
+          class: selectedClass,  // الفصل المختار
+          group: selectedGroup,  // المجموعة المختارة
           points: 0,
           streak: 0,
+          attendanceCount: 0,
           lastAttendanceDate: "",
           avatar: "" 
         };
@@ -124,6 +196,10 @@
             window.location.href = "home.html";
           }, 4000);
         });
+      }).catch(err => {
+        alert("حدث عطل أثناء التسجيل، حاول مرة أخرى ❌");
+        submitBtn.disabled = false;
+        submitBtn.textContent = "إنشاء الحساب وحفظ كودي 🎯";
       });
     });
   </script>

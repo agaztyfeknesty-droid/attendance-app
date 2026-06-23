@@ -9,30 +9,66 @@
   <link rel="stylesheet" href="style.css">
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <style>
+    .section-title {
+      font-family: 'Changa', sans-serif;
+      font-size: 18px;
+      color: #00f2fe;
+      margin: 20px 0 10px 0;
+      text-align: right;
+      border-right: 4px solid #00f2fe;
+      padding-right: 8px;
+    }
+    .group-row {
+      display: flex;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 14px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+    .group-rank { font-weight: bold; font-size: 16px; width: 35px; text-align: center; }
+    .group-info { flex: 1; text-align: right; margin-right: 10px; }
+    .group-name { font-weight: bold; color: white; font-size: 15px; }
+    .group-class { font-size: 12px; color: #94a3b8; }
+    .group-points { font-weight: bold; color: #10b981; font-size: 16px; }
+  </style>
 </head>
 <body>
 
   <form onsubmit="return false;">
     <img src="logo.png" alt="اجازتي في كنيستي" class="logo">
     <h1>لوحة الصدارة 🏆</h1>
-    <p class="sub-greeting">مين أكتر واحد التزم؟ ✨</p>
+    <p class="sub-greeting">مين أكتر مجموعة وفرد ملتزمين؟ ✨</p>
 
+    <div class="section-title">🏆 صدارة المجموعات (إجمالي النقط)</div>
+    <div id="groupsList"></div>
+
+    <div class="section-title">👤 صدارة الأبطال (فردي)</div>
     <div id="list"></div>
   </form>
 
   <div class="bottom-nav">
     <a href="home.html" class="nav-item">
       <span class="nav-icon">🏠</span>
-      <span class="nav-label">الرئيسية</span>
+      <span class="nav-text">الرئيسية</span>
+    </a>
+    <a href="quiz.html" class="nav-item">
+      <span class="nav-icon">🎯</span>
+      <span class="nav-text">المسابقة</span>
+    </a>
+    <a href="rewards.html" class="nav-item">
+      <span class="nav-icon">🚀</span>
+      <span class="nav-text">الجوائز</span>
     </a>
     <a href="leaderboard.html" class="nav-item active">
       <span class="nav-icon">🏆</span>
-      <span class="nav-label">الصدارة</span>
+      <span class="nav-text">الصدارة</span>
     </a>
   </div>
 
   <script>
-    // إعدادات الفايربيس الخاصة ببروجكت "أجازتي في كنيستي"
     const firebaseConfig = {
       apiKey: "AIzaSyBTlBr41Tl-GxnOwOsZvPkg26iQs2SGW3A",
       authDomain: "agazty-feknesty.firebaseapp.com",
@@ -45,46 +81,78 @@
     const db = firebase.firestore();
 
     const listDiv = document.getElementById("list");
-    const avatarColors = ["#F2618C", "#36AEE0", "#F4B731", "#7C5CFC", "#2BB673"];
+    const groupsListDiv = document.getElementById("groupsList");
+    const avatarColors = ["#ff4757", "#2ed573", "#1e90ff", "#ffa502", "#9b59b6"];
 
-    // الاستماع لايف (Real-time) لجميع الطلاب وترتيبهم حسب النقاط تنازلياً
     db.collection("students").orderBy("points", "desc").onSnapshot(function(querySnapshot) {
-      // مسح القائمة القديمة قبل إعادة الرسم لمنع التكرار
       listDiv.innerHTML = "";
+      groupsListDiv.innerHTML = "";
       
       let rank = 1;
       const medals = ["🥇", "🥈", "🥉"];
+      
+      // كائن لتجميع نقاط المجموعات ديناميكياً
+      let groupScores = {};
 
       querySnapshot.forEach(function(doc) {
         const student = doc.data();
-        
-        // أول 3 هياخدوا ميداليات، والباقي أرقام عادية
+        const sPoints = student.points || 0;
+        const sClass = student.class || "بدون فصل";
+        const sGroup = student.group || "بدون مجموعة";
+
+        // تجميع نقاط المجموعة
+        if(student.class && student.group) {
+          const groupKey = `${sClass} - ${sGroup}`;
+          if(!groupScores[groupKey]) {
+            groupScores[groupKey] = { points: 0, class: sClass, group: sGroup };
+          }
+          groupScores[groupKey].points += sPoints;
+        }
+
+        // رسم صدارة الأفراد
         const medal = rank <= 3 ? medals[rank - 1] : rank;
-        
-        // جلب أول حرف من الاسم عشان الـ Avatar
         const initial = student.name ? student.name.charAt(0).toUpperCase() : "⭐";
         const color = avatarColors[(rank - 1) % avatarColors.length];
 
-        // بناء صف الطالب في لوحة الصدارة
         const row = document.createElement("div");
         row.className = "leader-row";
         row.innerHTML = `
-          <div class="leader-rank">${medal}</div>
-          <div class="leader-avatar" style="background-color: ${color};">${initial}</div>
-          <div class="leader-info">
-            <div class="leader-name">${student.name}</div>
-            <div class="leader-streak">${student.streak || 0} 🔥 يوم التزام</div>
+          <div class=\"leader-rank\">${medal}</div>
+          <div class=\"leader-avatar\" style=\"background-color: ${color};\">${initial}</div>
+          <div class=\"leader-info\">
+            <div class=\"leader-name\">${student.name}</div>
+            <div class=\"leader-streak\" style="font-size:11px; color:#94a3b8;">📍 ${sClass} | ${sGroup}</div>
           </div>
-          <div class="leader-points">${student.points || 0} ⭐</div>
+          <div class=\"leader-points\">${sPoints} ⭐</div>
         `;
-
         listDiv.appendChild(row);
         rank++;
       });
-    }, function(error) {
-      console.error("Error listening to leaderboard: ", error);
+
+      // تحويل المجموعات لمصفوفة وترتيبها من الكبير للصغير
+      let sortedGroups = Object.values(groupScores).sort((a, b) => b.points - a.points);
+      
+      let gRank = 1;
+      sortedGroups.forEach(g => {
+        const gMedal = gRank <= 3 ? medals[gRank - 1] : gRank;
+        const gRow = document.createElement("div");
+        gRow.className = "group-row";
+        gRow.innerHTML = `
+          <div class="group-rank">${gMedal}</div>
+          <div class="group-info">
+            <div class="group-name">${g.group}</div>
+            <div class="group-class">${g.class}</div>
+          </div>
+          <div class="group-points">${g.points} 🎯</div>
+        `;
+        groupsListDiv.appendChild(gRow);
+        gRank++;
+      });
+      
+      if(sortedGroups.length === 0) {
+        groupsListDiv.innerHTML = `<p style="text-align:center; color:#94a3b8; font-size:13px;">في انتظار تجميع نقاط المجموعات...</p>`;
+      }
     });
   </script>
-
 </body>
 </html>
