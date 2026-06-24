@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>التحدي اليومي 📖</title>
+  <title>تحدي الستريك 🔥</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Changa:wght@600;700;800&display=swap" rel="stylesheet">
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -43,87 +43,127 @@
       color: #0f172a;
       font-weight: 800;
     }
+
+    /* كارت الستريك */
     .streak-card {
       background: linear-gradient(135deg, #ff6b35, #f43f5e);
-      border-radius: 20px;
-      padding: 20px;
+      border-radius: 24px;
+      padding: 28px 20px;
       text-align: center;
       color: white;
       margin-bottom: 16px;
-      box-shadow: 0 8px 20px rgba(244, 63, 94, 0.25);
+      box-shadow: 0 8px 24px rgba(244, 63, 94, 0.3);
     }
-    .streak-fire { font-size: 48px; display: block; margin-bottom: 8px; animation: pulse 1.5s infinite; }
-    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
-    .streak-num { font-family: 'Changa', sans-serif; font-size: 42px; font-weight: 800; display: block; line-height: 1; }
-    .streak-label { font-size: 14px; opacity: 0.9; margin-top: 4px; }
-    .chapter-card {
+    .streak-fire {
+      font-size: 56px;
+      display: block;
+      margin-bottom: 10px;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.12); }
+    }
+    .streak-num {
+      font-family: 'Changa', sans-serif;
+      font-size: 56px;
+      font-weight: 800;
+      display: block;
+      line-height: 1;
+    }
+    .streak-label {
+      font-size: 15px;
+      opacity: 0.9;
+      margin-top: 6px;
+    }
+
+    /* كارت الكتاب المقدس */
+    .bible-card {
       background: white;
       border-radius: 20px;
-      padding: 20px;
+      padding: 22px;
       margin-bottom: 16px;
       border: 1px solid #e2e8f0;
       box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+      text-align: center;
     }
-    .chapter-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
+    .bible-card h2 {
+      font-family: 'Changa', sans-serif;
+      font-size: 18px;
+      color: #0f172a;
+      margin-bottom: 8px;
     }
-    .chapter-title { font-family: 'Changa', sans-serif; font-size: 17px; font-weight: 800; color: #0f172a; }
-    .chapter-badge { background: #1e3a8a; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; white-space: nowrap; }
-    .chapter-desc { font-size: 14px; color: #64748b; line-height: 1.8; margin-bottom: 14px; }
-    .read-link {
+    .bible-card p {
+      font-size: 14px;
+      color: #64748b;
+      line-height: 1.7;
+      margin-bottom: 18px;
+    }
+    .open-bible-btn {
       display: block;
       background: #1e3a8a;
       color: white;
       text-align: center;
       padding: 14px;
-      border-radius: 12px;
+      border-radius: 14px;
+      text-decoration: none;
       font-weight: 700;
       font-size: 15px;
       font-family: 'Cairo', sans-serif;
+      margin-bottom: 10px;
+    }
+    .open-bible-note {
+      font-size: 12px;
+      color: #94a3b8;
+    }
+
+    /* زرار "قرأت أصحاح اليوم" */
+    .confirm-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #10b981, #065f46);
+      color: white;
       border: none;
+      padding: 18px;
+      border-radius: 16px;
+      font-size: 18px;
+      font-family: 'Changa', sans-serif;
+      font-weight: 800;
       cursor: pointer;
-      width: 100%;
-    }
-    .question-card {
-      background: white;
-      border-radius: 20px;
-      padding: 20px;
       margin-bottom: 16px;
-      border: 1px solid #e2e8f0;
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35);
+      transition: transform 0.1s ease;
     }
-    .question-label { font-size: 13px; color: #64748b; font-weight: 600; margin-bottom: 10px; display: block; }
-    .question-text { font-size: 16px; font-weight: 700; color: #0f172a; margin-bottom: 16px; line-height: 1.6; }
-    .options-grid { display: flex; flex-direction: column; gap: 10px; }
-    .option-btn {
-      background: #f8fafc;
-      border: 2px solid #e2e8f0;
-      border-radius: 12px;
-      padding: 13px 16px;
-      font-size: 15px;
-      font-family: 'Cairo', sans-serif;
-      font-weight: 600;
-      color: #334155;
-      cursor: pointer;
-      text-align: right;
-      transition: all 0.2s ease;
-      width: 100%;
+    .confirm-btn:active { transform: scale(0.97); }
+    .confirm-btn:disabled {
+      background: #9ca3af;
+      box-shadow: none;
+      cursor: not-allowed;
     }
-    .option-btn:hover { border-color: #1e3a8a; background: #eff6ff; }
-    .option-btn.correct { background: #d1fae5; border-color: #10b981; color: #065f46; }
-    .option-btn.wrong { background: #fee2e2; border-color: #ef4444; color: #991b1b; }
-    .option-btn:disabled { cursor: not-allowed; opacity: 0.7; }
-    .result-card, .already-done-card {
+
+    /* كارت "قرأت بالفعل" */
+    .done-card {
       background: white;
       border-radius: 20px;
-      padding: 25px;
+      padding: 28px;
       text-align: center;
-      border: 1px solid #e2e8f0;
+      border: 2px solid #10b981;
       margin-bottom: 16px;
       display: none;
+      box-shadow: 0 4px 16px rgba(16, 185, 129, 0.15);
     }
+
+    /* كارت النجاح */
+    .success-card {
+      background: white;
+      border-radius: 20px;
+      padding: 28px;
+      text-align: center;
+      border: 2px solid #fbbf24;
+      margin-bottom: 16px;
+      display: none;
+      box-shadow: 0 4px 16px rgba(251, 191, 36, 0.2);
+    }
+
     .go-home-btn {
       display: block;
       background: #0f172a;
@@ -138,8 +178,23 @@
       cursor: pointer;
       width: 100%;
       font-family: 'Cairo', sans-serif;
-      margin-top: 12px;
+      margin-top: 14px;
     }
+
+    /* معلومة الستريك */
+    .streak-info-card {
+      background: white;
+      border-radius: 16px;
+      padding: 16px;
+      border: 1px solid #e2e8f0;
+      margin-bottom: 16px;
+      font-size: 13px;
+      color: #64748b;
+      line-height: 1.8;
+    }
+    .streak-info-card b { color: #0f172a; }
+
+    /* البار السفلي */
     .bottom-navbar {
       position: fixed;
       bottom: 0; left: 0; right: 0;
@@ -151,7 +206,7 @@
       align-items: center;
       z-index: 100;
     }
-    .nav-link { text-decoration: none; color: #64748b; font-size: 12px; text-align: center; }
+    .nav-link { text-decoration: none; color: #64748b; font-size: 11px; text-align: center; font-family: 'Cairo', sans-serif; }
     .nav-link.active { color: #0f172a; font-weight: bold; }
     .nav-icon { display: block; font-size: 20px; margin-bottom: 2px; }
   </style>
@@ -159,52 +214,72 @@
 <body>
 
   <div class="container">
+
     <div class="top-bar">
       <button class="back-btn" onclick="window.location.href='home.html'">⬅ رجوع</button>
-      <span class="page-title">📖 التحدي اليومي</span>
+      <span class="page-title">📖 تحدي الستريك</span>
       <div style="width:60px;"></div>
     </div>
 
+    <!-- كارت الستريك -->
     <div class="streak-card">
       <span class="streak-fire">🔥</span>
       <span class="streak-num" id="streakCount">0</span>
       <span class="streak-label">يوم متتالي — سلسلة الالتزام بتاعتك</span>
     </div>
 
-    <div class="chapter-card" id="chapterCard">
-      <div class="chapter-header">
-        <span class="chapter-title" id="chapterTitle">جاري التحميل...</span>
-        <span class="chapter-badge" id="chapterBadge">مرقس</span>
+    <!-- كارت "قرأت بالفعل النهاردة" -->
+    <div class="done-card" id="doneCard">
+      <span style="font-size:52px; display:block; margin-bottom:12px;">✅</span>
+      <p style="font-family:'Changa'; font-size:20px; font-weight:800; color:#065f46; margin-bottom:8px;">عملتها النهاردة! 🎉</p>
+      <p style="color:#64748b; font-size:14px; margin-bottom:4px;">سجّلت قراءتك النهاردة بنجاح.</p>
+      <p style="color:#64748b; font-size:14px;">تعالى بكرة عشان تكمل الستريك! 🔥</p>
+      <button onclick="window.location.href='home.html'" class="go-home-btn">🏠 رجوع للرئيسية</button>
+    </div>
+
+    <!-- كارت النجاح بعد الضغط -->
+    <div class="success-card" id="successCard">
+      <span style="font-size:52px; display:block; margin-bottom:12px;">🏆</span>
+      <p style="font-family:'Changa'; font-size:22px; font-weight:800; color:#0f172a; margin-bottom:8px;" id="successTitle">أحسنت يا بطل!</p>
+      <p style="font-size:15px; color:#16a34a; font-weight:700; margin-bottom:4px;" id="successStreak"></p>
+      <p style="font-size:14px; color:#64748b;" id="successPoints"></p>
+      <button onclick="window.location.href='home.html'" class="go-home-btn">🏠 رجوع للرئيسية</button>
+    </div>
+
+    <!-- المحتوى الرئيسي -->
+    <div id="mainContent">
+
+      <!-- كارت الكتاب المقدس -->
+      <div class="bible-card">
+        <h2>📖 اقرأ من الكتاب المقدس</h2>
+        <p>افتح الكتاب المقدس واقرأ أصحاح من انجيل مرقس أو أي أصحاح تحبه، وبعد ما تخلص ارجع هنا وسجّل قراءتك.</p>
+        <a href="https://www.biblegateway.com/passage/?search=Mark+1&version=ALAB" target="_blank" class="open-bible-btn">
+          📖 افتح الكتاب المقدس من هنا
+        </a>
+        <p class="open-bible-note">هيفتح في تاب جديد — ارجع هنا بعد ما تخلص القراءة</p>
       </div>
-      <p class="chapter-desc" id="chapterDesc">...</p>
-      <button onclick="openChapter()" class="read-link">📖 اقرأ الأصحاح من هنا 📚</button>
+
+      <!-- معلومة الستريك -->
+      <div class="streak-info-card">
+        <b>🔥 إزاي بيشتغل الستريك؟</b><br>
+        كل يوم تسجّل قراءتك، الستريك بيزيد يوم.<br>
+        لو نسيت يوم، الستريك بيرجع من الأول.<br>
+        <b>⭐ كل قراءة = 5 نقاط تضاف لرصيدك.</b>
+      </div>
+
+      <!-- زرار التأكيد -->
+      <button class="confirm-btn" id="confirmBtn" onclick="confirmReading()">
+        ✅ قرأت أصحاح اليوم!
+      </button>
+
     </div>
 
-    <div class="question-card" id="questionCard">
-      <span class="question-label">✅ سؤال تأكيد القراءة</span>
-      <p class="question-text" id="questionText">جاري تحميل السؤال...</p>
-      <div class="options-grid" id="optionsGrid"></div>
-    </div>
-
-    <div class="already-done-card" id="alreadyDoneCard">
-      <span style="font-size:50px; display:block; margin-bottom:10px;">✅</span>
-      <p style="font-family:'Changa'; font-size:20px; font-weight:800; color:#0f172a; margin-bottom:8px;">عملتها النهاردة! 🎉</p>
-      <p style="color:#64748b; font-size:14px; margin-bottom:16px;">قرأت الأصحاح وجاوبت النهاردة.<br>تعالى بكرة الأصحاح الجديد! 📅</p>
-      <button onclick="window.location.href='home.html'" class="go-home-btn">🏠 رجوع للرئيسية</button>
-    </div>
-
-    <div class="result-card" id="resultCard">
-      <span style="font-size:50px; display:block; margin-bottom:10px;" id="resultEmoji">🎉</span>
-      <p style="font-family:'Changa'; font-size:22px; font-weight:800; color:#0f172a; margin-bottom:8px;" id="resultTitle">أحسنت!</p>
-      <p style="font-size:15px; color:#16a34a; font-weight:700; margin-bottom:16px;" id="resultPoints"></p>
-      <button onclick="window.location.href='home.html'" class="go-home-btn">🏠 رجوع للرئيسية</button>
-    </div>
   </div>
 
   <div class="bottom-navbar">
     <a href="home.html" class="nav-link"><span class="nav-icon">🏠</span>الرئيسية</a>
     <a href="bible.html" class="nav-link active"><span class="nav-icon">📖</span>الستريك</a>
-    <a href="quiz.html" class="nav-link"><span class="nav-icon">🎯</span>المسابقة</a>
+    <a href="badges.html" class="nav-link"><span class="nav-icon">🏅</span>أوسمتي</a>
     <a href="leaderboard.html" class="nav-link"><span class="nav-icon">🏆</span>الصدارة</a>
   </div>
 
@@ -223,133 +298,113 @@
     const student = JSON.parse(localStorage.getItem("loggedInStudent"));
     if (!student || !student.code) { window.location.href = "index.html"; }
 
-    // أصحاح مرقس — روابط Bible Gateway بالعربي (بتشتغل على طول)
-    const markChapters = [
-      { num: 1, title: "الأصحاح الأول", desc: "المعمودية ودعوة التلاميذ الأوائل وأعمال شفاء في كفرناحوم.", link: "https://www.biblegateway.com/passage/?search=Mark+1&version=ALAB", question: "من عمّد يسوع في هذا الأصحاح؟", options: ["إيليا", "يوحنا المعمدان", "بطرس", "موسى"], correct: 1 },
-      { num: 2, title: "الأصحاح الثاني", desc: "شفاء المفلوج ودعوة لاوي والجدال عن الصوم والسبت.", link: "https://www.biblegateway.com/passage/?search=Mark+2&version=ALAB", question: "ماذا فعل لاوي عندما دعاه يسوع؟", options: ["رفض الدعوة", "قام وتبعه", "طلب يوماً للتفكير", "ذهب يسأل الكهنة"], correct: 1 },
-      { num: 3, title: "الأصحاح الثالث", desc: "اختيار الاثني عشر رسولاً والجدال مع الكتبة.", link: "https://www.biblegateway.com/passage/?search=Mark+3&version=ALAB", question: "كم عدد الرسل الذين اختارهم يسوع؟", options: ["سبعة", "سبعين", "اثني عشر", "ثلاثة"], correct: 2 },
-      { num: 4, title: "الأصحاح الرابع", desc: "مثل الزارع ومثل الخردل وتهدئة العاصفة.", link: "https://www.biblegateway.com/passage/?search=Mark+4&version=ALAB", question: "ماذا فعل يسوع عندما هاجت العاصفة؟", options: ["أيقظ التلاميذ", "أمر الريح والبحر فهدآ", "ترك السفينة", "صلى طوال الليل"], correct: 1 },
-      { num: 5, title: "الأصحاح الخامس", desc: "شفاء مجنون جرجسة وإقامة ابنة يايرس.", link: "https://www.biblegateway.com/passage/?search=Mark+5&version=ALAB", question: "ما اسم رئيس المجمع الذي طلب شفاء ابنته؟", options: ["نيقوديموس", "يايرس", "بارتيماوس", "لعازر"], correct: 1 },
-      { num: 6, title: "الأصحاح السادس", desc: "إرسال الاثني عشر وتكثير الخبز ومشي يسوع على الماء.", link: "https://www.biblegateway.com/passage/?search=Mark+6&version=ALAB", question: "كم رغيف خبز كان لدى التلاميذ قبل المعجزة؟", options: ["اثنان", "عشرة", "خمسة", "سبعة"], correct: 2 },
-      { num: 7, title: "الأصحاح السابع", desc: "الوصايا الحقيقية وشفاء ابنة المرأة الكنعانية.", link: "https://www.biblegateway.com/passage/?search=Mark+7&version=ALAB", question: "ما جنسية المرأة التي طلبت شفاء ابنتها؟", options: ["يهودية", "رومانية", "يونانية سورية الجنس", "مصرية"], correct: 2 },
-      { num: 8, title: "الأصحاح الثامن", desc: "تكثير الخبز الثاني واعتراف بطرس بأن يسوع هو المسيح.", link: "https://www.biblegateway.com/passage/?search=Mark+8&version=ALAB", question: "من أجاب يسوع بأنه المسيح؟", options: ["يوحنا", "توما", "بطرس", "أندراوس"], correct: 2 },
-      { num: 9, title: "الأصحاح التاسع", desc: "التجلي على الجبل وشفاء الولد المصروع.", link: "https://www.biblegateway.com/passage/?search=Mark+9&version=ALAB", question: "من ظهر مع يسوع وقت التجلي؟", options: ["إبراهيم وإسحق", "موسى وإيليا", "داود وسليمان", "يشوع وكالب"], correct: 1 },
-      { num: 10, title: "الأصحاح العاشر", desc: "الطلاق والأطفال والشاب الغني وشفاء بارتيماوس.", link: "https://www.biblegateway.com/passage/?search=Mark+10&version=ALAB", question: "ما اسم الأعمى الذي شفاه يسوع؟", options: ["طيماوس", "يايرس", "بارتيماوس", "أننياس"], correct: 2 },
-      { num: 11, title: "الأصحاح الحادي عشر", desc: "الدخول إلى أورشليم وطرد الباعة من الهيكل.", link: "https://www.biblegateway.com/passage/?search=Mark+11&version=ALAB", question: "ماذا وجد يسوع في الهيكل فغضب؟", options: ["أصناماً", "باعة وصيارفة", "جنوداً رومان", "كهنة يصلون"], correct: 1 },
-      { num: 12, title: "الأصحاح الثاني عشر", desc: "مثل الكرامين والجزية لقيصر والوصية العظمى.", link: "https://www.biblegateway.com/passage/?search=Mark+12&version=ALAB", question: "ما هي الوصية العظمى التي ذكرها يسوع؟", options: ["لا تسرق", "تحب الرب إلهك بكل قلبك", "اذهب وبع مالك", "أكرم أباك وأمك"], correct: 1 },
-      { num: 13, title: "الأصحاح الثالث عشر", desc: "نبوات عن خراب أورشليم وعلامات النهاية.", link: "https://www.biblegateway.com/passage/?search=Mark+13&version=ALAB", question: "ماذا قال يسوع عن موعد مجيئه الثاني؟", options: ["بعد ألف سنة", "لا يعلم أحد الساعة إلا الآب", "في عيد الفصح", "بعد خراب روما"], correct: 1 },
-      { num: 14, title: "الأصحاح الرابع عشر", desc: "العشاء الأخير وخيانة يهوذا واعتقال يسوع.", link: "https://www.biblegateway.com/passage/?search=Mark+14&version=ALAB", question: "ماذا صنعت المرأة بالطيب في هذا الأصحاح؟", options: ["باعته للكهنة", "سكبته على رأس يسوع", "أعطته للفقراء", "احتفظت به"], correct: 1 },
-      { num: 15, title: "الأصحاح الخامس عشر", desc: "محاكمة يسوع أمام بيلاطس وصلبه ودفنه.", link: "https://www.biblegateway.com/passage/?search=Mark+15&version=ALAB", question: "من طلب جسد يسوع ودفنه؟", options: ["يوحنا الرسول", "يوسف الرامي", "نيقوديموس", "بطرس"], correct: 1 },
-      { num: 16, title: "الأصحاح السادس عشر", desc: "قيامة يسوع من الأموات وظهوره للتلاميذ.", link: "https://www.biblegateway.com/passage/?search=Mark+16&version=ALAB", question: "من كانت أول من ذهبت إلى القبر يوم القيامة؟", options: ["أم يسوع مريم", "مريم المجدلية وأخريات", "التلاميذ الاثنا عشر", "يوحنا وبطرس"], correct: 1 }
-    ];
-
-    var chapterUrl = "";
-
-    function openChapter() {
-      if (chapterUrl) {
-        window.open(chapterUrl, '_blank');
-      }
-    }
-
+    // التاريخ بتوقيت مصر بالظبط
     function getTodayString() {
       const now = new Date();
-      const cairoTime = new Date(now.toLocaleString("en-US", {timeZone: "Africa/Cairo"}));
+      const cairoTime = new Date(now.toLocaleString("en-US", { timeZone: "Africa/Cairo" }));
       const year = cairoTime.getFullYear();
       const month = String(cairoTime.getMonth() + 1).padStart(2, '0');
       const day = String(cairoTime.getDate()).padStart(2, '0');
       return year + "-" + month + "-" + day;
     }
 
-    function getTodayChapter() {
-      const startDate = new Date("2026-06-23");
-      const now = new Date(new Date().toLocaleString("en-US", {timeZone: "Africa/Cairo"}));
-      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-      const diffDays = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
-      return markChapters[Math.max(0, diffDays) % markChapters.length];
-    }
-
-    const todayChapter = getTodayChapter();
     const todayString = getTodayString();
-    chapterUrl = todayChapter.link;
 
-    document.getElementById("chapterTitle").textContent = "إنجيل مرقس — " + todayChapter.title;
-    document.getElementById("chapterBadge").textContent = "الأصحاح " + todayChapter.num;
-    document.getElementById("chapterDesc").textContent = todayChapter.desc;
-    document.getElementById("questionText").textContent = todayChapter.question;
-
+    // جلب بيانات الطالب
     db.collection("students").doc(student.code).get().then(function(doc) {
       if (!doc.exists) return;
       const data = doc.data();
+
+      // عرض الستريك الحالي
       document.getElementById("streakCount").textContent = data.bibleStreak || 0;
 
+      // لو قرأ النهاردة بالفعل
       if (data.lastBibleDate === todayString) {
-        document.getElementById("chapterCard").style.display = "none";
-        document.getElementById("questionCard").style.display = "none";
-        document.getElementById("alreadyDoneCard").style.display = "block";
-        return;
+        document.getElementById("mainContent").style.display = "none";
+        document.getElementById("doneCard").style.display = "block";
       }
-      renderOptions(data);
     });
 
-    function renderOptions(studentData) {
-      const grid = document.getElementById("optionsGrid");
-      grid.innerHTML = "";
-      todayChapter.options.forEach(function(option, index) {
-        const btn = document.createElement("button");
-        btn.className = "option-btn";
-        btn.textContent = option;
-        btn.addEventListener("click", function() { handleAnswer(index, studentData); });
-        grid.appendChild(btn);
-      });
-    }
+    // لما يدوس "قرأت أصحاح اليوم"
+    function confirmReading() {
+      const btn = document.getElementById("confirmBtn");
+      btn.disabled = true;
+      btn.textContent = "جاري التسجيل... ⏳";
 
-    function handleAnswer(chosenIndex, studentData) {
-      const buttons = document.querySelectorAll(".option-btn");
-      buttons.forEach(function(btn) { btn.disabled = true; });
+      db.collection("students").doc(student.code).get().then(function(doc) {
+        if (!doc.exists) return;
+        const data = doc.data();
 
-      const isCorrect = chosenIndex === todayChapter.correct;
-      buttons[chosenIndex].classList.add(isCorrect ? "correct" : "wrong");
-      if (!isCorrect) { buttons[todayChapter.correct].classList.add("correct"); }
+        // لو قرأ بالفعل النهاردة — منع التكرار
+        if (data.lastBibleDate === todayString) {
+          document.getElementById("mainContent").style.display = "none";
+          document.getElementById("doneCard").style.display = "block";
+          return;
+        }
 
-      const lastBibleDate = studentData.lastBibleDate || "";
-      let currentStreak = studentData.bibleStreak || 0;
-      let newStreak = 1;
+        // حساب الستريك الجديد
+        const lastBibleDate = data.lastBibleDate || "";
+        let currentStreak = data.bibleStreak || 0;
+        let newStreak = 1;
 
-      if (lastBibleDate) {
-        const lastDate = new Date(lastBibleDate);
-        const today = new Date(todayString);
-        const diffDays = Math.round((today - lastDate) / (1000 * 60 * 60 * 24));
-        if (diffDays === 1) { newStreak = currentStreak + 1; }
-        else if (diffDays === 0) { newStreak = currentStreak; }
-        else { newStreak = 1; }
-      }
+        if (lastBibleDate) {
+          const lastDate = new Date(lastBibleDate);
+          const today = new Date(todayString);
+          const diffDays = Math.round((today - lastDate) / (1000 * 60 * 60 * 24));
 
-      const pointsEarned = isCorrect ? 10 : 5;
-      const newPoints = (studentData.points || 0) + pointsEarned;
+          if (diffDays === 1) {
+            // يوم بعد يوم — الستريك يزيد
+            newStreak = currentStreak + 1;
+          } else if (diffDays === 0) {
+            // نفس اليوم — مش المفروض يوصل هنا بس للأمان
+            newStreak = currentStreak;
+          } else {
+            // فات أكتر من يوم — الستريك يبدأ من 1
+            newStreak = 1;
+          }
+        }
 
-      setTimeout(function() {
+        // 5 نقاط على القراءة
+        const newPoints = (data.points || 0) + 5;
+
+        // حفظ في Firebase
         db.collection("students").doc(student.code).update({
           bibleStreak: newStreak,
           lastBibleDate: todayString,
           points: newPoints
         }).then(function() {
-          document.getElementById("chapterCard").style.display = "none";
-          document.getElementById("questionCard").style.display = "none";
-          document.getElementById("resultCard").style.display = "block";
+
+          // إخفاء المحتوى وإظهار كارت النجاح
+          document.getElementById("mainContent").style.display = "none";
+          document.getElementById("successCard").style.display = "block";
           document.getElementById("streakCount").textContent = newStreak;
 
-          if (isCorrect) {
-            document.getElementById("resultEmoji").textContent = "🏆";
-            document.getElementById("resultTitle").textContent = "إجابة صح! يا بطل!";
-            document.getElementById("resultPoints").textContent = "+ " + pointsEarned + " نقطة أُضيفت لرصيدك 🎉";
+          // رسائل مختلفة حسب الستريك
+          if (newStreak >= 30) {
+            document.getElementById("successTitle").textContent = "أسطورة! 👑 شهر كامل!";
+          } else if (newStreak >= 15) {
+            document.getElementById("successTitle").textContent = "قلب ثابت! 💎 نصف شهر!";
+          } else if (newStreak >= 7) {
+            document.getElementById("successTitle").textContent = "أسبوع مع ربنا! ⚡";
+          } else if (newStreak >= 3) {
+            document.getElementById("successTitle").textContent = "3 أيام نار! 🔥";
           } else {
-            document.getElementById("resultEmoji").textContent = "📖";
-            document.getElementById("resultTitle").textContent = "الإجابة غلط، بس مشكور على القراءة!";
-            document.getElementById("resultPoints").textContent = "+ 5 نقاط على القراءة 📚";
+            document.getElementById("successTitle").textContent = "أحسنت يا بطل! 🏆";
+          }
+
+          document.getElementById("successStreak").textContent = "🔥 الستريك بتاعك دلوقتي: " + newStreak + " يوم متتالي";
+          document.getElementById("successPoints").textContent = "⭐ + 5 نقاط أُضيفت لرصيدك";
+
+          // تحديث الـ localStorage
+          const updatedStudent = JSON.parse(localStorage.getItem("loggedInStudent"));
+          if (updatedStudent) {
+            updatedStudent.points = newPoints;
+            localStorage.setItem("loggedInStudent", JSON.stringify(updatedStudent));
           }
         });
-      }, 1200);
+      });
     }
   </script>
+
 </body>
 </html>
