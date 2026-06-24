@@ -6,14 +6,10 @@
   <title>الرئيسية 🏠</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Changa:wght@600;700&display=swap" rel="stylesheet">
-  
-  <!-- استدعاء المكتبات الأساسية عشان الـ QR والـ Firebase يشتغلوا -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-
   <style>
-    /* خلفية بيضاء سادة ونظيفة تماماً */
     html, body {
       background: #ffffff !important;
       margin: 0 !important;
@@ -30,7 +26,6 @@
       padding: 15px 15px 100px 15px;
       box-sizing: border-box;
     }
-    /* البار العلوي: الثلاث شرط يمين واللوجو شمال */
     .top-header-bar {
       display: flex;
       justify-content: space-between;
@@ -43,16 +38,16 @@
       border: 1px solid #cbd5e1;
       color: #0f172a;
       font-size: 22px;
-      padding: 4px 14px;
+      padding: 6px 14px;
       border-radius: 8px;
       cursor: pointer;
+      font-family: 'Cairo', sans-serif;
     }
     .main-app-logo {
       width: 60px;
       height: 60px;
       object-fit: contain;
     }
-    /* الهوية الشخصية */
     .profile-section {
       text-align: center;
       margin-bottom: 20px;
@@ -68,26 +63,27 @@
       height: 100%;
       border-radius: 50%;
       object-fit: cover;
-      border: 2px solid #0f172a;
+      border: 3px solid #1e3a8a;
     }
     .upload-badge {
       position: absolute;
       bottom: 2px;
       right: 2px;
-      background: #0f172a;
+      background: #1e3a8a;
       color: white;
-      width: 26px;
-      height: 26px;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 12px;
+      font-size: 13px;
       cursor: pointer;
+      border: 2px solid white;
     }
     .user-name {
       font-family: 'Changa', sans-serif;
-      font-size: 22px;
+      font-size: 20px;
       color: #0f172a;
       margin: 10px 0 2px 0;
     }
@@ -101,17 +97,16 @@
       background: #f1f5f9;
       border: 1px solid #e2e8f0;
       color: #334155;
-      padding: 4px 12px;
+      padding: 4px 14px;
       border-radius: 20px;
       display: inline-block;
     }
-    /* الكروت */
     .clean-info-card {
       background: #f8fafc;
       border: 1px solid #e2e8f0;
       border-radius: 16px;
       padding: 16px;
-      margin-bottom: 15px;
+      margin-bottom: 14px;
       text-align: center;
     }
     .action-link-card {
@@ -119,18 +114,21 @@
       color: #ffffff;
       border-radius: 16px;
       padding: 18px;
-      margin-bottom: 15px;
+      margin-bottom: 14px;
       text-align: center;
       cursor: pointer;
       display: block;
       text-decoration: none;
     }
-    .action-link-card h3 { margin: 0 0 6px 0; font-size: 17px; font-family: 'Changa', sans-serif; color: #ffcc00; }
+    .action-link-card h3 {
+      margin: 0 0 6px 0;
+      font-size: 17px;
+      font-family: 'Changa', sans-serif;
+      color: #ffcc00;
+    }
     .action-link-card p { margin: 0; font-size: 13px; color: #cbd5e1; }
-
     .secondary-card { background: #1e3a8a; }
     .secondary-card h3 { color: #ffffff; }
-
     .qr-container {
       background: white;
       padding: 8px;
@@ -139,7 +137,6 @@
       display: inline-block;
       margin-top: 10px;
     }
-    /* البار السفلي الثابت */
     .bottom-navbar {
       position: fixed;
       bottom: 0;
@@ -156,76 +153,106 @@
     .nav-link {
       text-decoration: none;
       color: #64748b;
-      font-size: 12px;
+      font-size: 11px;
       text-align: center;
+      font-family: 'Cairo', sans-serif;
     }
     .nav-link.active { color: #0f172a; font-weight: bold; }
     .nav-icon { display: block; font-size: 20px; margin-bottom: 2px; }
-
-    /* ستايل المنيو الجانبية (Sidebar) الحقيقية */
     .sidebar {
       position: fixed;
       top: 0;
-      right: -280px;
+      right: -300px;
       width: 280px;
       height: 100%;
-      background: #ffffff;
-      box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+      background: #0f172a;
       z-index: 1000;
       transition: right 0.3s ease;
       display: flex;
       flex-direction: column;
-<a href="badges.html" class="menu-item">🏅 أوسمتي</a>
+      border-radius: 20px 0 0 20px;
     }
     .sidebar.open { right: 0; }
     .sidebar-header {
-      padding: 15px;
-      border-bottom: 1px solid #f1f5f9;
+      padding: 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
-    .sidebar-title { font-weight: bold; color: #0f172a; }
-    .close-btn { background: none; border: none; font-size: 24px; cursor: pointer; color: #64748b; }
-    .sidebar-menu { padding: 15px; display: flex; flex-direction: column; gap: 10px; }
-    .menu-item { text-decoration: none; color: #334155; padding: 10px; border-radius: 8px; display: block; }
-    .menu-item.active { background: #f1f5f9; color: #0f172a; font-weight: bold; }
+    .sidebar-title { font-weight: bold; color: #F4B731; font-family: 'Changa', sans-serif; font-size: 18px; }
+    .close-btn {
+      background: rgba(255,255,255,0.1);
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: white;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .sidebar-menu { padding: 15px; display: flex; flex-direction: column; gap: 6px; }
+    .menu-item {
+      text-decoration: none;
+      color: rgba(255,255,255,0.85);
+      padding: 12px 14px;
+      border-radius: 10px;
+      display: block;
+      font-size: 15px;
+      font-family: 'Cairo', sans-serif;
+    }
+    .menu-item:hover, .menu-item.active {
+      background: rgba(255,255,255,0.1);
+      color: #F4B731;
+    }
+    .logout-btn {
+      background: rgba(242,97,140,0.15);
+      border: 1px solid rgba(242,97,140,0.3);
+      color: #F2618C;
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-family: 'Cairo', sans-serif;
+      cursor: pointer;
+      text-align: right;
+      width: 100%;
+      margin-top: 10px;
+    }
     .sidebar-overlay {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.4);
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
       z-index: 999;
       display: none;
     }
     .sidebar-overlay.show { display: block; }
-    .logout-btn { background: none; border: none; color: #ef4444; text-align: right; padding: 10px; cursor: pointer; font-family: 'Cairo', sans-serif; font-size: 16px; }
   </style>
 </head>
 <body>
 
-  <!-- الأوفرلاي والمنيو الجانبية الحقيقية الفاتحة ونظيفة -->
   <div id="sidebarOverlay" class="sidebar-overlay"></div>
   <div id="sidebar" class="sidebar">
     <div class="sidebar-header">
-      <span class="sidebar-title">القائمة 📋</span>
+      <span class="sidebar-title">📋 القائمة</span>
       <button id="closeBtn" class="close-btn">×</button>
     </div>
     <div class="sidebar-menu">
       <a href="home.html" class="menu-item active">🏠 الرئيسية</a>
       <a href="bible.html" class="menu-item">📖 التحدي اليومي (الستريك)</a>
       <a href="quiz.html" class="menu-item">🎯 تحدي السبت الأسبوعي</a>
+      <a href="badges.html" class="menu-item">🏅 أوسمتي</a>
       <a href="rewards.html" class="menu-item">🚀 مركز الجوائز</a>
       <a href="leaderboard.html" class="menu-item">🏆 لوحة الصدارة</a>
-      <hr style="border: 0; border-top: 1px solid #f1f5f9; margin: 10px 0;">
+      <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin:10px 0;">
       <button id="logoutBtn" class="logout-btn">🚪 تسجيل الخروج</button>
     </div>
   </div>
 
   <div class="main-container">
-    <!-- البار العلوي مع المنيو اليمين واللوجو الشمال بجد -->
     <div class="top-header-bar">
       <button id="menuBtn" class="menu-trigger-btn">☰</button>
       <img src="logo.png" class="main-app-logo" alt="اللوجو">
@@ -233,22 +260,21 @@
 
     <div class="profile-section">
       <div class="avatar-wrapper">
-        <img id="userAvatar" src="https://via.placeholder.com/150" class="avatar-img" alt="صورة المخدوم">
+        <img id="userAvatar" src="" class="avatar-img" alt="صورة المخدوم">
         <label for="avatarUpload" class="upload-badge">📸</label>
         <input type="file" id="avatarUpload" style="display:none;" accept="image/*">
       </div>
       <h2 id="welcomeName" class="user-name">يا بطل! ✨</h2>
-      <p class="user-id-code">الكود الشخصي: <span id="userCode" style="font-weight: bold; color: #1e3a8a;">---</span></p>
-      <div id="userClassGroup" class="group-tag">جاري تحميل الفصل...</div>
+      <p class="user-id-code">الكود الشخصي: <span id="userCode" style="font-weight:bold; color:#1e3a8a;">---</span></p>
+      <div id="userClassGroup" class="group-tag">جاري التحميل...</div>
     </div>
 
-    <!-- كارت حصالة النقاط والمواظبة الحقيقي من الداتا -->
     <div class="clean-info-card">
-      <p style="font-size: 18px; margin: 0 0 6px 0; font-weight: bold; color: #0f172a;">
-        🪙 حصالة نقاطك: <span id="userPoints" style="color: #b45309;">0</span> نقطة
+      <p style="font-size:18px; margin:0 0 6px 0; font-weight:bold; color:#0f172a;">
+        🪙 حصالة نقاطك: <span id="userPoints" style="color:#b45309;">0</span> نقطة
       </p>
-      <p style="font-size: 13px; margin: 0; color: #64748b;">
-        📊 أيام حضور الاجتماع: <span id="attendanceCounter" style="color: #1e3a8a; font-weight: bold;">0 / 18 يوم</span>
+      <p style="font-size:13px; margin:0; color:#64748b;">
+        📊 أيام حضور الاجتماع: <span id="attendanceCounter" style="color:#1e3a8a; font-weight:bold;">0 / 18 يوم</span>
       </p>
     </div>
 
@@ -262,23 +288,25 @@
       <p>ادخل حل أسئلة المسابقة واكسب نقط إضافية 🚀</p>
     </a>
 
-    <!-- كارت الـ QR الحقيقي اللي هيظهر بعد الربط -->
+    <a href="badges.html" class="action-link-card" style="background: linear-gradient(135deg, #92400e, #b45309);">
+      <h3>🏅 أوسمتي وشاراتي</h3>
+      <p>شوف الأوسمة اللي كسبتها وإيه اللي جاي 🎖️</p>
+    </a>
+
     <div class="clean-info-card">
-      <p style="margin: 0 0 6px 0; font-size: 12px; color: #64748b;">امسح الكود مع الخادم لتسجيل الحضور</p>
+      <p style="margin:0 0 6px 0; font-size:12px; color:#64748b;">امسح الكود مع الخادم لتسجيل الحضور 🥳</p>
       <div id="qrcode" class="qr-container"></div>
     </div>
   </div>
 
-  <!-- البار السفلي الثابت المظبوط -->
   <div class="bottom-navbar">
     <a href="home.html" class="nav-link active"><span class="nav-icon">🏠</span>الرئيسية</a>
-    <a href="quiz.html" class="nav-link"><span class="nav-icon">🎯</span>المسابقة</a>
-    <a href="rewards.html" class="nav-link"><span class="nav-icon">🚀</span>الجوائز</a>
+    <a href="bible.html" class="nav-link"><span class="nav-icon">📖</span>الستريك</a>
+    <a href="badges.html" class="nav-link"><span class="nav-icon">🏅</span>أوسمتي</a>
     <a href="leaderboard.html" class="nav-link"><span class="nav-icon">🏆</span>الصدارة</a>
   </div>
 
   <script>
-    // إعدادات الفايربيز بتاعتك الأصلية عشان الداتا ترجع لايف
     const firebaseConfig = {
       apiKey: "AIzaSyBTlBr41Tl-GxnOwOsZvPkg26iQs2SGW3A",
       authDomain: "agazty-feknesty.firebaseapp.com",
@@ -291,82 +319,61 @@
     const db = firebase.firestore();
 
     const student = JSON.parse(localStorage.getItem("loggedInStudent"));
-
     if (!student || !student.code) {
-      alert("الرجاء تسجيل الدخول أولاً! ❌");
       window.location.href = "index.html";
     } else {
-      // توليد الـ QR كود الحقيقي بناءً على كود المخدوم
       new QRCode(document.getElementById("qrcode"), {
         text: student.code,
         width: 130,
         height: 130,
-        colorDark : "#0f172a",
-        colorLight : "#ffffff",
-        correctLevel : QRCode.CorrectLevel.H
+        colorDark: "#0f172a",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H
       });
 
-      // جلب اسم المخدوم وباقي الداتا لايف وعرضها فوراً
       db.collection("students").doc(student.code).onSnapshot(function(doc) {
         if (doc.exists) {
-          const freshData = doc.data();
-          document.getElementById("welcomeName").textContent = `يا بطل، ${freshData.name || 'مخدوم'}! ✨`;
+          const data = doc.data();
+          document.getElementById("welcomeName").textContent = "يا بطل، " + (data.name || "مخدوم") + "! ✨";
           document.getElementById("userCode").textContent = student.code;
-          document.getElementById("userPoints").textContent = freshData.points || 0;
-          
-          const userClass = freshData.class || "مش محدد";
-          const userGroup = freshData.group || "مش محدد";
-          document.getElementById("userClassGroup").textContent = `📍 ${userClass} - ${userGroup}`;
+          document.getElementById("userPoints").textContent = data.points || 0;
+          document.getElementById("userClassGroup").textContent = "📍 " + (data.class || "مش محدد") + " - " + (data.group || "مش محدد");
+          document.getElementById("attendanceCounter").textContent = (data.attendanceCount || 0) + " / 18 يوم";
 
-          let attendanceCount = freshData.attendanceCount || 0;
-          document.getElementById("attendanceCounter").textContent = `${attendanceCount} / 18 يوم`;
-
-          if (freshData.avatar) {
-            document.getElementById("userAvatar").src = freshData.avatar;
+          if (data.avatar) {
+            document.getElementById("userAvatar").src = data.avatar;
+          } else {
+            const firstLetter = (data.name || "م").charAt(0).toUpperCase();
+            document.getElementById("userAvatar").src = "https://ui-avatars.com/api/?name=" + encodeURIComponent(firstLetter) + "&background=1e3a8a&color=fff&size=150&bold=true";
           }
         }
       });
     }
 
-    // الـ Logic الحقيقي لتشغيل فتح وقفل المنيو الجانبية (Sidebar) من غير الـ Alert البايظ
     const sidebar = document.getElementById("sidebar");
     const overlay = document.getElementById("sidebarOverlay");
     const menuBtn = document.getElementById("menuBtn");
     const closeBtn = document.getElementById("closeBtn");
 
-    function openSidebar() {
-      sidebar.classList.add("open");
-      overlay.classList.add("show");
-    }
-    function closeSidebar() {
-      sidebar.classList.remove("open");
-      overlay.classList.remove("show");
-    }
+    function openSidebar() { sidebar.classList.add("open"); overlay.classList.add("show"); }
+    function closeSidebar() { sidebar.classList.remove("open"); overlay.classList.remove("show"); }
 
-    menuBtn.addEventListener("click", function(e) {
-      e.stopPropagation();
-      openSidebar();
-    });
+    menuBtn.addEventListener("click", function(e) { e.stopPropagation(); openSidebar(); });
     closeBtn.addEventListener("click", closeSidebar);
     overlay.addEventListener("click", closeSidebar);
 
-    // رفع وتحميل الأفاتار
     document.getElementById("avatarUpload").addEventListener("change", function(e) {
       const file = e.target.files[0];
       if (!file) return;
       const reader = new FileReader();
       reader.onloadend = function() {
-        const base64Image = reader.result;
-        db.collection("students").doc(student.code).update({
-          avatar: base64Image
-        }).then(() => {
-          document.getElementById("userAvatar").src = base64Image;
+        db.collection("students").doc(student.code).update({ avatar: reader.result }).then(() => {
+          document.getElementById("userAvatar").src = reader.result;
         });
       }
       reader.readAsDataURL(file);
     });
 
-    // تسجيل الخروج
     document.getElementById("logoutBtn").addEventListener("click", function() {
       localStorage.removeItem("loggedInStudent");
       window.location.href = "index.html";

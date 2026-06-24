@@ -10,7 +10,6 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
       font-family: 'Cairo', sans-serif;
       background: #f8fafc;
@@ -20,16 +19,13 @@
       flex-direction: column;
       align-items: center;
     }
-
     .container { width: 100%; max-width: 400px; }
-
     .top-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 20px;
     }
-
     .back-btn {
       background: #f1f5f9;
       border: none;
@@ -41,124 +37,33 @@
       color: #334155;
       font-weight: 600;
     }
-
     .page-title {
       font-family: 'Changa', sans-serif;
       font-size: 18px;
       color: #0f172a;
       font-weight: 800;
     }
-
-    /* كارت الملخص */
     .summary-card {
       background: linear-gradient(135deg, #1e3a8a, #3b82f6);
       border-radius: 20px;
-      padding: 20px;
+      padding: 22px;
       text-align: center;
       color: white;
       margin-bottom: 20px;
+      box-shadow: 0 8px 20px rgba(30, 58, 138, 0.25);
     }
-
     .summary-title {
-      font-family: 'Changa', sans-serif;
-      font-size: 16px;
+      font-size: 14px;
       opacity: 0.9;
       margin-bottom: 8px;
     }
-
     .summary-count {
       font-family: 'Changa', sans-serif;
-      font-size: 48px;
+      font-size: 52px;
       font-weight: 800;
       line-height: 1;
     }
-
-    .summary-sub {
-      font-size: 13px;
-      opacity: 0.8;
-      margin-top: 4px;
-    }
-
-    /* شبكة الأوسمة */
-    .section-title {
-      font-family: 'Changa', sans-serif;
-      font-size: 16px;
-      font-weight: 800;
-      color: #0f172a;
-      margin-bottom: 14px;
-      padding-right: 4px;
-    }
-
-    .badges-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 24px;
-    }
-
-    .badge-card {
-      background: white;
-      border-radius: 18px;
-      padding: 18px 14px;
-      text-align: center;
-      border: 2px solid #e2e8f0;
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-    }
-
-    /* الوسام مقفول */
-    .badge-card.locked {
-      opacity: 0.4;
-      filter: grayscale(100%);
-    }
-
-    /* الوسام مفتوح */
-    .badge-card.unlocked {
-      border-color: #fbbf24;
-      box-shadow: 0 4px 16px rgba(251, 191, 36, 0.25);
-    }
-
-    .badge-card.unlocked::before {
-      content: "✓";
-      position: absolute;
-      top: 8px;
-      left: 10px;
-      background: #10b981;
-      color: white;
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      font-size: 11px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-    }
-
-    .badge-emoji {
-      font-size: 36px;
-      display: block;
-      margin-bottom: 8px;
-    }
-
-    .badge-name {
-      font-family: 'Changa', sans-serif;
-      font-size: 14px;
-      font-weight: 800;
-      color: #0f172a;
-      margin-bottom: 4px;
-    }
-
-    .badge-desc {
-      font-size: 11px;
-      color: #64748b;
-      line-height: 1.4;
-    }
-
-    .badge-card.unlocked .badge-name { color: #92400e; }
-
-    /* شريط التقدم */
+    .summary-sub { font-size: 13px; opacity: 0.8; margin-top: 6px; }
     .progress-section {
       background: white;
       border-radius: 18px;
@@ -166,20 +71,14 @@
       margin-bottom: 20px;
       border: 1px solid #e2e8f0;
     }
-
     .progress-title {
       font-weight: 700;
       color: #0f172a;
       font-size: 14px;
-      margin-bottom: 12px;
-    }
-
-    .progress-item {
       margin-bottom: 14px;
     }
-
+    .progress-item { margin-bottom: 14px; }
     .progress-item:last-child { margin-bottom: 0; }
-
     .progress-label {
       display: flex;
       justify-content: space-between;
@@ -188,22 +87,78 @@
       font-weight: 600;
       margin-bottom: 6px;
     }
-
     .progress-bar-bg {
       background: #f1f5f9;
       border-radius: 10px;
-      height: 8px;
+      height: 10px;
       overflow: hidden;
     }
-
     .progress-bar-fill {
       height: 100%;
       border-radius: 10px;
       background: linear-gradient(90deg, #3b82f6, #1e3a8a);
-      transition: width 0.8s ease;
+      transition: width 1s ease;
     }
-
-    /* البار السفلي */
+    .section-title {
+      font-family: 'Changa', sans-serif;
+      font-size: 16px;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 14px;
+      padding-right: 4px;
+    }
+    .badges-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .badge-card {
+      background: white;
+      border-radius: 18px;
+      padding: 18px 12px;
+      text-align: center;
+      border: 2px solid #e2e8f0;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .badge-card.locked {
+      opacity: 0.35;
+      filter: grayscale(100%);
+    }
+    .badge-card.unlocked {
+      border-color: #fbbf24;
+      box-shadow: 0 6px 20px rgba(251, 191, 36, 0.3);
+      background: linear-gradient(135deg, #fffbeb, #ffffff);
+    }
+    .badge-card.unlocked::after {
+      content: "✓";
+      position: absolute;
+      top: 8px;
+      left: 10px;
+      background: #10b981;
+      color: white;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+    }
+    .badge-emoji { font-size: 38px; display: block; margin-bottom: 8px; }
+    .badge-name {
+      font-family: 'Changa', sans-serif;
+      font-size: 13px;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 5px;
+      line-height: 1.3;
+    }
+    .badge-desc { font-size: 11px; color: #64748b; line-height: 1.4; }
+    .badge-card.unlocked .badge-name { color: #92400e; }
     .bottom-navbar {
       position: fixed;
       bottom: 0; left: 0; right: 0;
@@ -215,7 +170,7 @@
       align-items: center;
       z-index: 100;
     }
-    .nav-link { text-decoration: none; color: #64748b; font-size: 12px; text-align: center; }
+    .nav-link { text-decoration: none; color: #64748b; font-size: 11px; text-align: center; font-family: 'Cairo', sans-serif; }
     .nav-link.active { color: #0f172a; font-weight: bold; }
     .nav-icon { display: block; font-size: 20px; margin-bottom: 2px; }
   </style>
@@ -226,24 +181,22 @@
 
     <div class="top-bar">
       <button class="back-btn" onclick="window.location.href='home.html'">⬅ رجوع</button>
-      <span class="page-title">🏅 أوسمتي</span>
+      <span class="page-title">🏅 أوسمتي وشاراتي</span>
       <div style="width:60px;"></div>
     </div>
 
-    <!-- ملخص الأوسمة -->
     <div class="summary-card">
-      <p class="summary-title">إجمالي الأوسمة المفتوحة</p>
+      <p class="summary-title">🎖️ إجمالي الأوسمة المفتوحة</p>
       <span class="summary-count" id="totalBadges">0</span>
       <p class="summary-sub">من أصل 10 أوسمة</p>
     </div>
 
-    <!-- شريط التقدم للأهداف القادمة -->
     <div class="progress-section">
-      <p class="progress-title">📊 تقدمك نحو الأوسمة القادمة</p>
+      <p class="progress-title">📊 تقدمك نحو الأوسمة الجاية</p>
 
       <div class="progress-item">
         <div class="progress-label">
-          <span>🔥 ستريك القراءة</span>
+          <span>🔥 ستريك القراءة اليومية</span>
           <span id="streakProgress">0 / 30 يوم</span>
         </div>
         <div class="progress-bar-bg">
@@ -263,7 +216,7 @@
 
       <div class="progress-item">
         <div class="progress-label">
-          <span>⭐ النقاط</span>
+          <span>⭐ النقاط المجموعة</span>
           <span id="pointsProgress">0 / 500 نقطة</span>
         </div>
         <div class="progress-bar-bg">
@@ -272,11 +225,8 @@
       </div>
     </div>
 
-    <!-- الأوسمة -->
     <p class="section-title">🎖️ كل الأوسمة</p>
-    <div class="badges-grid" id="badgesGrid">
-      <!-- هتتولد من JavaScript -->
-    </div>
+    <div class="badges-grid" id="badgesGrid"></div>
 
   </div>
 
@@ -302,76 +252,75 @@
     const student = JSON.parse(localStorage.getItem("loggedInStudent"));
     if (!student || !student.code) { window.location.href = "index.html"; }
 
-    // قايمة كل الأوسمة وشروطها
     const allBadges = [
       {
         id: "first_login",
         emoji: "🌱",
-        name: "البداية",
-        desc: "سجّلت حسابك وبدأت رحلتك",
-        check: function(data) { return true; } // كل حد مسجل يستاهله
+        name: "نبتة صغيرة",
+        desc: "بدأت رحلتك مع ربنا!",
+        check: function(data) { return true; }
       },
       {
         id: "first_read",
         emoji: "📖",
-        name: "قارئ",
-        desc: "قرأت أول أصحاح في مرقس",
-        check: function(data) { return (data.bibleStreak || 0) >= 1 || data.lastBibleDate; }
+        name: "التلميذ المجتهد",
+        desc: "قرأت كلام ربنا لأول مرة",
+        check: function(data) { return (data.bibleStreak || 0) >= 1 || !!data.lastBibleDate; }
       },
       {
         id: "streak_3",
         emoji: "🔥",
         name: "3 أيام نار",
-        desc: "قرأت 3 أيام متتاليين",
+        desc: "قرأت 3 أيام متتاليين، يا بطل!",
         check: function(data) { return (data.bibleStreak || 0) >= 3; }
       },
       {
         id: "streak_7",
         emoji: "⚡",
-        name: "أسبوع كامل",
-        desc: "قرأت 7 أيام متتاليين",
+        name: "أسبوع مع ربنا",
+        desc: "أسبوع كامل من الالتزام والقراءة",
         check: function(data) { return (data.bibleStreak || 0) >= 7; }
       },
       {
         id: "streak_15",
         emoji: "💎",
-        name: "نصف شهر",
-        desc: "قرأت 15 يوم متتالي",
+        name: "قلب ثابت",
+        desc: "نصف شهر مواظبة على كلام ربنا",
         check: function(data) { return (data.bibleStreak || 0) >= 15; }
       },
       {
         id: "streak_30",
         emoji: "👑",
-        name: "شهر الالتزام",
-        desc: "قرأت 30 يوم متتالي — أسطورة!",
+        name: "تلميذ حقيقي",
+        desc: "شهر كامل مع الكلمة — أسطورة!",
         check: function(data) { return (data.bibleStreak || 0) >= 30; }
       },
       {
         id: "first_attend",
         emoji: "✅",
-        name: "حاضر",
+        name: "حاضر وموجود",
         desc: "سجّلت حضورك في أول اجتماع",
         check: function(data) { return (data.attendanceCount || 0) >= 1; }
       },
       {
         id: "attend_5",
         emoji: "🏟️",
-        name: "مواظب",
-        desc: "حضرت 5 اجتماعات",
+        name: "عضو أصيل",
+        desc: "حضرت 5 اجتماعات متتالية",
         check: function(data) { return (data.attendanceCount || 0) >= 5; }
       },
       {
         id: "points_100",
         emoji: "🌟",
-        name: "نجم",
-        desc: "جمعت 100 نقطة",
+        name: "نجم الفصل",
+        desc: "جمعت 100 نقطة — برافو عليك!",
         check: function(data) { return (data.points || 0) >= 100; }
       },
       {
         id: "points_500",
         emoji: "🚀",
-        name: "متميز",
-        desc: "جمعت 500 نقطة — رائع!",
+        name: "بطل الكنيسة",
+        desc: "جمعت 500 نقطة — أنت فعلاً بطل!",
         check: function(data) { return (data.points || 0) >= 500; }
       }
     ];
@@ -380,7 +329,6 @@
       if (!doc.exists) return;
       const data = doc.data();
 
-      // تحديث شريط التقدم
       const streak = data.bibleStreak || 0;
       const attendance = data.attendanceCount || 0;
       const points = data.points || 0;
@@ -393,18 +341,16 @@
       document.getElementById("attendanceBar").style.width = Math.min(100, (attendance / 18) * 100) + "%";
       document.getElementById("pointsBar").style.width = Math.min(100, (points / 500) * 100) + "%";
 
-      // رسم الأوسمة
       const grid = document.getElementById("badgesGrid");
       grid.innerHTML = "";
       let unlockedCount = 0;
       const newlyUnlocked = [];
+      const earnedBadges = data.badges || [];
 
       allBadges.forEach(function(badge) {
         const isUnlocked = badge.check(data);
         if (isUnlocked) unlockedCount++;
 
-        // نتحقق لو الوسام جديد (مش موجود في الداتا قبل كده)
-        const earnedBadges = data.badges || [];
         const isNew = isUnlocked && !earnedBadges.includes(badge.id);
         if (isNew) { newlyUnlocked.push(badge.id); }
 
@@ -419,15 +365,13 @@
 
       document.getElementById("totalBadges").textContent = unlockedCount;
 
-      // لو في أوسمة جديدة، احفظها في Firebase
       if (newlyUnlocked.length > 0) {
-        const currentBadges = data.badges || [];
-        const updatedBadges = currentBadges.concat(newlyUnlocked);
         db.collection("students").doc(student.code).update({
-          badges: updatedBadges
+          badges: earnedBadges.concat(newlyUnlocked)
         });
       }
     });
   </script>
+
 </body>
 </html>
