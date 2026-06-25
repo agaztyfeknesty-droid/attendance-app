@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>متجر الهدايا والجوائز 🎁</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Changa:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <style>
+    .store-container {
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 15px;
+    }
+    .points-display {
+      background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+      padding: 15px;
+      border-radius: 15px;
+      text-align: center;
+      color: #0f172a;
+      font-weight: bold;
+      font-size: 18px;
+      margin-bottom: 25px;
+      box-shadow: 0 4px 15px rgba(0, 242, 254, 0.2);
+    }
+    .section-title {
+      font-family: 'Changa', sans-serif;
+      color: #fff;
+      margin: 20px 0 10px 0;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .grid-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+    .gift-card {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 15px;
+      text-align: center;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .gift-card.premium {
+      border: 1px solid #f4b731;
+      background: rgba(244, 183, 49, 0.05);
+    }
+    .gift-icon {
+      font-size: 40px;
+      margin-bottom: 10px;
+    }
+    .gift-name {
+      font-weight: bold;
+      font-size: 16px;
+      color: #fff;
+      margin-bottom: 5px;
+    }
+    .gift-cost {
+      color: #00f2fe;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    .gift-card.premium .gift-cost {
+      color: #f4b731;
+    }
+    .badge-req {
+      background: rgba(244, 183, 49, 0.2);
+      color: #f4b731;
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 20px;
+      margin-bottom: 10px;
+      display: inline-block;
+    }
+    .limited-count {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: #ef4444;
+      color: white;
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+    .buy-btn {
+      background: #2bb673;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: 'Cairo', sans-serif;
+      font-weight: bold;
+      width: 100%;
+      transition: 0.3s;
+    }
+    .buy-btn:disabled {
+      background: #475569 !important;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="store-container">
+    <div style="text-align: center;">
+      <img src="logo.png" alt="اجازتي في كنيستي" class="logo" style="max-width: 120px;">
+      <h1>متجر الجوائز السحري 🎁</h1>
+      <p class="sub-greeting">استبدل نقاطك بهدايا حقيقية واقفل المستويات!</p>
+    </div>
+
+    <div class="points-display">
+      محفظتك الحالية: <span id="userPoints">0</span> ⭐
+    </div>
+
+    <!-- قسم هدايا الكانتين العامة -->
+    <div class="section-title">🍿 هدايا الكانتين العامة</div>
+    <div class="grid-container">
+      
+      <div class="gift-card">
+        <div class="gift-icon">🍫</div>
+        <div class="gift-name">شوكولاتة فاخرة</div>
+        <div class="gift-cost">30 ⭐</div>
+        <button class="buy-btn" onclick="buyItem('canteen_choco', 30, 'شوكولاتة فاخرة')">شراء 🎯</button>
+      </div>
+
+      <div class="gift-card">
+        <div class="gift-icon">🧃</div>
+        <div class="gift-name">عصير طبيعي</div>
+        <div class="gift-cost">20 ⭐</div>
+        <button class="buy-btn" onclick="buyItem('canteen_juice', 20, 'عصير طبيعي')">شراء 🎯</button>
+      </div>
+
+    </div>
+
+    <!-- قسم الهدايا البريميوم المحدودة والوشاح -->
+    <div class="section-title">👑 هدايا بريميوم (ليمتد + وشاح خاص)</div>
+    <div class="grid-container">
+      
+      <div class="gift-card premium">
+        <div class="limited-count">متبقي: <span id="stock_connect4">..</span></div>
+        <div class="gift-icon">🧩</div>
+        <div class="gift-name">لعبة Connect 4</div>
+        <div class="gift-cost">150 ⭐</div>
+        <div class="badge-req">🏅 يتطلب: وسام بطل التحدي</div>
+        <button class="buy-btn" id="btn_connect4" onclick="buyPremiumItem('connect4', 150, 'لعبة Connect 4', 'quiz_master')">شراء 👑</button>
+      </div>
+
+      <div class="gift-card premium">
+        <div class="limited-count">متبقي: <span id="stock_ball">..</span></div>
+        <div class="gift-icon">⚽</div>
+        <div class="gift-name">كرة قدم مميزة</div>
+        <div class="gift-cost">200 ⭐</div>
+        <div class="badge-req">🏅 يتطلب: وسام بطل التحدي</div>
+        <button class="buy-btn" id="btn_ball" onclick="buyPremiumItem('ball', 200, 'كرة قدم مميزة', 'quiz_master')">شراء 👑</button>
+      </div>
+
+    </div>
+
+    <a href="home.html" style="display:block; text-align:center; margin-top:25px; color:#00f2fe; font-weight:700; text-decoration:none;">⬅ رجوع للصفحة الرئيسية</a>
+  </div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBTlBr41Tl-GxnOwOsZvPkg26iQs2SGW3A",
+      authDomain: "agazty-feknesty.firebaseapp.com",
+      projectId: "agazty-feknesty",
+      storageBucket: "agazty-feknesty.firebasestorage.app",
+      messagingSenderId: "1065028327259",
+      appId: "1:1065028327259:web:c0b7c6f6fe39bc93b9ac7e"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    const localStudent = JSON.parse(localStorage.getItem("loggedInStudent"));
+    if (!localStudent) {
+      alert("الرجاء تسجيل الدخول أولاً! ❌");
+      window.location.href = "index.html";
+    }
+
+    let currentPoints = 0;
+    let userBadges = [];
+
+    function initStore() {
+      db.collection("students").doc(localStudent.code).onSnapshot(doc => {
+        if (doc.exists) {
+          const data = doc.data();
+          currentPoints = data.points || 0;
+          userBadges = data.badges || [];
+          document.getElementById("userPoints").textContent = currentPoints;
+        }
+      });
+
+      db.collection("store_stock").onSnapshot(snapshot => {
+        snapshot.forEach(doc => {
+          const item = doc.id;
+          const count = doc.data().count;
+          if (document.getElementById(`stock_${item}`)) {
+            document.getElementById(`stock_${item}`).textContent = count;
+            if (count <= 0) {
+              document.getElementById(`btn_${item}`).disabled = true;
+              document.getElementById(`btn_${item}`).textContent = "نفذت الكمية ❌";
+            }
+          }
+        });
+      });
+    }
+
+    function buyItem(itemId, cost, itemName) {
+      if (currentPoints < cost) {
+        alert("نقاطك لا تكفي لشراء هذه الهدية! 😢");
+        return;
+      }
+
+      if (confirm(`هل أنت متأكد من استبدال ${cost} نقطة بـ (${itemName})؟`)) {
+        db.collection("students").doc(localStudent.code).update({
+          points: firebase.firestore.FieldValue.increment(-cost)
+        }).then(() => {
+          alert(`مبروك! تم شراء ${itemName} بنجاح 🎉، توجه للخادم واستلمها.`);
+        }).catch(err => alert("حدث خطأ أثناء الشراء ❌"));
+      }
+    }
+
+    function buyPremiumItem(itemId, cost, itemName, requiredBadge) {
+      if (currentPoints < cost) {
+        alert("نقاطك لا تكفي لشراء هذه الهدية البريميوم! 😢");
+        return;
+      }
+
+      if (!userBadges.includes(requiredBadge)) {
+        alert("عذراً يا بطل! هذه الهدية تتطلب الحصول على (وسام بطل التحدي) أولاً 🏅");
+        return;
+      }
+
+      const stockRef = db.collection("store_stock").doc(itemId);
+      
+      db.runTransaction(transaction => {
+        return transaction.get(stockRef).then(stockDoc => {
+          if (!stockDoc.exists || stockDoc.data().count <= 0) {
+            throw "نفذت الكمية للأسف! ❌";
+          }
+
+          transaction.update(stockRef, { count: firebase.firestore.FieldValue.increment(-1) });
+          transaction.update(db.collection("students").doc(localStudent.code), {
+            points: firebase.firestore.FieldValue.increment(-cost)
+          });
+        });
+      }).then(() => {
+        alert(`أسطوووورة! 🔥 تم اقتناص الهدية المحدودة: ${itemName} بنجاح 👑`);
+      }).catch(err => {
+        alert(err);
+      });
+    }
+
+    initStore();
+  </script>
+</body>
+</html>
