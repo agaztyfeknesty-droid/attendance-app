@@ -138,7 +138,6 @@
       color: #64748b;
       margin-top: 4px;
     }
-    /* Modal */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -193,7 +192,6 @@
       font-weight: 700;
       cursor: pointer;
     }
-    /* Success */
     .success-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -231,29 +229,25 @@
 </head>
 <body>
 
-  <!-- Modal تأكيد الشراء -->
-  <div class="modal-overlay" id="modalOverlay">
+  <div id="modalOverlay" class="modal-overlay">
     <div class="modal-card">
-      <span class="modal-emoji" id="modalEmoji">🎁</span>
-      <p class="modal-title" id="modalName">اسم الهدية</p>
-      <p class="modal-desc">هتتخصم من رصيدك:</p>
-      <p class="modal-price" id="modalPrice">0 نقطة</p>
-      <p class="modal-desc" style="font-size:12px; color:#94a3b8;">الهدية هتتسلم في الاجتماع الجاي من الخادم 🎁</p>
-      <br>
+      <span id="modalEmoji" class="modal-emoji"></span>
+      <h2 id="modalName" class="modal-title"></h2>
+      <p class="modal-desc">هتستبدل نقاطك بالهدية دي</p>
+      <p id="modalPrice" class="modal-price"></p>
       <div class="modal-btns">
-        <button class="modal-confirm" onclick="confirmBuy()">✅ تأكيد الشراء</button>
+        <button class="modal-confirm" onclick="confirmBuy()">✅ تأكيد</button>
         <button class="modal-cancel" onclick="closeModal()">❌ إلغاء</button>
       </div>
     </div>
   </div>
 
-  <!-- نجاح الشراء -->
-  <div class="success-overlay" id="successOverlay">
+  <div id="successOverlay" class="success-overlay">
     <div class="success-card">
-      <span style="font-size:52px; display:block; margin-bottom:12px;">🎉</span>
-      <p style="font-family:'Changa'; font-size:22px; font-weight:800; color:#0f172a; margin-bottom:8px;">تم الطلب بنجاح!</p>
-      <p style="font-size:14px; color:#64748b; margin-bottom:6px;">طلبك وصل للخادم وهيتسلمهولك في الاجتماع الجاي</p>
-      <p style="font-size:13px; color:#10b981; font-weight:700; margin-bottom:20px;" id="remainingPoints"></p>
+      <div style="font-size: 60px; margin-bottom: 12px;">🎉</div>
+      <h2 style="font-family:'Changa'; font-size:22px; color:#0f172a; margin-bottom:8px;">تم الطلب بنجاح!</h2>
+      <p style="font-size:14px; color:#64748b; margin-bottom:6px;">طلبك اتسجل وهيتسلم قريباً</p>
+      <p id="remainingPoints" style="font-size:14px; color:#1e3a8a; font-weight:700; margin-bottom:20px;"></p>
       <button onclick="closeSuccess()" style="width:100%; background:#0f172a; color:white; border:none; padding:13px; border-radius:12px; font-family:'Cairo'; font-size:15px; font-weight:700; cursor:pointer;">
         🏠 رجوع للمتجر
       </button>
@@ -268,21 +262,18 @@
       <div style="width:60px;"></div>
     </div>
 
-    <!-- رصيد النقاط -->
     <div class="points-card">
       <p>🪙 رصيدك الحالي</p>
       <span id="userPoints">0</span>
       <p>نقطة</p>
     </div>
 
-    <!-- هدايا Unlimited -->
     <p class="section-title">
       🎀 هدايا متاحة دايماً
       <span class="section-badge unlimited-badge">Unlimited</span>
     </p>
     <div class="items-grid" id="unlimitedGrid"></div>
 
-    <!-- هدايا Limited -->
     <p class="section-title">
       👑 هدايا محدودة
       <span class="section-badge limited-badge">Limited</span>
@@ -318,28 +309,25 @@
     let currentPoints = 0;
     let selectedItem = null;
 
-    // الهدايا الثابتة (Unlimited)
     const unlimitedItems = [
-      { id: "hair_clip", emoji: "🎀", name: "توك الشعر", price: 30 },
-      { id: "bracelet", emoji: "📿", name: "البريسليت", price: 40 },
-      { id: "medal", emoji: "🏅", name: "الميدالية", price: 50 },
-      { id: "cantina", emoji: "🧃", name: "قسيمة كانتين 25 جنيه", price: 60, note: "مرتين كل أسبوع" }
+      { id: "hair_clip", emoji: "🎀", name: "توك الشعر", price: 35 },
+      { id: "bracelet", emoji: "💎", name: "البريسليت", price: 70 },
+      { id: "medal", emoji: "🏷️", name: "الميدالية", price: 50 },
+      { id: "cantina", emoji: "🎫", name: "قسيمة كانتين 25 جنيه", price: 100, note: "مرتين كل أسبوع" }
     ];
 
-    // الهدايا المحدودة (Limited) — هتتخزن وتتحدث في Firebase
     const limitedItemsBase = [
-      { id: "girls_notebook", emoji: "📓", name: "Girls Notebook", price: 80, maxQty: 3 },
-      { id: "boys_notebook", emoji: "📔", name: "Boys Notebook", price: 80, maxQty: 3 },
-      { id: "skratchers", emoji: "🎰", name: "Skratchers", price: 100, maxQty: 3 },
-      { id: "sticky_notes", emoji: "🗒️", name: "Sticky Notes", price: 70, maxQty: 8 },
-      { id: "uno", emoji: "🃏", name: "Uno", price: 150, maxQty: 5 },
-      { id: "connect4", emoji: "🔴", name: "Connect 4", price: 200, maxQty: 4 },
-      { id: "ball", emoji: "⚽", name: "كورة", price: 250, maxQty: 3 },
-      { id: "watch", emoji: "⌚", name: "Watch", price: 300, maxQty: 2 },
-      { id: "airpods", emoji: "🎧", name: "Airpods", price: 500, maxQty: 1 }
+      { id: "sticky_notes", emoji: "🗒️", name: "Sticky Notes", price: 80, maxQty: 8 },
+      { id: "skratchers", emoji: "🖍️", name: "Scratchers", price: 120, maxQty: 3 },
+      { id: "boys_notebook", emoji: "📔", name: "Boys Notebook", price: 180, maxQty: 3 },
+      { id: "girls_notebook", emoji: "📓", name: "Girls Notebook", price: 180, maxQty: 3 },
+      { id: "uno", emoji: "🃏", name: "Uno", price: 280, maxQty: 5 },
+      { id: "connect4", emoji: "🟡🔴", name: "Connect 4", price: 420, maxQty: 4 },
+      { id: "ball", emoji: "⚽", name: "Football", price: 600, maxQty: 3 },
+      { id: "watch", emoji: "⌚", name: "Watch", price: 800, maxQty: 2 },
+      { id: "airpods", emoji: "🎧", name: "AirPods", price: 1000, maxQty: 1 }
     ];
 
-    // جلب النقاط الحالية للطالب
     db.collection("students").doc(student.code).onSnapshot(function(doc) {
       if (doc.exists) {
         currentPoints = doc.data().points || 0;
@@ -347,7 +335,6 @@
       }
     });
 
-    // رسم هدايا Unlimited
     function renderUnlimited() {
       const grid = document.getElementById("unlimitedGrid");
       grid.innerHTML = "";
@@ -366,7 +353,6 @@
       });
     }
 
-    // رسم هدايا Limited من Firebase
     function renderLimited() {
       const grid = document.getElementById("limitedGrid");
       grid.innerHTML = "";
@@ -378,7 +364,6 @@
           if (doc.exists) {
             remainingQty = doc.data().remaining;
           } else {
-            // لو مش موجود في Firebase، اعمله بالكمية الأصلية
             db.collection("storeItems").doc(item.id).set({
               name: item.name,
               remaining: item.maxQty,
@@ -405,7 +390,6 @@
       });
     }
 
-    // فتح Modal التأكيد
     function openModal(id, emoji, name, price, isLimited) {
       selectedItem = { id, emoji, name, price, isLimited };
       document.getElementById("modalEmoji").textContent = emoji;
@@ -419,7 +403,6 @@
       selectedItem = null;
     }
 
-    // تأكيد الشراء
     function confirmBuy() {
       if (!selectedItem) return;
 
@@ -429,12 +412,10 @@
 
       const newPoints = currentPoints - selectedItem.price;
 
-      // خصم النقاط من الطالب
       db.collection("students").doc(student.code).update({
         points: newPoints
       }).then(function() {
 
-        // إضافة الطلب لقاعدة البيانات
         const now = new Date();
         db.collection("orders").add({
           studentCode: student.code,
@@ -448,7 +429,6 @@
           timestamp: now.toLocaleDateString("ar-EG") + " - " + now.toLocaleTimeString("ar-EG", {hour: '2-digit', minute: '2-digit'})
         }).then(function() {
 
-          // لو Limited، نقلل الكمية
           if (selectedItem.isLimited) {
             db.collection("storeItems").doc(selectedItem.id).get().then(function(doc) {
               if (doc.exists) {
@@ -464,6 +444,8 @@
           document.getElementById("remainingPoints").textContent = "رصيدك الجديد: " + newPoints + " نقطة";
           document.getElementById("successOverlay").classList.add("show");
           currentPoints = newPoints;
+          btn.disabled = false;
+          btn.textContent = "✅ تأكيد";
         });
       });
     }
@@ -474,7 +456,6 @@
       renderLimited();
     }
 
-    // تحميل الصفحة
     db.collection("students").doc(student.code).get().then(function(doc) {
       if (doc.exists) {
         currentPoints = doc.data().points || 0;
