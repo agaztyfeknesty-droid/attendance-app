@@ -3,174 +3,301 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>متجر الهدايا والجوائز 🎁</title>
+  <title>المتجر 🛒</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Changa:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <style>
-    .store-container {
-      max-width: 600px;
-      margin: 20px auto;
-      padding: 15px;
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: #f8fafc;
+      min-height: 100vh;
+      padding: 20px 15px 90px 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
-    .points-display {
-      background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
-      padding: 15px;
-      border-radius: 15px;
-      text-align: center;
-      color: #0f172a;
-      font-weight: bold;
+    .container { width: 100%; max-width: 400px; }
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .back-btn {
+      background: #f1f5f9;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: 'Cairo', sans-serif;
+      cursor: pointer;
+      color: #334155;
+      font-weight: 600;
+    }
+    .page-title {
+      font-family: 'Changa', sans-serif;
       font-size: 18px;
-      margin-bottom: 25px;
-      box-shadow: 0 4px 15px rgba(0, 242, 254, 0.2);
+      color: #0f172a;
+      font-weight: 800;
+    }
+    .points-card {
+      background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+      border-radius: 20px;
+      padding: 18px;
+      text-align: center;
+      color: white;
+      margin-bottom: 20px;
+    }
+    .points-card p { font-size: 14px; opacity: 0.9; margin-bottom: 4px; }
+    .points-card span {
+      font-family: 'Changa', sans-serif;
+      font-size: 40px;
+      font-weight: 800;
     }
     .section-title {
       font-family: 'Changa', sans-serif;
-      color: #fff;
-      margin: 20px 0 10px 0;
-      font-size: 20px;
+      font-size: 16px;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 12px;
       display: flex;
       align-items: center;
       gap: 8px;
     }
-    .grid-container {
+    .section-badge {
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-family: 'Cairo', sans-serif;
+      font-weight: 700;
+    }
+    .unlimited-badge { background: #dcfce7; color: #166534; }
+    .limited-badge { background: #fee2e2; color: #991b1b; }
+    .items-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 15px;
-      margin-bottom: 30px;
+      gap: 12px;
+      margin-bottom: 24px;
     }
-    .gift-card {
-      background: rgba(15, 23, 42, 0.6);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+    .item-card {
+      background: white;
       border-radius: 16px;
-      padding: 15px;
+      padding: 16px 12px;
       text-align: center;
+      border: 2px solid #e2e8f0;
       position: relative;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
+      transition: all 0.2s ease;
     }
-    .gift-card.premium {
-      border: 1px solid #f4b731;
-      background: rgba(244, 183, 49, 0.05);
+    .item-card.out-of-stock {
+      opacity: 0.5;
+      filter: grayscale(80%);
     }
-    .gift-icon {
-      font-size: 40px;
-      margin-bottom: 10px;
-    }
-    .gift-name {
-      font-weight: bold;
-      font-size: 16px;
-      color: #fff;
-      margin-bottom: 5px;
-    }
-    .gift-cost {
-      color: #00f2fe;
+    .item-emoji { font-size: 36px; display: block; margin-bottom: 8px; }
+    .item-name {
+      font-family: 'Changa', sans-serif;
       font-size: 14px;
-      font-weight: 600;
-      margin-bottom: 10px;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 4px;
     }
-    .gift-card.premium .gift-cost {
-      color: #f4b731;
+    .item-price {
+      font-size: 13px;
+      color: #b45309;
+      font-weight: 700;
+      margin-bottom: 8px;
     }
-    .badge-req {
-      background: rgba(244, 183, 49, 0.2);
-      color: #f4b731;
+    .item-quantity {
       font-size: 11px;
-      padding: 3px 8px;
-      border-radius: 20px;
-      margin-bottom: 10px;
-      display: inline-block;
+      color: #64748b;
+      margin-bottom: 8px;
     }
-    .limited-count {
-      position: absolute;
-      top: 8px;
-      left: 8px;
-      background: #ef4444;
-      color: white;
-      font-size: 11px;
-      padding: 2px 6px;
-      border-radius: 8px;
-      font-weight: bold;
-    }
+    .item-quantity.low { color: #dc2626; font-weight: 700; }
     .buy-btn {
-      background: #2bb673;
+      width: 100%;
+      background: #0f172a;
       color: white;
       border: none;
-      padding: 8px 12px;
-      border-radius: 8px;
-      cursor: pointer;
+      padding: 8px;
+      border-radius: 10px;
       font-family: 'Cairo', sans-serif;
-      font-weight: bold;
-      width: 100%;
-      transition: 0.3s;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s ease;
     }
+    .buy-btn:hover { background: #1e3a8a; }
     .buy-btn:disabled {
-      background: #475569 !important;
+      background: #94a3b8;
       cursor: not-allowed;
     }
+    .cantina-note {
+      font-size: 11px;
+      color: #64748b;
+      margin-top: 4px;
+    }
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-overlay.show { display: flex; }
+    .modal-card {
+      background: white;
+      border-radius: 24px;
+      padding: 28px 22px;
+      width: 100%;
+      max-width: 340px;
+      text-align: center;
+    }
+    .modal-emoji { font-size: 52px; display: block; margin-bottom: 12px; }
+    .modal-title {
+      font-family: 'Changa', sans-serif;
+      font-size: 20px;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 8px;
+    }
+    .modal-desc { font-size: 14px; color: #64748b; margin-bottom: 6px; }
+    .modal-price { font-size: 16px; color: #b45309; font-weight: 700; margin-bottom: 20px; }
+    .modal-btns { display: flex; gap: 10px; }
+    .modal-confirm {
+      flex: 1;
+      background: #10b981;
+      color: white;
+      border: none;
+      padding: 13px;
+      border-radius: 12px;
+      font-family: 'Cairo', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .modal-cancel {
+      flex: 1;
+      background: #f1f5f9;
+      color: #334155;
+      border: none;
+      padding: 13px;
+      border-radius: 12px;
+      font-family: 'Cairo', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    /* Success */
+    .success-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1001;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .success-overlay.show { display: flex; }
+    .success-card {
+      background: white;
+      border-radius: 24px;
+      padding: 32px 22px;
+      width: 100%;
+      max-width: 340px;
+      text-align: center;
+    }
+    .bottom-navbar {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      height: 65px;
+      background: white;
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 100;
+    }
+    .nav-link { text-decoration: none; color: #64748b; font-size: 11px; text-align: center; font-family: 'Cairo', sans-serif; }
+    .nav-link.active { color: #0f172a; font-weight: bold; }
+    .nav-icon { display: block; font-size: 20px; margin-bottom: 2px; }
   </style>
 </head>
 <body>
 
-  <div class="store-container">
-    <div style="text-align: center;">
-      <img src="logo.png" alt="اجازتي في كنيستي" class="logo" style="max-width: 120px;">
-      <h1>متجر الجوائز السحري 🎁</h1>
-      <p class="sub-greeting">استبدل نقاطك بهدايا حقيقية واقفل المستويات!</p>
+  <!-- Modal تأكيد الشراء -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-card">
+      <span class="modal-emoji" id="modalEmoji">🎁</span>
+      <p class="modal-title" id="modalName">اسم الهدية</p>
+      <p class="modal-desc">هتتخصم من رصيدك:</p>
+      <p class="modal-price" id="modalPrice">0 نقطة</p>
+      <p class="modal-desc" style="font-size:12px; color:#94a3b8;">الهدية هتتسلم في الاجتماع الجاي من الخادم 🎁</p>
+      <br>
+      <div class="modal-btns">
+        <button class="modal-confirm" onclick="confirmBuy()">✅ تأكيد الشراء</button>
+        <button class="modal-cancel" onclick="closeModal()">❌ إلغاء</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- نجاح الشراء -->
+  <div class="success-overlay" id="successOverlay">
+    <div class="success-card">
+      <span style="font-size:52px; display:block; margin-bottom:12px;">🎉</span>
+      <p style="font-family:'Changa'; font-size:22px; font-weight:800; color:#0f172a; margin-bottom:8px;">تم الطلب بنجاح!</p>
+      <p style="font-size:14px; color:#64748b; margin-bottom:6px;">طلبك وصل للخادم وهيتسلمهولك في الاجتماع الجاي</p>
+      <p style="font-size:13px; color:#10b981; font-weight:700; margin-bottom:20px;" id="remainingPoints"></p>
+      <button onclick="closeSuccess()" style="width:100%; background:#0f172a; color:white; border:none; padding:13px; border-radius:12px; font-family:'Cairo'; font-size:15px; font-weight:700; cursor:pointer;">
+        🏠 رجوع للمتجر
+      </button>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <div class="top-bar">
+      <button class="back-btn" onclick="window.location.href='home.html'">⬅ رجوع</button>
+      <span class="page-title">🛒 المتجر</span>
+      <div style="width:60px;"></div>
     </div>
 
-    <div class="points-display">
-      محفظتك الحالية: <span id="userPoints">0</span> ⭐
+    <!-- رصيد النقاط -->
+    <div class="points-card">
+      <p>🪙 رصيدك الحالي</p>
+      <span id="userPoints">0</span>
+      <p>نقطة</p>
     </div>
 
-    <!-- قسم هدايا الكانتين العامة -->
-    <div class="section-title">🍿 هدايا الكانتين العامة</div>
-    <div class="grid-container">
-      
-      <div class="gift-card">
-        <div class="gift-icon">🍫</div>
-        <div class="gift-name">شوكولاتة فاخرة</div>
-        <div class="gift-cost">30 ⭐</div>
-        <button class="buy-btn" onclick="buyItem('canteen_choco', 30, 'شوكولاتة فاخرة')">شراء 🎯</button>
-      </div>
+    <!-- هدايا Unlimited -->
+    <p class="section-title">
+      🎀 هدايا متاحة دايماً
+      <span class="section-badge unlimited-badge">Unlimited</span>
+    </p>
+    <div class="items-grid" id="unlimitedGrid"></div>
 
-      <div class="gift-card">
-        <div class="gift-icon">🧃</div>
-        <div class="gift-name">عصير طبيعي</div>
-        <div class="gift-cost">20 ⭐</div>
-        <button class="buy-btn" onclick="buyItem('canteen_juice', 20, 'عصير طبيعي')">شراء 🎯</button>
-      </div>
+    <!-- هدايا Limited -->
+    <p class="section-title">
+      👑 هدايا محدودة
+      <span class="section-badge limited-badge">Limited</span>
+    </p>
+    <p style="font-size:12px; color:#64748b; margin-bottom:12px;">⚠️ الكميات محدودة — أسرع قبل ما تخلص!</p>
+    <div class="items-grid" id="limitedGrid"></div>
 
-    </div>
+  </div>
 
-    <!-- قسم الهدايا البريميوم المحدودة والوشاح -->
-    <div class="section-title">👑 هدايا بريميوم (ليمتد + وشاح خاص)</div>
-    <div class="grid-container">
-      
-      <div class="gift-card premium">
-        <div class="limited-count">متبقي: <span id="stock_connect4">..</span></div>
-        <div class="gift-icon">🧩</div>
-        <div class="gift-name">لعبة Connect 4</div>
-        <div class="gift-cost">150 ⭐</div>
-        <div class="badge-req">🏅 يتطلب: وسام بطل التحدي</div>
-        <button class="buy-btn" id="btn_connect4" onclick="buyPremiumItem('connect4', 150, 'لعبة Connect 4', 'quiz_master')">شراء 👑</button>
-      </div>
-
-      <div class="gift-card premium">
-        <div class="limited-count">متبقي: <span id="stock_ball">..</span></div>
-        <div class="gift-icon">⚽</div>
-        <div class="gift-name">كرة قدم مميزة</div>
-        <div class="gift-cost">200 ⭐</div>
-        <div class="badge-req">🏅 يتطلب: وسام بطل التحدي</div>
-        <button class="buy-btn" id="btn_ball" onclick="buyPremiumItem('ball', 200, 'كرة قدم مميزة', 'quiz_master')">شراء 👑</button>
-      </div>
-
-    </div>
-
-    <a href="home.html" style="display:block; text-align:center; margin-top:25px; color:#00f2fe; font-weight:700; text-decoration:none;">⬅ رجوع للصفحة الرئيسية</a>
+  <div class="bottom-navbar">
+    <a href="home.html" class="nav-link"><span class="nav-icon">🏠</span>الرئيسية</a>
+    <a href="bible.html" class="nav-link"><span class="nav-icon">📖</span>الستريك</a>
+    <a href="badges.html" class="nav-link"><span class="nav-icon">🏅</span>أوسمتي</a>
+    <a href="store.html" class="nav-link active"><span class="nav-icon">🛒</span>المتجر</a>
+    <a href="leaderboard.html" class="nav-link"><span class="nav-icon">🏆</span>الصدارة</a>
   </div>
 
   <script>
@@ -185,87 +312,178 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    const localStudent = JSON.parse(localStorage.getItem("loggedInStudent"));
-    if (!localStudent) {
-      alert("الرجاء تسجيل الدخول أولاً! ❌");
-      window.location.href = "index.html";
-    }
+    const student = JSON.parse(localStorage.getItem("loggedInStudent"));
+    if (!student || !student.code) { window.location.href = "index.html"; }
 
     let currentPoints = 0;
-    let userBadges = [];
+    let selectedItem = null;
 
-    function initStore() {
-      db.collection("students").doc(localStudent.code).onSnapshot(doc => {
-        if (doc.exists) {
-          const data = doc.data();
-          currentPoints = data.points || 0;
-          userBadges = data.badges || [];
-          document.getElementById("userPoints").textContent = currentPoints;
-        }
+    // الهدايا الثابتة (Unlimited)
+    const unlimitedItems = [
+      { id: "hair_clip", emoji: "🎀", name: "توك الشعر", price: 30 },
+      { id: "bracelet", emoji: "📿", name: "البريسليت", price: 40 },
+      { id: "medal", emoji: "🏅", name: "الميدالية", price: 50 },
+      { id: "cantina", emoji: "🧃", name: "قسيمة كانتين 25 جنيه", price: 60, note: "مرتين كل أسبوع" }
+    ];
+
+    // الهدايا المحدودة (Limited) — هتتخزن وتتحدث في Firebase
+    const limitedItemsBase = [
+      { id: "girls_notebook", emoji: "📓", name: "Girls Notebook", price: 80, maxQty: 3 },
+      { id: "boys_notebook", emoji: "📔", name: "Boys Notebook", price: 80, maxQty: 3 },
+      { id: "skratchers", emoji: "🎰", name: "Skratchers", price: 100, maxQty: 3 },
+      { id: "sticky_notes", emoji: "🗒️", name: "Sticky Notes", price: 70, maxQty: 8 },
+      { id: "uno", emoji: "🃏", name: "Uno", price: 150, maxQty: 5 },
+      { id: "connect4", emoji: "🔴", name: "Connect 4", price: 200, maxQty: 4 },
+      { id: "ball", emoji: "⚽", name: "كورة", price: 250, maxQty: 3 },
+      { id: "watch", emoji: "⌚", name: "Watch", price: 300, maxQty: 2 },
+      { id: "airpods", emoji: "🎧", name: "Airpods", price: 500, maxQty: 1 }
+    ];
+
+    // جلب النقاط الحالية للطالب
+    db.collection("students").doc(student.code).onSnapshot(function(doc) {
+      if (doc.exists) {
+        currentPoints = doc.data().points || 0;
+        document.getElementById("userPoints").textContent = currentPoints;
+      }
+    });
+
+    // رسم هدايا Unlimited
+    function renderUnlimited() {
+      const grid = document.getElementById("unlimitedGrid");
+      grid.innerHTML = "";
+      unlimitedItems.forEach(function(item) {
+        const canAfford = currentPoints >= item.price;
+        const card = document.createElement("div");
+        card.className = "item-card";
+        card.innerHTML =
+          "<span class='item-emoji'>" + item.emoji + "</span>" +
+          "<p class='item-name'>" + item.name + "</p>" +
+          "<p class='item-price'>🪙 " + item.price + " نقطة</p>" +
+          (item.note ? "<p class='cantina-note'>(" + item.note + ")</p>" : "") +
+          "<button class='buy-btn' " + (!canAfford ? "disabled" : "") + " onclick='openModal(\"" + item.id + "\", \"" + item.emoji + "\", \"" + item.name + "\", " + item.price + ", false)'>" +
+          (canAfford ? "🛒 اشتري" : "نقاط غير كافية") + "</button>";
+        grid.appendChild(card);
       });
+    }
 
-      db.collection("store_stock").onSnapshot(snapshot => {
-        snapshot.forEach(doc => {
-          const item = doc.id;
-          const count = doc.data().count;
-          if (document.getElementById(`stock_${item}`)) {
-            document.getElementById(`stock_${item}`).textContent = count;
-            if (count <= 0) {
-              document.getElementById(`btn_${item}`).disabled = true;
-              document.getElementById(`btn_${item}`).textContent = "نفذت الكمية ❌";
-            }
+    // رسم هدايا Limited من Firebase
+    function renderLimited() {
+      const grid = document.getElementById("limitedGrid");
+      grid.innerHTML = "";
+
+      limitedItemsBase.forEach(function(item) {
+        db.collection("storeItems").doc(item.id).get().then(function(doc) {
+          let remainingQty = item.maxQty;
+
+          if (doc.exists) {
+            remainingQty = doc.data().remaining;
+          } else {
+            // لو مش موجود في Firebase، اعمله بالكمية الأصلية
+            db.collection("storeItems").doc(item.id).set({
+              name: item.name,
+              remaining: item.maxQty,
+              maxQty: item.maxQty
+            });
           }
+
+          const isOut = remainingQty <= 0;
+          const canAfford = currentPoints >= item.price;
+          const isLow = remainingQty <= 2 && remainingQty > 0;
+
+          const card = document.createElement("div");
+          card.className = "item-card" + (isOut ? " out-of-stock" : "");
+          card.innerHTML =
+            "<span class='item-emoji'>" + item.emoji + "</span>" +
+            "<p class='item-name'>" + item.name + "</p>" +
+            "<p class='item-price'>🪙 " + item.price + " نقطة</p>" +
+            "<p class='item-quantity" + (isLow ? " low" : "") + "'>" +
+            (isOut ? "❌ نفد المخزون" : "📦 متبقي: " + remainingQty + " قطعة") + "</p>" +
+            "<button class='buy-btn' " + (isOut || !canAfford ? "disabled" : "") + " onclick='openModal(\"" + item.id + "\", \"" + item.emoji + "\", \"" + item.name + "\", " + item.price + ", true)'>" +
+            (isOut ? "نفدت" : !canAfford ? "نقاط غير كافية" : "🛒 اشتري") + "</button>";
+          grid.appendChild(card);
         });
       });
     }
 
-    function buyItem(itemId, cost, itemName) {
-      if (currentPoints < cost) {
-        alert("نقاطك لا تكفي لشراء هذه الهدية! 😢");
-        return;
-      }
-
-      if (confirm(`هل أنت متأكد من استبدال ${cost} نقطة بـ (${itemName})؟`)) {
-        db.collection("students").doc(localStudent.code).update({
-          points: firebase.firestore.FieldValue.increment(-cost)
-        }).then(() => {
-          alert(`مبروك! تم شراء ${itemName} بنجاح 🎉، توجه للخادم واستلمها.`);
-        }).catch(err => alert("حدث خطأ أثناء الشراء ❌"));
-      }
+    // فتح Modal التأكيد
+    function openModal(id, emoji, name, price, isLimited) {
+      selectedItem = { id, emoji, name, price, isLimited };
+      document.getElementById("modalEmoji").textContent = emoji;
+      document.getElementById("modalName").textContent = name;
+      document.getElementById("modalPrice").textContent = price + " نقطة";
+      document.getElementById("modalOverlay").classList.add("show");
     }
 
-    function buyPremiumItem(itemId, cost, itemName, requiredBadge) {
-      if (currentPoints < cost) {
-        alert("نقاطك لا تكفي لشراء هذه الهدية البريميوم! 😢");
-        return;
-      }
+    function closeModal() {
+      document.getElementById("modalOverlay").classList.remove("show");
+      selectedItem = null;
+    }
 
-      if (!userBadges.includes(requiredBadge)) {
-        alert("عذراً يا بطل! هذه الهدية تتطلب الحصول على (وسام بطل التحدي) أولاً 🏅");
-        return;
-      }
+    // تأكيد الشراء
+    function confirmBuy() {
+      if (!selectedItem) return;
 
-      const stockRef = db.collection("store_stock").doc(itemId);
-      
-      db.runTransaction(transaction => {
-        return transaction.get(stockRef).then(stockDoc => {
-          if (!stockDoc.exists || stockDoc.data().count <= 0) {
-            throw "نفذت الكمية للأسف! ❌";
+      const btn = document.querySelector(".modal-confirm");
+      btn.disabled = true;
+      btn.textContent = "جاري التنفيذ...";
+
+      const newPoints = currentPoints - selectedItem.price;
+
+      // خصم النقاط من الطالب
+      db.collection("students").doc(student.code).update({
+        points: newPoints
+      }).then(function() {
+
+        // إضافة الطلب لقاعدة البيانات
+        const now = new Date();
+        db.collection("orders").add({
+          studentCode: student.code,
+          studentName: student.name || "مخدوم",
+          itemId: selectedItem.id,
+          itemName: selectedItem.name,
+          itemEmoji: selectedItem.emoji,
+          price: selectedItem.price,
+          isLimited: selectedItem.isLimited,
+          status: "pending",
+          timestamp: now.toLocaleDateString("ar-EG") + " - " + now.toLocaleTimeString("ar-EG", {hour: '2-digit', minute: '2-digit'})
+        }).then(function() {
+
+          // لو Limited، نقلل الكمية
+          if (selectedItem.isLimited) {
+            db.collection("storeItems").doc(selectedItem.id).get().then(function(doc) {
+              if (doc.exists) {
+                const current = doc.data().remaining;
+                db.collection("storeItems").doc(selectedItem.id).update({
+                  remaining: Math.max(0, current - 1)
+                });
+              }
+            });
           }
 
-          transaction.update(stockRef, { count: firebase.firestore.FieldValue.increment(-1) });
-          transaction.update(db.collection("students").doc(localStudent.code), {
-            points: firebase.firestore.FieldValue.increment(-cost)
-          });
+          closeModal();
+          document.getElementById("remainingPoints").textContent = "رصيدك الجديد: " + newPoints + " نقطة";
+          document.getElementById("successOverlay").classList.add("show");
+          currentPoints = newPoints;
         });
-      }).then(() => {
-        alert(`أسطوووورة! 🔥 تم اقتناص الهدية المحدودة: ${itemName} بنجاح 👑`);
-      }).catch(err => {
-        alert(err);
       });
     }
 
-    initStore();
+    function closeSuccess() {
+      document.getElementById("successOverlay").classList.remove("show");
+      renderUnlimited();
+      renderLimited();
+    }
+
+    // تحميل الصفحة
+    db.collection("students").doc(student.code).get().then(function(doc) {
+      if (doc.exists) {
+        currentPoints = doc.data().points || 0;
+        document.getElementById("userPoints").textContent = currentPoints;
+        renderUnlimited();
+        renderLimited();
+      }
+    });
   </script>
+
 </body>
 </html>
