@@ -23,8 +23,6 @@
             align-items: center;
         }
         .container { width: 100%; max-width: 360px; }
-        
-        /* زرار لوحة تحكم الأسئلة النيون الفخم */
         .admin-nav-btn {
             background: linear-gradient(135deg, #00f2fe, #4facfe);
             color: #020617;
@@ -45,7 +43,6 @@
             transition: all 0.2s ease;
         }
         .admin-nav-btn:active { transform: scale(0.97); }
-
         .scanner-card {
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(15px);
@@ -57,8 +54,6 @@
             margin-bottom: 25px;
         }
         #reader { width: 100%; border-radius: 16px; overflow: hidden; border: none !important; }
-        
-        /* صندوق عرض داتا المخدوم عند السكان */
         .result-box {
             background: rgba(255,255,255,0.08);
             border-radius: 18px;
@@ -83,8 +78,6 @@
             object-fit: cover;
             border: 2px solid #00f2fe;
         }
-
-        /* قائمة المخدومين الجداد */
         .students-list-card {
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(15px);
@@ -103,7 +96,6 @@
         }
         .list-header h3 { font-family: 'Changa', sans-serif; margin: 0; color: #00f2fe; font-size: 16px; }
         .counter-badge { background: #4facfe; color: #020617; padding: 2px 10px; border-radius: 20px; font-weight: bold; font-size: 12px; }
-        
         .student-item {
             background: rgba(255,255,255,0.04);
             border: 1px solid rgba(255,255,255,0.05);
@@ -120,13 +112,11 @@
 <body>
 
     <div class="container">
-        
-        <!-- زرار التحكم وتعديل الأسئلة الموحد -->
+
         <button class="admin-nav-btn" onclick="window.location.href='admin-quiz.html'">
             👑 تعديل لوحة تحكم أسئلة السبت 🚀
         </button>
 
-        <!-- كارت كاميرا السكنر المتأمن -->
         <div class="scanner-card">
             <h2 style="font-family:'Changa'; margin:0 0 15px 0; color:#4facfe;">📸 ماسح تسجيل الحضور</h2>
             <div id="reader"></div>
@@ -135,7 +125,6 @@
             </div>
         </div>
 
-        <!-- قائمة عرض بيانات وحسابات المخدومين المسجلين بالسيستم لايف -->
         <div class="students-list-card">
             <div class="list-header">
                 <h3>👥 المخدومين المسجلين بالسيستم</h3>
@@ -146,10 +135,20 @@
             </div>
         </div>
 
+        <!-- قسم طلبات المتجر -->
+        <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; padding: 20px; margin-top: 20px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:10px;">
+                <h3 style="font-family:'Changa'; color:#fbbf24; margin:0; font-size:16px;">🛒 طلبات المتجر</h3>
+                <span id="ordersCounter" style="background:#f43f5e; color:white; padding:2px 10px; border-radius:20px; font-weight:bold; font-size:12px;">0 طلب</span>
+            </div>
+            <div id="ordersContainer">
+                <p style="text-align:center; color:#94a3b8; font-size:13px;">جاري التحميل...</p>
+            </div>
+        </div>
+
     </div>
 
     <script>
-        // داتا الفايربيز الموحدة والثابتة بدون أي تغيير
         const firebaseConfig = {
             apiKey: "AIzaSyBTlBr41Tl-GxnOwOsZvPkg26iQs2SGW3A",
             authDomain: "agazty-feknesty.firebaseapp.com",
@@ -163,22 +162,20 @@
 
         let isScanning = true;
 
-        // دالة استقبال الكود والفحص الصارم لمنع التكرار اليومي
         function onScanSuccess(decodedText, decodedResult) {
             if (!isScanning) return;
-            isScanning = false; 
+            isScanning = false;
 
             const resultContainer = document.getElementById('result');
             resultContainer.innerHTML = `<div style="text-align:center;">⏳ جاري فحص الحضور والتأمين...</div>`;
-            
-            const todayStr = new Date().toLocaleDateString('en-US'); // التقاط تاريخ اليوم الحالي بالملي
+
+            const todayStr = new Date().toLocaleDateString('en-US');
 
             db.collection("students").doc(decodedText).get().then(doc => {
                 if(doc.exists) {
                     const student = doc.data();
                     let currentCount = student.attendanceCount || 0;
-                    
-                    // 🚨 شرط منع التكرار: لو تاريخ النهاردة مسجل مسبقاً، ارفض السحب فوراً
+
                     if (student.lastAttendanceDate === todayStr) {
                         resultContainer.innerHTML = `
                             <div style="text-align:right; border-right: 3px solid #f43f5e; padding-right:8px;">
@@ -188,17 +185,15 @@
                             </div>
                         `;
                     } else {
-                        // لو أول مرة يسحب الكارت النهاردة ➡️ زود النقط + عداد الحضور واحفظ تاريخ اليوم
                         let currentPoints = student.points || 0;
-                        let newPoints = currentPoints + 10; 
-                        let newCount = currentCount + 1; 
+                        let newPoints = currentPoints + 10;
+                        let newCount = currentCount + 1;
 
                         db.collection("students").doc(decodedText).update({
                             points: newPoints,
-                            attendanceCount: newCount, 
-                            lastAttendanceDate: todayStr 
+                            attendanceCount: newCount,
+                            lastAttendanceDate: todayStr
                         }).then(() => {
-                            // رندر الداتا والملف الشخصي للمخدوم بنجاح كامل
                             resultContainer.innerHTML = `
                                 <div class="student-profile">
                                     <img class="student-avatar" src="${student.avatar || 'https://via.placeholder.com/100'}" alt="Avatar">
@@ -218,7 +213,6 @@
                 } else {
                     resultContainer.innerHTML = `<div style="text-align:center; color:#f43f5e; font-weight:bold;">❌ كود تالف أو غير مسجل بالسيستم!</div>`;
                 }
-                // تكييش مؤقت لمدة 3 ثواني قبل السماح بسحب الكارت التالي
                 setTimeout(() => { isScanning = true; }, 3000);
             }).catch(err => {
                 resultContainer.innerHTML = `<div style="text-align:center; color:#f43f5e;">❌ عطل بالسيرفر: ${err.message}</div>`;
@@ -226,12 +220,11 @@
             });
         }
 
-        // الاستماع اللحظي لايف للمخدومين المسجلين وعرض بياناتهم
         function listenToNewStudents() {
             db.collection("students").onSnapshot(snapshot => {
                 const container = document.getElementById("studentsContainer");
                 const counter = document.getElementById("studentCounter");
-                
+
                 counter.textContent = `${snapshot.size} مخدوم`;
                 container.innerHTML = "";
 
@@ -244,7 +237,7 @@
                     const data = doc.data();
                     const studentId = doc.id;
                     const count = data.attendanceCount || 0;
-                    
+
                     container.innerHTML += `
                         <div class="student-item">
                             <div class="student-name-row">
@@ -259,20 +252,45 @@
             });
         }
 
-        // تشغيل السيستم والمراقبة الذكية
         let html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 15, qrbox: 230 });
         html5QrcodeScanner.render(onScanSuccess);
         listenToNewStudents();
+
+        // طلبات المتجر لايف
+        db.collection("orders").where("status", "==", "pending").onSnapshot(function(snapshot) {
+            const container = document.getElementById("ordersContainer");
+            const counter = document.getElementById("ordersCounter");
+            counter.textContent = snapshot.size + " طلب";
+
+            if (snapshot.empty) {
+                container.innerHTML = '<p style="text-align:center; color:#94a3b8; font-size:13px;">مفيش طلبات جديدة ✅</p>';
+                return;
+            }
+
+            container.innerHTML = "";
+            snapshot.forEach(function(doc) {
+                const order = doc.data();
+                const div = document.createElement("div");
+                div.style.cssText = "background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:12px; margin-bottom:10px;";
+                div.innerHTML =
+                    "<div style='display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;'>" +
+                    "<span style='font-size:20px;'>" + (order.itemEmoji || "🎁") + "</span>" +
+                    "<span style='background:" + (order.isLimited ? "#7c3aed" : "#065f46") + "; color:white; padding:2px 8px; border-radius:10px; font-size:10px;'>" +
+                    (order.isLimited ? "Limited" : "Unlimited") + "</span>" +
+                    "</div>" +
+                    "<p style='color:white; font-weight:bold; font-size:14px; margin:0 0 3px 0;'>" + order.itemName + "</p>" +
+                    "<p style='color:#00f2fe; font-size:12px; margin:0 0 3px 0;'>👤 " + order.studentName + " (" + order.studentCode + ")</p>" +
+                    "<p style='color:#94a3b8; font-size:11px; margin:0 0 10px 0;'>⏰ " + order.timestamp + "</p>" +
+                    "<button onclick='deliverOrder(\"" + doc.id + "\")' style='width:100%; background:#10b981; color:white; border:none; padding:9px; border-radius:10px; font-family:Cairo; font-size:13px; font-weight:bold; cursor:pointer;'>✅ تم التسليم</button>";
+                container.appendChild(div);
+            });
+        });
+
+        function deliverOrder(orderId) {
+            db.collection("orders").doc(orderId).update({ status: "delivered" }).then(function() {
+                alert("✅ تم تسليم الهدية بنجاح!");
+            });
+        }
     </script>
 </body>
 </html>
-<!-- قسم طلبات المتجر -->
-<div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; padding: 20px; margin-top: 20px;">
-  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:10px;">
-    <h3 style="font-family:'Changa'; color:#fbbf24; margin:0; font-size:16px;">🛒 طلبات المتجر</h3>
-    <span id="ordersCounter" style="background:#f43f5e; color:white; padding:2px 10px; border-radius:20px; font-weight:bold; font-size:12px;">0 طلب</span>
-  </div>
-  <div id="ordersContainer">
-    <p style="text-align:center; color:#94a3b8; font-size:13px;">جاري التحميل...</p>
-  </div>
-</div>
