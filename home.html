@@ -3,283 +3,330 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>تحدي الستريك 🔥</title>
+  <title>الرئيسية 🏠</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Changa:wght@600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Cairo', sans-serif;
-      background: #f8fafc;
+    html, body {
+      background: #ffffff !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      width: 100% !important;
       min-height: 100vh;
-      padding: 20px 15px 90px 15px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      font-family: 'Cairo', sans-serif;
+      color: #334155;
     }
-    .container { width: 100%; max-width: 400px; }
-    .top-bar {
+    .main-container {
+      width: 100%;
+      max-width: 420px;
+      margin: 0 auto;
+      padding: 15px 15px 100px 15px;
+      box-sizing: border-box;
+    }
+    .top-header-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      width: 100%;
       margin-bottom: 20px;
     }
-    .back-btn {
+    .menu-trigger-btn {
       background: #f1f5f9;
-      border: none;
-      padding: 8px 14px;
-      border-radius: 10px;
-      font-size: 14px;
-      font-family: 'Cairo', sans-serif;
+      border: 1px solid #cbd5e1;
+      color: #0f172a;
+      font-size: 22px;
+      padding: 6px 14px;
+      border-radius: 8px;
       cursor: pointer;
-      color: #334155;
-      font-weight: 600;
+      font-family: 'Cairo', sans-serif;
     }
-    .page-title {
-      font-family: 'Changa', sans-serif;
-      font-size: 18px;
-      color: #0f172a;
-      font-weight: 800;
+    .main-app-logo {
+      width: 60px;
+      height: 60px;
+      object-fit: contain;
     }
-
-    /* كارت الستريك */
-    .streak-card {
-      background: linear-gradient(135deg, #ff6b35, #f43f5e);
-      border-radius: 24px;
-      padding: 28px 20px;
+    .profile-section {
       text-align: center;
-      color: white;
-      margin-bottom: 16px;
-      box-shadow: 0 8px 24px rgba(244, 63, 94, 0.3);
+      margin-bottom: 20px;
     }
-    .streak-fire {
-      font-size: 56px;
-      display: block;
-      margin-bottom: 10px;
-      animation: pulse 1.5s infinite;
+    .avatar-wrapper {
+      position: relative;
+      display: inline-block;
+      width: 100px;
+      height: 100px;
     }
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.12); }
+    .avatar-img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #1e3a8a;
     }
-    .streak-num {
-      font-family: 'Changa', sans-serif;
-      font-size: 56px;
-      font-weight: 800;
-      display: block;
-      line-height: 1;
-    }
-    .streak-label {
-      font-size: 15px;
-      opacity: 0.9;
-      margin-top: 6px;
-    }
-
-    /* كارت الكتاب المقدس */
-    .bible-card {
-      background: white;
-      border-radius: 20px;
-      padding: 22px;
-      margin-bottom: 16px;
-      border: 1px solid #e2e8f0;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-      text-align: center;
-    }
-    .bible-card h2 {
-      font-family: 'Changa', sans-serif;
-      font-size: 18px;
-      color: #0f172a;
-      margin-bottom: 8px;
-    }
-    .bible-card p {
-      font-size: 14px;
-      color: #64748b;
-      line-height: 1.7;
-      margin-bottom: 18px;
-    }
-    .open-bible-btn {
-      display: block;
+    .upload-badge {
+      position: absolute;
+      bottom: 2px;
+      right: 2px;
       background: #1e3a8a;
       color: white;
-      text-align: center;
-      padding: 14px;
-      border-radius: 14px;
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 15px;
-      font-family: 'Cairo', sans-serif;
-      margin-bottom: 10px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      cursor: pointer;
+      border: 2px solid white;
     }
-    .open-bible-note {
-      font-size: 12px;
-      color: #94a3b8;
-    }
-
-    /* زرار "قرأت أصحاح اليوم" */
-    .confirm-btn {
-      width: 100%;
-      background: linear-gradient(135deg, #10b981, #065f46);
-      color: white;
-      border: none;
-      padding: 18px;
-      border-radius: 16px;
-      font-size: 18px;
+    .user-name {
       font-family: 'Changa', sans-serif;
-      font-weight: 800;
-      cursor: pointer;
-      margin-bottom: 16px;
-      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35);
-      transition: transform 0.1s ease;
+      font-size: 20px;
+      color: #0f172a;
+      margin: 10px 0 2px 0;
     }
-    .confirm-btn:active { transform: scale(0.97); }
-    .confirm-btn:disabled {
-      background: #9ca3af;
-      box-shadow: none;
-      cursor: not-allowed;
+    .user-id-code {
+      font-size: 14px;
+      color: #64748b;
+      margin: 0 0 10px 0;
     }
-
-    /* كارت "قرأت بالفعل" */
-    .done-card {
-      background: white;
+    .group-tag {
+      font-size: 13px;
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      color: #334155;
+      padding: 4px 14px;
       border-radius: 20px;
-      padding: 28px;
-      text-align: center;
-      border: 2px solid #10b981;
-      margin-bottom: 16px;
-      display: none;
-      box-shadow: 0 4px 16px rgba(16, 185, 129, 0.15);
+      display: inline-block;
     }
-
-    /* كارت النجاح */
-    .success-card {
-      background: white;
-      border-radius: 20px;
-      padding: 28px;
-      text-align: center;
-      border: 2px solid #fbbf24;
-      margin-bottom: 16px;
-      display: none;
-      box-shadow: 0 4px 16px rgba(251, 191, 36, 0.2);
-    }
-
-    .go-home-btn {
-      display: block;
-      background: #0f172a;
-      color: white;
-      text-align: center;
-      padding: 13px;
-      border-radius: 12px;
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 15px;
-      border: none;
-      cursor: pointer;
-      width: 100%;
-      font-family: 'Cairo', sans-serif;
-      margin-top: 14px;
-    }
-
-    /* معلومة الستريك */
-    .streak-info-card {
-      background: white;
+    .clean-info-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
       border-radius: 16px;
       padding: 16px;
-      border: 1px solid #e2e8f0;
-      margin-bottom: 16px;
-      font-size: 13px;
-      color: #64748b;
-      line-height: 1.8;
+      margin-bottom: 14px;
+      text-align: center;
     }
-    .streak-info-card b { color: #0f172a; }
-
-    /* البار السفلي */
+    .action-link-card {
+      background: #0f172a;
+      color: #ffffff;
+      border-radius: 16px;
+      padding: 18px;
+      margin-bottom: 14px;
+      text-align: center;
+      cursor: pointer;
+      display: block;
+      text-decoration: none;
+    }
+    .action-link-card h3 {
+      margin: 0 0 6px 0;
+      font-size: 17px;
+      font-family: 'Changa', sans-serif;
+      color: #ffcc00;
+    }
+    .action-link-card p {
+      margin: 0;
+      font-size: 13px;
+      color: #cbd5e1;
+    }
+    .secondary-card { background: #1e3a8a; }
+    .secondary-card h3 { color: #ffffff; }
+    .qr-container {
+      background: white;
+      padding: 8px;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      display: inline-block;
+      margin-top: 10px;
+    }
     .bottom-navbar {
       position: fixed;
-      bottom: 0; left: 0; right: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
       height: 65px;
-      background: white;
+      background: #ffffff;
       border-top: 1px solid #e2e8f0;
       display: flex;
       justify-content: space-around;
       align-items: center;
       z-index: 100;
     }
-    .nav-link { text-decoration: none; color: #64748b; font-size: 11px; text-align: center; font-family: 'Cairo', sans-serif; }
+    .nav-link {
+      text-decoration: none;
+      color: #64748b;
+      font-size: 11px;
+      text-align: center;
+      font-family: 'Cairo', sans-serif;
+    }
     .nav-link.active { color: #0f172a; font-weight: bold; }
     .nav-icon { display: block; font-size: 20px; margin-bottom: 2px; }
+    .sidebar {
+      position: fixed;
+      top: 0;
+      right: -300px;
+      width: 280px;
+      height: 100%;
+      background: #0f172a;
+      z-index: 1000;
+      transition: right 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      border-radius: 20px 0 0 20px;
+    }
+    .sidebar.open { right: 0; }
+    .sidebar-header {
+      padding: 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .sidebar-title {
+      font-weight: bold;
+      color: #F4B731;
+      font-family: 'Changa', sans-serif;
+      font-size: 18px;
+    }
+    .close-btn {
+      background: rgba(255,255,255,0.1);
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: white;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .sidebar-menu {
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .menu-item {
+      text-decoration: none;
+      color: rgba(255,255,255,0.85);
+      padding: 12px 14px;
+      border-radius: 10px;
+      display: block;
+      font-size: 15px;
+      font-family: 'Cairo', sans-serif;
+    }
+    .menu-item:hover, .menu-item.active {
+      background: rgba(255,255,255,0.1);
+      color: #F4B731;
+    }
+    .logout-btn {
+      background: rgba(242,97,140,0.15);
+      border: 1px solid rgba(242,97,140,0.3);
+      color: #F2618C;
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-family: 'Cairo', sans-serif;
+      cursor: pointer;
+      text-align: right;
+      width: 100%;
+      margin-top: 10px;
+    }
+    .sidebar-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 999;
+      display: none;
+    }
+    .sidebar-overlay.show { display: block; }
   </style>
 </head>
 <body>
 
-  <div class="container">
+  <div id="sidebarOverlay" class="sidebar-overlay"></div>
+  <div id="sidebar" class="sidebar">
+    <div class="sidebar-header">
+      <span class="sidebar-title">📋 القائمة</span>
+      <button id="closeBtn" class="close-btn">×</button>
+    </div>
+    <div class="sidebar-menu">
+      <a href="home.html" class="menu-item active">🏠 الرئيسية</a>
+      <a href="bible.html" class="menu-item">📖 التحدي اليومي (الستريك)</a>
+      <a href="quiz.html" class="menu-item">🎯 تحدي السبت الأسبوعي</a>
+      <a href="badges.html" class="menu-item">🏅 أوسمتي</a>
+      <a href="store.html" class="menu-item">🛒 المتجر</a>
+      <a href="leaderboard.html" class="menu-item">🏆 لوحة الصدارة</a>
+      <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin:10px 0;">
+      <button id="logoutBtn" class="logout-btn">🚪 تسجيل الخروج</button>
+    </div>
+  </div>
 
-    <div class="top-bar">
-      <button class="back-btn" onclick="window.location.href='home.html'">⬅ رجوع</button>
-      <span class="page-title">📖 تحدي الستريك</span>
-      <div style="width:60px;"></div>
+  <div class="main-container">
+
+    <div class="top-header-bar">
+      <button id="menuBtn" class="menu-trigger-btn">☰</button>
+      <img src="logo.png" class="main-app-logo" alt="اللوجو">
     </div>
 
-    <!-- كارت الستريك -->
-    <div class="streak-card">
-      <span class="streak-fire">🔥</span>
-      <span class="streak-num" id="streakCount">0</span>
-      <span class="streak-label">يوم متتالي — سلسلة الالتزام بتاعتك</span>
-    </div>
-
-    <!-- كارت "قرأت بالفعل النهاردة" -->
-    <div class="done-card" id="doneCard">
-      <span style="font-size:52px; display:block; margin-bottom:12px;">✅</span>
-      <p style="font-family:'Changa'; font-size:20px; font-weight:800; color:#065f46; margin-bottom:8px;">عملتها النهاردة! 🎉</p>
-      <p style="color:#64748b; font-size:14px; margin-bottom:4px;">سجّلت قراءتك النهاردة بنجاح.</p>
-      <p style="color:#64748b; font-size:14px;">تعالى بكرة عشان تكمل الستريك! 🔥</p>
-      <button onclick="window.location.href='home.html'" class="go-home-btn">🏠 رجوع للرئيسية</button>
-    </div>
-
-    <!-- كارت النجاح بعد الضغط -->
-    <div class="success-card" id="successCard">
-      <span style="font-size:52px; display:block; margin-bottom:12px;">🏆</span>
-      <p style="font-family:'Changa'; font-size:22px; font-weight:800; color:#0f172a; margin-bottom:8px;" id="successTitle">أحسنت يا بطل!</p>
-      <p style="font-size:15px; color:#16a34a; font-weight:700; margin-bottom:4px;" id="successStreak"></p>
-      <p style="font-size:14px; color:#64748b;" id="successPoints"></p>
-      <button onclick="window.location.href='home.html'" class="go-home-btn">🏠 رجوع للرئيسية</button>
-    </div>
-
-    <!-- المحتوى الرئيسي -->
-    <div id="mainContent">
-
-      <!-- كارت الكتاب المقدس -->
-      <div class="bible-card">
-        <h2>📖 اقرأ من الكتاب المقدس</h2>
-        <p>افتح الكتاب المقدس واقرأ أصحاح من انجيل مرقس أو أي أصحاح تحبه، وبعد ما تخلص ارجع هنا وسجّل قراءتك.</p>
-        <a href="https://www.biblegateway.com/passage/?search=Mark+1&version=ALAB" target="_blank" class="open-bible-btn">
-          📖 افتح الكتاب المقدس من هنا
-        </a>
-        <p class="open-bible-note">هيفتح في تاب جديد — ارجع هنا بعد ما تخلص القراءة</p>
+    <div class="profile-section">
+      <div class="avatar-wrapper">
+        <img id="userAvatar" src="" class="avatar-img" alt="صورة">
+        <label for="avatarUpload" class="upload-badge">📸</label>
+        <input type="file" id="avatarUpload" style="display:none;" accept="image/*">
       </div>
+      <h2 id="welcomeName" class="user-name">يا بطل! ✨</h2>
+      <p class="user-id-code">الكود: <span id="userCode" style="font-weight:bold; color:#1e3a8a;">---</span></p>
+      <div id="userClassGroup" class="group-tag">جاري التحميل...</div>
+    </div>
 
-      <!-- معلومة الستريك -->
-      <div class="streak-info-card">
-        <b>🔥 إزاي بيشتغل الستريك؟</b><br>
-        كل يوم تسجّل قراءتك، الستريك بيزيد يوم.<br>
-        لو نسيت يوم، الستريك بيرجع من الأول.<br>
-        <b>⭐ كل قراءة = 5 نقاط تضاف لرصيدك.</b>
-      </div>
+    <div class="clean-info-card">
+      <p style="font-size:18px; margin:0 0 8px 0; font-weight:bold; color:#0f172a;">
+        🪙 نقاطك: <span id="userPoints" style="color:#b45309;">0</span> نقطة
+      </p>
+      <p style="font-size:13px; margin:0; color:#64748b;">
+        📊 أيام الحضور: <span id="attendanceCounter" style="color:#1e3a8a; font-weight:bold;">0 / 18 يوم</span>
+      </p>
+    </div>
 
-      <!-- زرار التأكيد -->
-      <button class="confirm-btn" id="confirmBtn" onclick="confirmReading()">
-        ✅ قرأت أصحاح اليوم!
-      </button>
+    <a href="bible.html" class="action-link-card">
+      <h3>📖 تحدي الستريك اليومي</h3>
+      <p>اقرأ وسجّل قراءتك واكسب نقاط يومية 🔥</p>
+    </a>
 
+    <a href="quiz.html" class="action-link-card secondary-card">
+      <h3>🎯 تحدي السبت الأسبوعي</h3>
+      <p>حل أسئلة المسابقة واكسب نقاط إضافية 🚀</p>
+    </a>
+
+    <a href="badges.html" class="action-link-card" style="background: linear-gradient(135deg, #92400e, #b45309);">
+      <h3>🏅 أوسمتي وشاراتي</h3>
+      <p>شوف الأوسمة اللي كسبتها وإيه اللي جاي 🎖️</p>
+    </a>
+
+    <a href="store.html" class="action-link-card" style="background: linear-gradient(135deg, #065f46, #10b981);">
+      <h3>🛒 المتجر</h3>
+      <p>استبدل نقاطك بهدايا حقيقية 🎁</p>
+    </a>
+
+    <div class="clean-info-card">
+      <p style="margin:0 0 8px 0; font-size:13px; color:#64748b; font-weight:600;">
+        📱 امسح الكود مع الخادم لتسجيل الحضور
+      </p>
+      <div id="qrcode" class="qr-container"></div>
     </div>
 
   </div>
 
   <div class="bottom-navbar">
-    <a href="home.html" class="nav-link"><span class="nav-icon">🏠</span>الرئيسية</a>
-    <a href="bible.html" class="nav-link active"><span class="nav-icon">📖</span>الستريك</a>
+    <a href="home.html" class="nav-link active"><span class="nav-icon">🏠</span>الرئيسية</a>
+    <a href="bible.html" class="nav-link"><span class="nav-icon">📖</span>الستريك</a>
     <a href="badges.html" class="nav-link"><span class="nav-icon">🏅</span>أوسمتي</a>
+    <a href="store.html" class="nav-link"><span class="nav-icon">🛒</span>المتجر</a>
     <a href="leaderboard.html" class="nav-link"><span class="nav-icon">🏆</span>الصدارة</a>
   </div>
 
@@ -296,115 +343,66 @@
     const db = firebase.firestore();
 
     const student = JSON.parse(localStorage.getItem("loggedInStudent"));
-    if (!student || !student.code) { window.location.href = "index.html"; }
 
-    // التاريخ بتوقيت مصر بالظبط
-    function getTodayString() {
-      const now = new Date();
-      const cairoTime = new Date(now.toLocaleString("en-US", { timeZone: "Africa/Cairo" }));
-      const year = cairoTime.getFullYear();
-      const month = String(cairoTime.getMonth() + 1).padStart(2, '0');
-      const day = String(cairoTime.getDate()).padStart(2, '0');
-      return year + "-" + month + "-" + day;
-    }
+    if (!student || !student.code) {
+      window.location.href = "index.html";
+    } else {
+      new QRCode(document.getElementById("qrcode"), {
+        text: student.code,
+        width: 130,
+        height: 130,
+        colorDark: "#0f172a",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H
+      });
 
-    const todayString = getTodayString();
+      db.collection("students").doc(student.code).onSnapshot(function(doc) {
+        if (doc.exists) {
+          const data = doc.data();
+          document.getElementById("welcomeName").textContent = "يا بطل، " + (data.name || "مخدوم") + "! ✨";
+          document.getElementById("userCode").textContent = student.code;
+          document.getElementById("userPoints").textContent = data.points || 0;
+          document.getElementById("userClassGroup").textContent = "📍 " + (data.class || "مش محدد") + " - " + (data.group || "مش محدد");
+          document.getElementById("attendanceCounter").textContent = (data.attendanceCount || 0) + " / 18 يوم";
 
-    // جلب بيانات الطالب
-    db.collection("students").doc(student.code).get().then(function(doc) {
-      if (!doc.exists) return;
-      const data = doc.data();
-
-      // عرض الستريك الحالي
-      document.getElementById("streakCount").textContent = data.bibleStreak || 0;
-
-      // لو قرأ النهاردة بالفعل
-      if (data.lastBibleDate === todayString) {
-        document.getElementById("mainContent").style.display = "none";
-        document.getElementById("doneCard").style.display = "block";
-      }
-    });
-
-    // لما يدوس "قرأت أصحاح اليوم"
-    function confirmReading() {
-      const btn = document.getElementById("confirmBtn");
-      btn.disabled = true;
-      btn.textContent = "جاري التسجيل... ⏳";
-
-      db.collection("students").doc(student.code).get().then(function(doc) {
-        if (!doc.exists) return;
-        const data = doc.data();
-
-        // لو قرأ بالفعل النهاردة — منع التكرار
-        if (data.lastBibleDate === todayString) {
-          document.getElementById("mainContent").style.display = "none";
-          document.getElementById("doneCard").style.display = "block";
-          return;
-        }
-
-        // حساب الستريك الجديد
-        const lastBibleDate = data.lastBibleDate || "";
-        let currentStreak = data.bibleStreak || 0;
-        let newStreak = 1;
-
-        if (lastBibleDate) {
-          const lastDate = new Date(lastBibleDate);
-          const today = new Date(todayString);
-          const diffDays = Math.round((today - lastDate) / (1000 * 60 * 60 * 24));
-
-          if (diffDays === 1) {
-            // يوم بعد يوم — الستريك يزيد
-            newStreak = currentStreak + 1;
-          } else if (diffDays === 0) {
-            // نفس اليوم — مش المفروض يوصل هنا بس للأمان
-            newStreak = currentStreak;
+          if (data.avatar) {
+            document.getElementById("userAvatar").src = data.avatar;
           } else {
-            // فات أكتر من يوم — الستريك يبدأ من 1
-            newStreak = 1;
+            const firstLetter = (data.name || "م").charAt(0).toUpperCase();
+            document.getElementById("userAvatar").src = "https://ui-avatars.com/api/?name=" + encodeURIComponent(firstLetter) + "&background=1e3a8a&color=fff&size=150&bold=true";
           }
         }
-
-        // 5 نقاط على القراءة
-        const newPoints = (data.points || 0) + 5;
-
-        // حفظ في Firebase
-        db.collection("students").doc(student.code).update({
-          bibleStreak: newStreak,
-          lastBibleDate: todayString,
-          points: newPoints
-        }).then(function() {
-
-          // إخفاء المحتوى وإظهار كارت النجاح
-          document.getElementById("mainContent").style.display = "none";
-          document.getElementById("successCard").style.display = "block";
-          document.getElementById("streakCount").textContent = newStreak;
-
-          // رسائل مختلفة حسب الستريك
-          if (newStreak >= 30) {
-            document.getElementById("successTitle").textContent = "أسطورة! 👑 شهر كامل!";
-          } else if (newStreak >= 15) {
-            document.getElementById("successTitle").textContent = "قلب ثابت! 💎 نصف شهر!";
-          } else if (newStreak >= 7) {
-            document.getElementById("successTitle").textContent = "أسبوع مع ربنا! ⚡";
-          } else if (newStreak >= 3) {
-            document.getElementById("successTitle").textContent = "3 أيام نار! 🔥";
-          } else {
-            document.getElementById("successTitle").textContent = "أحسنت يا بطل! 🏆";
-          }
-
-          document.getElementById("successStreak").textContent = "🔥 الستريك بتاعك دلوقتي: " + newStreak + " يوم متتالي";
-          document.getElementById("successPoints").textContent = "⭐ + 5 نقاط أُضيفت لرصيدك";
-
-          // تحديث الـ localStorage
-          const updatedStudent = JSON.parse(localStorage.getItem("loggedInStudent"));
-          if (updatedStudent) {
-            updatedStudent.points = newPoints;
-            localStorage.setItem("loggedInStudent", JSON.stringify(updatedStudent));
-          }
-        });
       });
     }
-  </script>
 
+    const sidebar = document.getElementById("sidebar");
+    const overlay = document.getElementById("sidebarOverlay");
+    const menuBtn = document.getElementById("menuBtn");
+    const closeBtn = document.getElementById("closeBtn");
+
+    function openSidebar() { sidebar.classList.add("open"); overlay.classList.add("show"); }
+    function closeSidebar() { sidebar.classList.remove("open"); overlay.classList.remove("show"); }
+
+    menuBtn.addEventListener("click", function(e) { e.stopPropagation(); openSidebar(); });
+    closeBtn.addEventListener("click", closeSidebar);
+    overlay.addEventListener("click", closeSidebar);
+
+    document.getElementById("avatarUpload").addEventListener("change", function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onloadend = function() {
+        db.collection("students").doc(student.code).update({ avatar: reader.result }).then(() => {
+          document.getElementById("userAvatar").src = reader.result;
+        });
+      }
+      reader.readAsDataURL(file);
+    });
+
+    document.getElementById("logoutBtn").addEventListener("click", function() {
+      localStorage.removeItem("loggedInStudent");
+      window.location.href = "index.html";
+    });
+  </script>
 </body>
 </html>
