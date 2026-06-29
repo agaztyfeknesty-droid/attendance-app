@@ -69,16 +69,16 @@
     <label for="studentClass">اختر فصلك 🏫</label>
     <select id="studentClass" required>
       <option value="">-- اختر الفصل --</option>
-      <option value="فصل 1">فصل 1</option>
-      <option value="فصل 2">فصل 2</option>
-      <option value="فصل 3">فصل 3</option>
-      <option value="فصل 4">فصل 4</option>
+      <option value="فصل 1 - الشهيد ابانوب (ابتدائي)">فصل 1 - الشهيد ابانوب (ابتدائي)</option>
+      <option value="فصل 2 - الشهيد كيرياكوس (ابتدائي)">فصل 2 - الشهيد كيرياكوس (ابتدائي)</option>
+      <option value="فصل 3 - دانيال النبي (اعدادي)">فصل 3 - دانيال النبي (اعدادي)</option>
+      <option value="فصل 4 - تيموثاوس (اعدادي)">فصل 4 - تيموثاوس (اعدادي)</option>
     </select>
 
     <div id="groupWrapper" style="display: none; width: 100%;">
       <label for="studentGroup">اختر مجموعتك جوه الفصل 👥</label>
       <select id="studentGroup" required>
-        </select>
+      </select>
     </div>
 
     <label for="newPassword">عمل كلمة مرور (باسورد)</label>
@@ -173,14 +173,14 @@
           phone: studentPhone,
           parentPhone: parentPhone,
           password: newPassword,
-          class: selectedClass,  
-          group: selectedGroup,  
+          class: selectedClass,
+          group: selectedGroup,
           points: 0,
           streak: 0,
           attendanceCount: 0,
           lastAttendanceDate: "",
           avatar: "",
-          badges: [] // مضاف لتهيئة مصفوفة الأوسمة للمتجر تلقائياً
+          badges: []
         };
 
         db.collection("students").doc(generatedCode).set(newStudent).then(function() {
