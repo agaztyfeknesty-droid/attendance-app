@@ -262,7 +262,15 @@
                                 <span style="color:#00f2fe; font-size:12px;">🆔 ${studentId}</span>
                             </div>
                             <p class="parent-phone">📞 ولي الأمر: ${data.parentPhone || 'غير مسجل'}</p>
-                            <p style="color:#cbd5e1; font-size:11px; margin:0 0 6px 0;">📊 الحضور: <b style="color:#00f2fe;">${count} / 18 يوم</b> | 🎯 النقاط: ${data.points || 0} ن</p>
+                            <p style="color:#cbd5e1; font-size:11px; margin:0 0 6px 0;">📊 الحضور: <b style="color:#00f2fe;">${count} / 18 يوم</b> | 🎯 النقاط: <b id="pts-${studentId}" style="color:#fbbf24;">${data.points || 0}</b> ن</p>
+                            <div style="display:flex; gap:6px; margin-bottom:10px; align-items:center;">
+                                <input type="number" id="addpts-${studentId}" placeholder="نقاط" min="1"
+                                    style="flex:1; padding:8px 10px; border-radius:10px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.08); color:white; font-family:'Cairo',sans-serif; font-size:13px; text-align:center;">
+                                <button onclick="addPoints('${studentId}', ${data.points || 0})"
+                                    style="background:linear-gradient(135deg,#10b981,#065f46); color:white; border:none; padding:8px 14px; border-radius:10px; font-family:'Cairo',sans-serif; font-size:13px; font-weight:bold; cursor:pointer; white-space:nowrap;">
+                                    ➕ أضف
+                                </button>
+                            </div>
                             <div class="qr-container">
                                 <div id="${qrDivId}"></div>
                                 <span class="qr-label">📲 كارت الحضور - ${data.name || studentId}</span>
@@ -284,6 +292,23 @@
                         }
                     }, 100);
                 });
+            });
+        }
+
+        function addPoints(studentId, currentPoints) {
+            const input = document.getElementById("addpts-" + studentId);
+            const val = parseInt(input.value);
+            if (!val || val <= 0) {
+                alert("⚠️ اكتب عدد النقاط الأول!");
+                return;
+            }
+            const newPoints = currentPoints + val;
+            db.collection("students").doc(studentId).update({ points: newPoints }).then(() => {
+                document.getElementById("pts-" + studentId).textContent = newPoints;
+                input.value = "";
+                alert("✅ تم إضافة " + val + " نقطة بنجاح!");
+            }).catch(err => {
+                alert("❌ حصل خطأ: " + err.message);
             });
         }
 
