@@ -404,8 +404,13 @@
       const newPoints = currentPoints + winner.points;
       const todayString = getTodayString();
 
+      const currentStoreBalance = window._storeBalance || 0;
+      const currentGroupPoints = window._groupPoints || 0;
+
       db.collection("students").doc(student.code).update({
         points: newPoints,
+        storeBalance: currentStoreBalance + winner.points,
+        groupPoints: currentGroupPoints + winner.points,
         lastSpinDate: todayString
       }).then(function() {
         currentPoints = newPoints;
@@ -439,6 +444,8 @@
         if (doc.exists) {
           const data = doc.data();
           currentPoints = data.points || 0;
+          window._storeBalance = data.storeBalance || 0;
+          window._groupPoints = data.groupPoints || 0;
           document.getElementById("welcomeName").textContent = "يا بطل، " + (data.name || "مخدوم") + "! ✨";
           document.getElementById("userCode").textContent = student.code;
           document.getElementById("userPoints").textContent = currentPoints;
