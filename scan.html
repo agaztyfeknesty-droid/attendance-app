@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Changa:wght@600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script src="https://unpkg.com/html5-qrcode"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
     <style>
@@ -107,6 +108,21 @@
         .student-item p { margin: 3px 0; }
         .student-name-row { font-weight: bold; color: #2bb673; font-size: 14px; display: flex; justify-content: space-between; }
         .parent-phone { color: #cbd5e1; font-size: 12px; }
+        .qr-container {
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: white;
+            border-radius: 10px;
+            padding: 8px;
+        }
+        .qr-label {
+            font-size: 11px;
+            color: #64748b;
+            margin-top: 5px;
+            font-family: 'Cairo', sans-serif;
+        }
     </style>
 </head>
 <body>
@@ -130,7 +146,7 @@
                 <h3>👥 المخدومين المسجلين بالسيستم</h3>
                 <span class="counter-badge" id="studentCounter">0 مخدوم</span>
             </div>
-            <div id="studentsContainer" style="max-height: 300px; overflow-y: auto; padding-left: 5px;">
+            <div id="studentsContainer" style="max-height: 600px; overflow-y: auto; padding-left: 5px;">
                 <p style="text-align: center; color: #94a3b8; font-size: 13px;">جاري تحميل القائمة... 🔄</p>
             </div>
         </div>
@@ -237,6 +253,7 @@
                     const data = doc.data();
                     const studentId = doc.id;
                     const count = data.attendanceCount || 0;
+                    const qrDivId = "qr-" + studentId;
 
                     container.innerHTML += `
                         <div class="student-item">
@@ -245,9 +262,27 @@
                                 <span style="color:#00f2fe; font-size:12px;">🆔 ${studentId}</span>
                             </div>
                             <p class="parent-phone">📞 ولي الأمر: ${data.parentPhone || 'غير مسجل'}</p>
-                            <p style="color:#cbd5e1; font-size:11px; margin:0;">📊 الحضور: <b style="color:#00f2fe;">${count} / 18 يوم</b> | 🎯 النقاط: ${data.points || 0} ن</p>
+                            <p style="color:#cbd5e1; font-size:11px; margin:0 0 6px 0;">📊 الحضور: <b style="color:#00f2fe;">${count} / 18 يوم</b> | 🎯 النقاط: ${data.points || 0} ن</p>
+                            <div class="qr-container">
+                                <div id="${qrDivId}"></div>
+                                <span class="qr-label">📲 كارت الحضور - ${data.name || studentId}</span>
+                            </div>
                         </div>
                     `;
+
+                    setTimeout(() => {
+                        const qrEl = document.getElementById(qrDivId);
+                        if (qrEl && qrEl.childElementCount === 0) {
+                            new QRCode(qrEl, {
+                                text: studentId,
+                                width: 120,
+                                height: 120,
+                                colorDark: "#0f172a",
+                                colorLight: "#ffffff",
+                                correctLevel: QRCode.CorrectLevel.H
+                            });
+                        }
+                    }, 100);
                 });
             });
         }
