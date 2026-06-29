@@ -43,205 +43,138 @@
       cursor: pointer;
       font-family: 'Cairo', sans-serif;
     }
-    .main-app-logo {
-      width: 60px;
-      height: 60px;
-      object-fit: contain;
-    }
-    .profile-section {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    .avatar-wrapper {
-      position: relative;
-      display: inline-block;
-      width: 100px;
-      height: 100px;
-    }
-    .avatar-img {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 3px solid #1e3a8a;
-    }
+    .main-app-logo { width: 60px; height: 60px; object-fit: contain; }
+    .profile-section { text-align: center; margin-bottom: 20px; }
+    .avatar-wrapper { position: relative; display: inline-block; width: 100px; height: 100px; }
+    .avatar-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid #1e3a8a; }
     .upload-badge {
-      position: absolute;
-      bottom: 2px;
-      right: 2px;
-      background: #1e3a8a;
-      color: white;
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 13px;
-      cursor: pointer;
-      border: 2px solid white;
+      position: absolute; bottom: 2px; right: 2px;
+      background: #1e3a8a; color: white; width: 28px; height: 28px;
+      border-radius: 50%; display: flex; align-items: center;
+      justify-content: center; font-size: 13px; cursor: pointer; border: 2px solid white;
     }
-    .user-name {
-      font-family: 'Changa', sans-serif;
-      font-size: 20px;
-      color: #0f172a;
-      margin: 10px 0 2px 0;
-    }
-    .user-id-code {
-      font-size: 14px;
-      color: #64748b;
-      margin: 0 0 10px 0;
-    }
+    .user-name { font-family: 'Changa', sans-serif; font-size: 20px; color: #0f172a; margin: 10px 0 2px 0; }
+    .user-id-code { font-size: 14px; color: #64748b; margin: 0 0 10px 0; }
     .group-tag {
-      font-size: 13px;
-      background: #f1f5f9;
-      border: 1px solid #e2e8f0;
-      color: #334155;
-      padding: 4px 14px;
-      border-radius: 20px;
-      display: inline-block;
+      font-size: 13px; background: #f1f5f9; border: 1px solid #e2e8f0;
+      color: #334155; padding: 4px 14px; border-radius: 20px; display: inline-block;
     }
     .clean-info-card {
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: 16px;
-      padding: 16px;
-      margin-bottom: 14px;
-      text-align: center;
+      background: #f8fafc; border: 1px solid #e2e8f0;
+      border-radius: 16px; padding: 16px; margin-bottom: 14px; text-align: center;
     }
     .action-link-card {
-      background: #0f172a;
-      color: #ffffff;
-      border-radius: 16px;
-      padding: 18px;
-      margin-bottom: 14px;
-      text-align: center;
-      cursor: pointer;
-      display: block;
-      text-decoration: none;
+      background: #0f172a; color: #ffffff; border-radius: 16px;
+      padding: 18px; margin-bottom: 14px; text-align: center;
+      cursor: pointer; display: block; text-decoration: none;
     }
-    .action-link-card h3 {
-      margin: 0 0 6px 0;
-      font-size: 17px;
-      font-family: 'Changa', sans-serif;
-      color: #ffcc00;
-    }
-    .action-link-card p {
-      margin: 0;
-      font-size: 13px;
-      color: #cbd5e1;
-    }
+    .action-link-card h3 { margin: 0 0 6px 0; font-size: 17px; font-family: 'Changa', sans-serif; color: #ffcc00; }
+    .action-link-card p { margin: 0; font-size: 13px; color: #cbd5e1; }
     .secondary-card { background: #1e3a8a; }
     .secondary-card h3 { color: #ffffff; }
     .qr-container {
-      background: white;
-      padding: 8px;
-      border: 1px solid #e2e8f0;
-      border-radius: 12px;
-      display: inline-block;
-      margin-top: 10px;
+      background: white; padding: 8px; border: 1px solid #e2e8f0;
+      border-radius: 12px; display: inline-block; margin-top: 10px;
     }
-    .bottom-navbar {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 65px;
-      background: #ffffff;
-      border-top: 1px solid #e2e8f0;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      z-index: 100;
-    }
-    .nav-link {
-      text-decoration: none;
-      color: #64748b;
-      font-size: 11px;
+
+    /* ===== العجلة ===== */
+    .wheel-card {
+      background: #0f172a;
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 14px;
       text-align: center;
-      font-family: 'Cairo', sans-serif;
     }
+    .wheel-card-title {
+      font-family: 'Changa', sans-serif;
+      font-size: 18px;
+      color: #fbbf24;
+      margin-bottom: 4px;
+    }
+    .wheel-card-sub { font-size: 12px; color: #94a3b8; margin-bottom: 16px; }
+    .wheel-wrapper {
+      position: relative;
+      width: 220px;
+      height: 220px;
+      margin: 0 auto 16px auto;
+    }
+    .wheel-pointer {
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0; height: 0;
+      border-left: 12px solid transparent;
+      border-right: 12px solid transparent;
+      border-top: 26px solid #f43f5e;
+      z-index: 10;
+    }
+    .spin-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+      color: #0f172a;
+      border: none;
+      padding: 13px;
+      border-radius: 14px;
+      font-family: 'Changa', sans-serif;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .spin-btn:disabled {
+      background: #374151;
+      color: #6b7280;
+      cursor: not-allowed;
+    }
+    .wheel-result {
+      margin-top: 12px;
+      font-size: 15px;
+      font-weight: 700;
+      color: #fbbf24;
+      min-height: 22px;
+    }
+    /* ================== */
+
+    .bottom-navbar {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      height: 65px; background: #ffffff; border-top: 1px solid #e2e8f0;
+      display: flex; justify-content: space-around; align-items: center; z-index: 100;
+    }
+    .nav-link { text-decoration: none; color: #64748b; font-size: 11px; text-align: center; font-family: 'Cairo', sans-serif; }
     .nav-link.active { color: #0f172a; font-weight: bold; }
     .nav-icon { display: block; font-size: 20px; margin-bottom: 2px; }
     .sidebar {
-      position: fixed;
-      top: 0;
-      right: -300px;
-      width: 280px;
-      height: 100%;
-      background: #0f172a;
-      z-index: 1000;
-      transition: right 0.3s ease;
-      display: flex;
-      flex-direction: column;
-      border-radius: 20px 0 0 20px;
+      position: fixed; top: 0; right: -300px; width: 280px; height: 100%;
+      background: #0f172a; z-index: 1000; transition: right 0.3s ease;
+      display: flex; flex-direction: column; border-radius: 20px 0 0 20px;
     }
     .sidebar.open { right: 0; }
     .sidebar-header {
-      padding: 20px;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.1);
+      display: flex; justify-content: space-between; align-items: center;
     }
-    .sidebar-title {
-      font-weight: bold;
-      color: #F4B731;
-      font-family: 'Changa', sans-serif;
-      font-size: 18px;
-    }
+    .sidebar-title { font-weight: bold; color: #F4B731; font-family: 'Changa', sans-serif; font-size: 18px; }
     .close-btn {
-      background: rgba(255,255,255,0.1);
-      border: none;
-      font-size: 20px;
-      cursor: pointer;
-      color: white;
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      background: rgba(255,255,255,0.1); border: none; font-size: 20px;
+      cursor: pointer; color: white; width: 32px; height: 32px;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
     }
-    .sidebar-menu {
-      padding: 15px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
+    .sidebar-menu { padding: 15px; display: flex; flex-direction: column; gap: 6px; }
     .menu-item {
-      text-decoration: none;
-      color: rgba(255,255,255,0.85);
-      padding: 12px 14px;
-      border-radius: 10px;
-      display: block;
-      font-size: 15px;
-      font-family: 'Cairo', sans-serif;
+      text-decoration: none; color: rgba(255,255,255,0.85);
+      padding: 12px 14px; border-radius: 10px; display: block;
+      font-size: 15px; font-family: 'Cairo', sans-serif;
     }
-    .menu-item:hover, .menu-item.active {
-      background: rgba(255,255,255,0.1);
-      color: #F4B731;
-    }
+    .menu-item:hover, .menu-item.active { background: rgba(255,255,255,0.1); color: #F4B731; }
     .logout-btn {
-      background: rgba(242,97,140,0.15);
-      border: 1px solid rgba(242,97,140,0.3);
-      color: #F2618C;
-      padding: 12px 14px;
-      border-radius: 10px;
-      font-size: 15px;
-      font-family: 'Cairo', sans-serif;
-      cursor: pointer;
-      text-align: right;
-      width: 100%;
-      margin-top: 10px;
+      background: rgba(242,97,140,0.15); border: 1px solid rgba(242,97,140,0.3);
+      color: #F2618C; padding: 12px 14px; border-radius: 10px;
+      font-size: 15px; font-family: 'Cairo', sans-serif;
+      cursor: pointer; text-align: right; width: 100%; margin-top: 10px;
     }
     .sidebar-overlay {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.5);
-      z-index: 999;
-      display: none;
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5); z-index: 999; display: none;
     }
     .sidebar-overlay.show { display: block; }
   </style>
@@ -303,15 +236,28 @@
       <p>حل أسئلة المسابقة واكسب نقاط إضافية 🚀</p>
     </a>
 
-    <a href="badges.html" class="action-link-card" style="background: linear-gradient(135deg, #92400e, #b45309);">
+    <a href="badges.html" class="action-link-card" style="background:linear-gradient(135deg,#92400e,#b45309);">
       <h3>🏅 أوسمتي وشاراتي</h3>
       <p>شوف الأوسمة اللي كسبتها وإيه اللي جاي 🎖️</p>
     </a>
 
-    <a href="store.html" class="action-link-card" style="background: linear-gradient(135deg, #065f46, #10b981);">
+    <a href="store.html" class="action-link-card" style="background:linear-gradient(135deg,#065f46,#10b981);">
       <h3>🛒 المتجر</h3>
       <p>استبدل نقاطك بهدايا حقيقية 🎁</p>
     </a>
+
+    <!-- ===== عجلة الحظ ===== -->
+    <div class="wheel-card">
+      <p class="wheel-card-title">🎡 عجلة الحظ</p>
+      <p class="wheel-card-sub">لفّة واحدة كل يوم — جرب حظك!</p>
+      <div class="wheel-wrapper">
+        <div class="wheel-pointer"></div>
+        <canvas id="wheelCanvas" width="220" height="220"></canvas>
+      </div>
+      <button class="spin-btn" id="spinBtn" onclick="spinWheel()">🎰 الف العجلة!</button>
+      <p class="wheel-result" id="wheelResult"></p>
+    </div>
+    <!-- ================== -->
 
     <div class="clean-info-card">
       <p style="margin:0 0 8px 0; font-size:13px; color:#64748b; font-weight:600;">
@@ -343,38 +289,181 @@
     const db = firebase.firestore();
 
     const student = JSON.parse(localStorage.getItem("loggedInStudent"));
+    if (!student || !student.code) { window.location.href = "index.html"; }
 
-    if (!student || !student.code) {
-      window.location.href = "index.html";
-    } else {
+    let currentPoints = 0;
+    let isSpinning = false;
+
+    // ===== العجلة =====
+    const segments = [
+      { label: "5 نقاط 🌟", points: 5, color: "#f43f5e" },
+      { label: "حظ أوفر 🍀", points: 0, color: "#475569" },
+      { label: "10 نقاط 👑", points: 10, color: "#fbbf24" },
+      { label: "2 نقطة ✨", points: 2, color: "#3b82f6" },
+      { label: "7 نقاط 🔥", points: 7, color: "#10b981" },
+      { label: "حظ أوفر 🍀", points: 0, color: "#475569" }
+    ];
+
+    const numSeg = segments.length;
+    const arc = (2 * Math.PI) / numSeg;
+    let currentAngle = 0;
+
+    function drawWheel(angle) {
+      const canvas = document.getElementById("wheelCanvas");
+      const ctx = canvas.getContext("2d");
+      const cx = canvas.width / 2;
+      const cy = canvas.height / 2;
+      const r = cx - 4;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (let i = 0; i < numSeg; i++) {
+        const start = angle + i * arc;
+        const end = start + arc;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.arc(cx, cy, r, start, end);
+        ctx.closePath();
+        ctx.fillStyle = segments[i].color;
+        ctx.fill();
+        ctx.strokeStyle = "rgba(255,255,255,0.25)";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(start + arc / 2);
+        ctx.textAlign = "right";
+        ctx.fillStyle = "white";
+        ctx.font = "bold 11px Cairo, sans-serif";
+        ctx.fillText(segments[i].label, r - 8, 4);
+        ctx.restore();
+      }
+
+      // مركز العجلة
+      ctx.beginPath();
+      ctx.arc(cx, cy, 18, 0, 2 * Math.PI);
+      ctx.fillStyle = "#0f172a";
+      ctx.fill();
+      ctx.strokeStyle = "rgba(255,255,255,0.2)";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.fillStyle = "#fbbf24";
+      ctx.font = "14px serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText("⭐", cx, cy);
+    }
+
+    drawWheel(currentAngle);
+
+    function getTodayString() {
+      const now = new Date();
+      const cairo = new Date(now.toLocaleString("en-US", { timeZone: "Africa/Cairo" }));
+      return cairo.getFullYear() + "-" +
+        String(cairo.getMonth() + 1).padStart(2, '0') + "-" +
+        String(cairo.getDate()).padStart(2, '0');
+    }
+
+    function spinWheel() {
+      if (isSpinning) return;
+      isSpinning = true;
+
+      const btn = document.getElementById("spinBtn");
+      btn.disabled = true;
+      btn.textContent = "🎡 جاري اللف...";
+      document.getElementById("wheelResult").textContent = "";
+
+      const winIndex = Math.floor(Math.random() * numSeg);
+      const targetAngle = (5 * 2 * Math.PI) +
+        (2 * Math.PI - winIndex * arc - arc / 2) - currentAngle;
+
+      const duration = 4000;
+      const startTime = performance.now();
+      const startAngle = currentAngle;
+
+      function animate(now) {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 4);
+        const angle = startAngle + targetAngle * eased;
+        drawWheel(angle);
+
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+        } else {
+          currentAngle = angle % (2 * Math.PI);
+          isSpinning = false;
+          finishSpin(winIndex);
+        }
+      }
+      requestAnimationFrame(animate);
+    }
+
+    function finishSpin(winIndex) {
+      const winner = segments[winIndex];
+      const newPoints = currentPoints + winner.points;
+      const todayString = getTodayString();
+
+      db.collection("students").doc(student.code).update({
+        points: newPoints,
+        lastSpinDate: todayString
+      }).then(function() {
+        currentPoints = newPoints;
+        document.getElementById("userPoints").textContent = newPoints;
+
+        const resultEl = document.getElementById("wheelResult");
+        if (winner.points > 0) {
+          resultEl.textContent = winner.label + " — رصيدك: " + newPoints + " نقطة 🎉";
+        } else {
+          resultEl.textContent = "حظ أوفر المرة الجاية! 🍀";
+          resultEl.style.color = "#94a3b8";
+        }
+
+        const btn = document.getElementById("spinBtn");
+        btn.disabled = true;
+        btn.textContent = "🔒 تعالى بكرة تلف تاني!";
+      });
+    }
+    // ==================
+
+    // بيانات الطالب
+    if (student && student.code) {
       new QRCode(document.getElementById("qrcode"), {
         text: student.code,
-        width: 130,
-        height: 130,
-        colorDark: "#0f172a",
-        colorLight: "#ffffff",
+        width: 130, height: 130,
+        colorDark: "#0f172a", colorLight: "#ffffff",
         correctLevel: QRCode.CorrectLevel.H
       });
 
       db.collection("students").doc(student.code).onSnapshot(function(doc) {
         if (doc.exists) {
           const data = doc.data();
+          currentPoints = data.points || 0;
           document.getElementById("welcomeName").textContent = "يا بطل، " + (data.name || "مخدوم") + "! ✨";
           document.getElementById("userCode").textContent = student.code;
-          document.getElementById("userPoints").textContent = data.points || 0;
+          document.getElementById("userPoints").textContent = currentPoints;
           document.getElementById("userClassGroup").textContent = "📍 " + (data.class || "مش محدد") + " - " + (data.group || "مش محدد");
           document.getElementById("attendanceCounter").textContent = (data.attendanceCount || 0) + " / 18 يوم";
 
           if (data.avatar) {
             document.getElementById("userAvatar").src = data.avatar;
           } else {
-            const firstLetter = (data.name || "م").charAt(0).toUpperCase();
-            document.getElementById("userAvatar").src = "https://ui-avatars.com/api/?name=" + encodeURIComponent(firstLetter) + "&background=1e3a8a&color=fff&size=150&bold=true";
+            const fl = (data.name || "م").charAt(0).toUpperCase();
+            document.getElementById("userAvatar").src = "https://ui-avatars.com/api/?name=" + encodeURIComponent(fl) + "&background=1e3a8a&color=fff&size=150&bold=true";
+          }
+
+          // لو لف النهاردة بالفعل
+          if (data.lastSpinDate === getTodayString()) {
+            const btn = document.getElementById("spinBtn");
+            btn.disabled = true;
+            btn.textContent = "🔒 تعالى بكرة تلف تاني!";
+            document.getElementById("wheelResult").textContent = "لفيت العجلة النهاردة بالفعل ✅";
           }
         }
       });
     }
 
+    // القائمة الجانبية
     const sidebar = document.getElementById("sidebar");
     const overlay = document.getElementById("sidebarOverlay");
     const menuBtn = document.getElementById("menuBtn");
