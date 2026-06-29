@@ -129,15 +129,8 @@
       transition: background 0.2s ease;
     }
     .buy-btn:hover { background: #1e3a8a; }
-    .buy-btn:disabled {
-      background: #94a3b8;
-      cursor: not-allowed;
-    }
-    .cantina-note {
-      font-size: 11px;
-      color: #64748b;
-      margin-top: 4px;
-    }
+    .buy-btn:disabled { background: #94a3b8; cursor: not-allowed; }
+    .cantina-note { font-size: 11px; color: #64748b; margin-top: 4px; }
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -158,39 +151,19 @@
       text-align: center;
     }
     .modal-emoji { font-size: 52px; display: block; margin-bottom: 12px; }
-    .modal-title {
-      font-family: 'Changa', sans-serif;
-      font-size: 20px;
-      font-weight: 800;
-      color: #0f172a;
-      margin-bottom: 8px;
-    }
+    .modal-title { font-family: 'Changa', sans-serif; font-size: 20px; font-weight: 800; color: #0f172a; margin-bottom: 8px; }
     .modal-desc { font-size: 14px; color: #64748b; margin-bottom: 6px; }
     .modal-price { font-size: 16px; color: #b45309; font-weight: 700; margin-bottom: 20px; }
     .modal-btns { display: flex; gap: 10px; }
     .modal-confirm {
-      flex: 1;
-      background: #10b981;
-      color: white;
-      border: none;
-      padding: 13px;
-      border-radius: 12px;
-      font-family: 'Cairo', sans-serif;
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
+      flex: 1; background: #10b981; color: white; border: none;
+      padding: 13px; border-radius: 12px; font-family: 'Cairo', sans-serif;
+      font-size: 15px; font-weight: 700; cursor: pointer;
     }
     .modal-cancel {
-      flex: 1;
-      background: #f1f5f9;
-      color: #334155;
-      border: none;
-      padding: 13px;
-      border-radius: 12px;
-      font-family: 'Cairo', sans-serif;
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
+      flex: 1; background: #f1f5f9; color: #334155; border: none;
+      padding: 13px; border-radius: 12px; font-family: 'Cairo', sans-serif;
+      font-size: 15px; font-weight: 700; cursor: pointer;
     }
     .success-overlay {
       position: fixed;
@@ -204,23 +177,15 @@
     }
     .success-overlay.show { display: flex; }
     .success-card {
-      background: white;
-      border-radius: 24px;
-      padding: 32px 22px;
-      width: 100%;
-      max-width: 340px;
-      text-align: center;
+      background: white; border-radius: 24px; padding: 32px 22px;
+      width: 100%; max-width: 340px; text-align: center;
     }
     .bottom-navbar {
       position: fixed;
       bottom: 0; left: 0; right: 0;
-      height: 65px;
-      background: white;
+      height: 65px; background: white;
       border-top: 1px solid #e2e8f0;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      z-index: 100;
+      display: flex; justify-content: space-around; align-items: center; z-index: 100;
     }
     .nav-link { text-decoration: none; color: #64748b; font-size: 11px; text-align: center; font-family: 'Cairo', sans-serif; }
     .nav-link.active { color: #0f172a; font-weight: bold; }
@@ -231,10 +196,10 @@
 
   <div id="modalOverlay" class="modal-overlay">
     <div class="modal-card">
-      <span id="modalEmoji" class="modal-emoji"></span>
-      <h2 id="modalName" class="modal-title"></h2>
-      <p class="modal-desc">هتستبدل نقاطك بالهدية دي</p>
-      <p id="modalPrice" class="modal-price"></p>
+      <span class="modal-emoji" id="modalEmoji"></span>
+      <p class="modal-title" id="modalName"></p>
+      <p class="modal-desc">هل أنت متأكد من الشراء؟</p>
+      <p class="modal-price" id="modalPrice"></p>
       <div class="modal-btns">
         <button class="modal-confirm" onclick="confirmBuy()">✅ تأكيد</button>
         <button class="modal-cancel" onclick="closeModal()">❌ إلغاء</button>
@@ -311,7 +276,6 @@
 
     const unlimitedItems = [
       { id: "hair_clip", emoji: "🎀", name: "توك الشعر", price: 35 },
-      { id: "bracelet", emoji: "💎", name: "البريسليت", price: 70 },
       { id: "medal", emoji: "🏷️", name: "الميدالية", price: 50 },
       { id: "cantina", emoji: "🎫", name: "قسيمة كانتين 25 جنيه", price: 100, note: "مرتين كل أسبوع" }
     ];
@@ -324,8 +288,7 @@
       { id: "uno", emoji: "🃏", name: "Uno", price: 280, maxQty: 5 },
       { id: "connect4", emoji: "🟡🔴", name: "Connect 4", price: 420, maxQty: 4 },
       { id: "ball", emoji: "⚽", name: "Football", price: 600, maxQty: 3 },
-      { id: "watch", emoji: "⌚", name: "Watch", price: 800, maxQty: 2 },
-      { id: "airpods", emoji: "🎧", name: "AirPods", price: 1000, maxQty: 1 }
+      { id: "watch", emoji: "⌚", name: "Watch", price: 800, maxQty: 2 }
     ];
 
     db.collection("students").doc(student.code).onSnapshot(function(doc) {
@@ -356,25 +319,17 @@
     function renderLimited() {
       const grid = document.getElementById("limitedGrid");
       grid.innerHTML = "";
-
       limitedItemsBase.forEach(function(item) {
         db.collection("storeItems").doc(item.id).get().then(function(doc) {
           let remainingQty = item.maxQty;
-
           if (doc.exists) {
             remainingQty = doc.data().remaining;
           } else {
-            db.collection("storeItems").doc(item.id).set({
-              name: item.name,
-              remaining: item.maxQty,
-              maxQty: item.maxQty
-            });
+            db.collection("storeItems").doc(item.id).set({ name: item.name, remaining: item.maxQty, maxQty: item.maxQty });
           }
-
           const isOut = remainingQty <= 0;
           const canAfford = currentPoints >= item.price;
           const isLow = remainingQty <= 2 && remainingQty > 0;
-
           const card = document.createElement("div");
           card.className = "item-card" + (isOut ? " out-of-stock" : "");
           card.innerHTML =
@@ -405,17 +360,11 @@
 
     function confirmBuy() {
       if (!selectedItem) return;
-
       const btn = document.querySelector(".modal-confirm");
       btn.disabled = true;
       btn.textContent = "جاري التنفيذ...";
-
       const newPoints = currentPoints - selectedItem.price;
-
-      db.collection("students").doc(student.code).update({
-        points: newPoints
-      }).then(function() {
-
+      db.collection("students").doc(student.code).update({ points: newPoints }).then(function() {
         const now = new Date();
         db.collection("orders").add({
           studentCode: student.code,
@@ -428,18 +377,13 @@
           status: "pending",
           timestamp: now.toLocaleDateString("ar-EG") + " - " + now.toLocaleTimeString("ar-EG", {hour: '2-digit', minute: '2-digit'})
         }).then(function() {
-
           if (selectedItem.isLimited) {
             db.collection("storeItems").doc(selectedItem.id).get().then(function(doc) {
               if (doc.exists) {
-                const current = doc.data().remaining;
-                db.collection("storeItems").doc(selectedItem.id).update({
-                  remaining: Math.max(0, current - 1)
-                });
+                db.collection("storeItems").doc(selectedItem.id).update({ remaining: Math.max(0, doc.data().remaining - 1) });
               }
             });
           }
-
           closeModal();
           document.getElementById("remainingPoints").textContent = "رصيدك الجديد: " + newPoints + " نقطة";
           document.getElementById("successOverlay").classList.add("show");
