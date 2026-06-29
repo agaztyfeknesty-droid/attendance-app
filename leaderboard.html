@@ -10,68 +10,144 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      background: linear-gradient(135deg, #0f172a, #020617);
+      background: #f0f4ff;
       min-height: 100vh;
-      margin: 0;
-      padding: 20px 15px 90px 15px;
-      box-sizing: border-box;
+      padding: 24px 15px 90px 15px;
       font-family: 'Cairo', sans-serif;
-    }
-    form {
-      width: 100%;
-      max-width: 400px;
-      margin: 0 auto;
       display: flex;
       flex-direction: column;
+      align-items: center;
     }
-    .section-title {
-      font-family: 'Changa', sans-serif;
-      font-size: 18px;
-      color: #00f2fe;
-      margin: 25px 0 12px 0;
-      text-align: right;
-      border-right: 4px solid #00f2fe;
-      padding-right: 8px;
+
+    .container { width: 100%; max-width: 420px; }
+
+    .page-header { text-align: center; margin-bottom: 24px; }
+    .page-header img { width: 70px; margin-bottom: 10px; }
+    .page-header h1 { font-family: 'Changa', sans-serif; font-size: 24px; color: #0f172a; font-weight: 800; }
+    .page-header p { font-size: 13px; color: #64748b; margin-top: 4px; }
+
+    .tabs {
+      display: flex;
+      background: white;
+      border-radius: 16px;
+      padding: 5px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+      gap: 5px;
     }
-    /* ستايل كروت المجموعات المبتكر */
-    .group-row {
+    .tab-btn {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 12px;
+      font-family: 'Cairo', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      background: transparent;
+      color: #94a3b8;
+      transition: all 0.2s ease;
+    }
+    .tab-btn.active {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: white;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
+    }
+
+    .podium {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .podium-item { display: flex; flex-direction: column; align-items: center; flex: 1; }
+    .podium-name { font-size: 11px; font-weight: 700; color: #0f172a; text-align: center; margin-bottom: 6px; line-height: 1.3; }
+    .podium-class { font-size: 10px; color: #64748b; text-align: center; margin-bottom: 4px; }
+    .podium-pts { font-family: 'Changa', sans-serif; font-size: 13px; font-weight: 800; margin-bottom: 4px; }
+    .podium-block { width: 100%; border-radius: 12px 12px 0 0; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+    .podium-item:nth-child(1) .podium-block { height: 80px; background: linear-gradient(135deg, #c0c0c0, #94a3b8); }
+    .podium-item:nth-child(2) .podium-block { height: 110px; background: linear-gradient(135deg, #f59e0b, #fbbf24); }
+    .podium-item:nth-child(3) .podium-block { height: 60px; background: linear-gradient(135deg, #cd7f32, #d97706); }
+    .podium-item:nth-child(1) .podium-pts { color: #64748b; }
+    .podium-item:nth-child(2) .podium-pts { color: #d97706; }
+    .podium-item:nth-child(3) .podium-pts { color: #92400e; }
+
+    .group-card {
+      background: white;
+      border-radius: 16px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
       display: flex;
       align-items: center;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 16px;
-      padding: 14px;
-      margin-bottom: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      gap: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      border: 1px solid #e2e8f0;
     }
-    .group-rank { 
-      font-family: 'Changa', sans-serif;
-      font-weight: 800; 
-      font-size: 18px; 
-      width: 40px; 
-      text-align: center; 
-      color: #cbd5e1;
+    .group-rank-badge {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: #f1f5f9; display: flex; align-items: center; justify-content: center;
+      font-family: 'Changa', sans-serif; font-weight: 800; font-size: 15px; color: #475569; flex-shrink: 0;
     }
-    .group-info { flex: 1; text-align: right; margin-right: 12px; }
-    .group-name { font-weight: bold; color: white; font-size: 16px; }
-    .group-class { font-size: 12px; color: #94a3b8; margin-top: 2px; }
-    .group-points { font-family: 'Changa', sans-serif; font-weight: bold; color: #10b981; font-size: 17px; }
+    .group-card-info { flex: 1; }
+    .group-card-name { font-weight: 700; color: #0f172a; font-size: 14px; }
+    .group-card-class { font-size: 11px; color: #94a3b8; margin-top: 2px; }
+    .group-card-pts { font-family: 'Changa', sans-serif; font-weight: 800; font-size: 16px; color: #6366f1; }
+
+    .hero-card {
+      background: white; border-radius: 16px; padding: 14px 16px; margin-bottom: 10px;
+      display: flex; align-items: center; gap: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06); border: 1px solid #e2e8f0;
+    }
+    .hero-card.top1 { border: 2px solid #f59e0b; background: #fffbeb; }
+    .hero-card.top2 { border: 2px solid #94a3b8; background: #f8fafc; }
+    .hero-card.top3 { border: 2px solid #cd7f32; background: #fff7ed; }
+    .hero-rank { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+    .hero-avatar { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px; color: white; flex-shrink: 0; }
+    .hero-info { flex: 1; }
+    .hero-name { font-weight: 700; color: #0f172a; font-size: 14px; }
+    .hero-sub { font-size: 11px; color: #94a3b8; margin-top: 2px; }
+    .hero-pts { font-family: 'Changa', sans-serif; font-weight: 800; font-size: 16px; color: #10b981; }
+
+    .section-label {
+      font-family: 'Changa', sans-serif; font-size: 15px; color: #475569;
+      font-weight: 700; margin: 16px 0 10px 0; padding-right: 10px; border-right: 3px solid #6366f1;
+    }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    .empty-msg { text-align: center; color: #94a3b8; font-size: 13px; padding: 30px 0; }
   </style>
 </head>
 <body>
 
-  <form onsubmit="return false;">
-    <img src="logo.png" alt="اجازتي في كنيستي" class="logo">
-    <h1>لوحة الصدارة 🏆</h1>
-    <p class="sub-greeting">مين أكتر مجموعة وفرد ملتزمين ومجمعين نقط؟ ✨</p>
+  <div class="container">
 
-    <div class="section-title">👥 صدارة المجموعات (إجمالي النقط)</div>
-    <div id="groupsList"></div>
+    <div class="page-header">
+      <img src="logo.png" alt="logo">
+      <h1>لوحة الصدارة 🏆</h1>
+      <p>مين أكتر مجموعة وفرد ملتزمين ومجمعين نقط؟ ✨</p>
+    </div>
 
-    <div class="section-title">👤 صدارة الأبطال (فردي)</div>
-    <div id="list"></div>
-  </form>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('groups', this)">👥 المجموعات</button>
+      <button class="tab-btn" onclick="switchTab('individuals', this)">👤 الأبطال</button>
+    </div>
+
+    <div class="tab-content active" id="tab-groups">
+      <div class="podium" id="podium"></div>
+      <div class="section-label">📋 ترتيب كل المجموعات</div>
+      <div id="groupsList"></div>
+    </div>
+
+    <div class="tab-content" id="tab-individuals">
+      <div id="individualsList"></div>
+    </div>
+
+  </div>
 
   <div class="bottom-nav">
     <a href="home.html" class="nav-item">
@@ -104,80 +180,117 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    const listDiv = document.getElementById("list");
-    const groupsListDiv = document.getElementById("groupsList");
-    const avatarColors = ["#ff4757", "#2ed573", "#1e90ff", "#ffa502", "#9b59b6"];
+    const avatarColors = ["#6366f1","#f43f5e","#10b981","#f59e0b","#8b5cf6","#0ea5e9","#ec4899"];
 
-    // الاستماع اللحظي لكل الطلاب وترتيبهم حسب النقاط فردياً
-    db.collection("students").orderBy("points", "desc").onSnapshot(function(querySnapshot) {
-      listDiv.innerHTML = "";
-      groupsListDiv.innerHTML = "";
-      
-      let rank = 1;
-      const medals = ["🥇", "🥈", "🥉"];
-      
-      // كائن (Object) ذكي لتجميع نقاط المجموعات لايف من حسابات العيال
-      let groupScores = {};
+    function switchTab(tab, btn) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      document.getElementById('tab-' + tab).classList.add('active');
+      btn.classList.add('active');
+    }
 
-      querySnapshot.forEach(function(doc) {
-        const student = doc.data();
-        const sPoints = student.points || 0;
-        const sClass = student.class || "بدون فصل";
-        const sGroup = student.group || "بدون مجموعة";
+    db.collection("students").orderBy("points", "desc").onSnapshot(function(snapshot) {
+      const groupScores = {};
+      const individuals = [];
 
-        // تجميع نقاط المجموعة لو البيانات كاملة
-        if(student.class && student.group) {
-          const groupKey = `${sClass} - ${sGroup}`;
-          if(!groupScores[groupKey]) {
-            groupScores[groupKey] = { points: 0, class: sClass, group: sGroup };
-          }
-          groupScores[groupKey].points += sPoints;
+      snapshot.forEach(function(doc) {
+        const s = doc.data();
+        const pts = s.points || 0;
+        const cls = s.class || "";
+        const grp = s.group || "";
+
+        if (cls && grp) {
+          const key = cls + "||" + grp;
+          if (!groupScores[key]) groupScores[key] = { points: 0, class: cls, group: grp };
+          groupScores[key].points += pts;
         }
 
-        // رسم صدارة الأفراد (القديمة بتاعتك مع تعديل إظهار الفصل والمجموعة)
-        const medal = rank <= 3 ? medals[rank - 1] : rank;
-        const initial = student.name ? student.name.charAt(0).toUpperCase() : "⭐";
-        const color = avatarColors[(rank - 1) % avatarColors.length];
-
-        const row = document.createElement("div");
-        row.className = "leader-row";
-        row.innerHTML = `
-          <div class="leader-rank">${medal}</div>
-          <div class="leader-avatar" style="background-color: ${color};">${initial}</div>
-          <div class="leader-info">
-            <div class="leader-name">${student.name}</div>
-            <div class="leader-streak" style="font-size:11px; color:#94a3b8;">📍 ${sClass} | ${sGroup}</div>
-          </div>
-          <div class="leader-points">${sPoints} ⭐</div>
-        `;
-        listDiv.appendChild(row);
-        rank++;
+        individuals.push({ name: s.name || "بدون اسم", points: pts, class: cls, group: grp });
       });
 
-      // تحويل كائن المجموعات لمصفوفة وترتيبها أوتوماتيك من الكبير للصغير
-      let sortedGroups = Object.values(groupScores).sort((a, b) => b.points - a.points);
-      
-      let gRank = 1;
-      sortedGroups.forEach(g => {
-        const gMedal = gRank <= 3 ? medals[gRank - 1] : gRank;
-        const gRow = document.createElement("div");
-        gRow.className = "group-row";
-        gRow.innerHTML = `
-          <div class="group-rank">${gMedal}</div>
-          <div class="group-info">
-            <div class="group-name">${g.group}</div>
-            <div class="group-class">${g.class}</div>
-          </div>
-          <div class="group-points">${g.points} 🎯</div>
-        `;
-        groupsListDiv.appendChild(gRow);
-        gRank++;
-      });
-      
-      if(sortedGroups.length === 0) {
-        groupsListDiv.innerHTML = `<p style="text-align:center; color:#94a3b8; font-size:13px;">في انتظار تجميع نقاط المجموعات من حسابات الأبطال...</p>`;
-      }
+      const sortedGroups = Object.values(groupScores).sort((a, b) => b.points - a.points);
+      renderGroups(sortedGroups);
+
+      individuals.sort((a, b) => b.points - a.points);
+      renderIndividuals(individuals);
     });
+
+    function renderGroups(groups) {
+      const podiumEl = document.getElementById("podium");
+      const listEl = document.getElementById("groupsList");
+      podiumEl.innerHTML = "";
+      listEl.innerHTML = "";
+
+      if (groups.length === 0) {
+        listEl.innerHTML = '<p class="empty-msg">في انتظار نقاط المجموعات... 🔄</p>';
+        return;
+      }
+
+      // البوديوم: الترتيب 2 - 1 - 3
+      const podiumOrder = [1, 0, 2];
+      const podiumEmojis = ["🥈", "🥇", "🥉"];
+      podiumOrder.forEach((idx, pos) => {
+        if (!groups[idx]) return;
+        const g = groups[idx];
+        const item = document.createElement("div");
+        item.className = "podium-item";
+        item.innerHTML = `
+          <div class="podium-name">${g.group}</div>
+          <div class="podium-class">${g.class}</div>
+          <div class="podium-pts">${g.points} 🎯</div>
+          <div class="podium-block">${podiumEmojis[pos]}</div>
+        `;
+        podiumEl.appendChild(item);
+      });
+
+      // باقي المجموعات من المركز الرابع
+      groups.forEach((g, i) => {
+        if (i < 3) return;
+        const card = document.createElement("div");
+        card.className = "group-card";
+        card.innerHTML = `
+          <div class="group-rank-badge">${i + 1}</div>
+          <div class="group-card-info">
+            <div class="group-card-name">${g.group}</div>
+            <div class="group-card-class">${g.class}</div>
+          </div>
+          <div class="group-card-pts">${g.points} 🎯</div>
+        `;
+        listEl.appendChild(card);
+      });
+    }
+
+    function renderIndividuals(individuals) {
+      const listEl = document.getElementById("individualsList");
+      listEl.innerHTML = "";
+
+      if (individuals.length === 0) {
+        listEl.innerHTML = '<p class="empty-msg">لا يوجد أبطال بعد... 🔄</p>';
+        return;
+      }
+
+      const medals = ["🥇","🥈","🥉"];
+      const topClasses = ["top1","top2","top3"];
+
+      individuals.forEach((s, i) => {
+        const rank = i + 1;
+        const card = document.createElement("div");
+        card.className = "hero-card " + (rank <= 3 ? topClasses[rank-1] : "");
+        const color = avatarColors[i % avatarColors.length];
+        const initial = s.name.charAt(0);
+
+        card.innerHTML = `
+          <div class="hero-rank">${rank <= 3 ? medals[rank-1] : ""}</div>
+          <div class="hero-avatar" style="background:${color};">${rank > 3 ? rank : initial}</div>
+          <div class="hero-info">
+            <div class="hero-name">${s.name}</div>
+            <div class="hero-sub">📍 ${s.class || "—"} | ${s.group || "—"}</div>
+          </div>
+          <div class="hero-pts">${s.points} ⭐</div>
+        `;
+        listEl.appendChild(card);
+      });
+    }
   </script>
 </body>
 </html>
