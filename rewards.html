@@ -397,11 +397,18 @@
 
     function showResult(winningIndex) {
       const winner = segments[winningIndex];
-      const newPoints = currentPoints + winner.points;
+
+      db.collection("students").doc(student.code).get().then(function(snap) {
+        const data = snap.data() || {};
+        const newPoints = (data.points || 0) + winner.points;
+        const data_storeBalance = data.storeBalance || 0;
+        const data_groupPoints = data.groupPoints || 0;
 
       // حفظ في Firebase
       db.collection("students").doc(student.code).update({
         points: newPoints,
+        storeBalance: (data_storeBalance || 0) + winner.points,
+        groupPoints: (data_groupPoints || 0) + winner.points,
         lastSpinDate: todayString
       }).then(function() {
         currentPoints = newPoints;
@@ -421,6 +428,7 @@
         btn.disabled = true;
         btn.textContent = "🔒 لفيت النهاردة — تعالى بكرة!";
       });
+      }); // إغلاق get
     }
   </script>
 

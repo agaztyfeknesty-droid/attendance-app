@@ -293,7 +293,7 @@
 
     db.collection("students").doc(student.code).onSnapshot(function(doc) {
       if (doc.exists) {
-        currentPoints = doc.data().points || 0;
+        currentPoints = doc.data().storeBalance || 0;
         document.getElementById("userPoints").textContent = currentPoints;
       }
     });
@@ -364,7 +364,7 @@
       btn.disabled = true;
       btn.textContent = "جاري التنفيذ...";
       const newPoints = currentPoints - selectedItem.price;
-      db.collection("students").doc(student.code).update({ points: newPoints }).then(function() {
+      db.collection("students").doc(student.code).update({ storeBalance: newPoints }).then(function() {
         const now = new Date();
         db.collection("orders").add({
           studentCode: student.code,
@@ -402,7 +402,7 @@
 
     db.collection("students").doc(student.code).get().then(function(doc) {
       if (doc.exists) {
-        currentPoints = doc.data().points || 0;
+        currentPoints = doc.data().storeBalance || 0;
         document.getElementById("userPoints").textContent = currentPoints;
         renderUnlimited();
         renderLimited();

@@ -224,8 +224,12 @@
         const studentRef = db.collection("students").doc(currentStudent.code);
         studentRef.get().then(doc => {
           let currentPoints = doc.data().points || 0;
+          let currentStoreBalance = doc.data().storeBalance || 0;
+          let currentGroupPoints = doc.data().groupPoints || 0;
           studentRef.update({ 
-            points: currentPoints + pointsEarned, 
+            points: currentPoints + pointsEarned,
+            storeBalance: currentStoreBalance + pointsEarned,
+            groupPoints: currentGroupPoints + pointsEarned,
             lastQuizDate: new Date().toLocaleDateString('en-US') 
           });
         });

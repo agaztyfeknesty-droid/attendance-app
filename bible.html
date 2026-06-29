@@ -357,11 +357,15 @@
         }
 
         const newPoints = (data.points || 0) + 5;
+        const newStoreBalance = (data.storeBalance || 0) + 5;
+        const newGroupPoints = (data.groupPoints || 0) + 5;
 
         db.collection("students").doc(student.code).update({
           bibleStreak: newStreak,
           lastBibleDate: todayString,
-          points: newPoints
+          points: newPoints,
+          storeBalance: newStoreBalance,
+          groupPoints: newGroupPoints
         }).then(function() {
 
           document.getElementById("mainContent").style.display = "none";
