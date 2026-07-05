@@ -292,6 +292,7 @@
     if (!student || !student.code) { window.location.href = "index.html"; }
 
     let currentPoints = 0;
+    let totalLeaderboardPoints = 0;
     let isSpinning = false;
     let alreadySpunToday = true; // افتراضيًا ممنوع اللف لحد ما نتأكد من السيرفر
 
@@ -402,24 +403,25 @@
 
     function finishSpin(winIndex) {
       const winner = segments[winIndex];
-      const newPoints = currentPoints + winner.points;
+      const newStoreBalance = currentPoints + winner.points;
+      const newTotalPoints = totalLeaderboardPoints + winner.points;
       const todayString = getTodayString();
 
-      const currentStoreBalance = window._storeBalance || 0;
       const currentGroupPoints = window._groupPoints || 0;
 
       db.collection("students").doc(student.code).update({
-        points: newPoints,
-        storeBalance: currentStoreBalance + winner.points,
+        points: newTotalPoints,
+        storeBalance: newStoreBalance,
         groupPoints: currentGroupPoints + winner.points,
         lastSpinDate: todayString
       }).then(function() {
-        currentPoints = newPoints;
-        document.getElementById("userPoints").textContent = newPoints;
+        currentPoints = newStoreBalance;
+        totalLeaderboardPoints = newTotalPoints;
+        document.getElementById("userPoints").textContent = newStoreBalance;
 
         const resultEl = document.getElementById("wheelResult");
         if (winner.points > 0) {
-          resultEl.textContent = winner.label + " — رصيدك: " + newPoints + " نقطة 🎉";
+          resultEl.textContent = winner.label + " — رصيدك: " + newStoreBalance + " نقطة 🎉";
         } else {
           resultEl.textContent = "حظ أوفر المرة الجاية! 🍀";
           resultEl.style.color = "#94a3b8";
@@ -445,12 +447,14 @@
       db.collection("students").doc(student.code).onSnapshot(function(doc) {
         if (doc.exists) {
           const data = doc.data();
-          currentPoints = data.points || 0;
+          currentPoints = data.storeBalance || 0;
+          totalLeaderboardPoints = data.points || 0;
           window._storeBalance = data.storeBalance || 0;
           window._groupPoints = data.groupPoints || 0;
           document.getElementById("welcomeName").textContent = "يا بطل، " + (data.name || "مخدوم") + "! ✨";
           document.getElementById("userCode").textContent = student.code;
           document.getElementById("userPoints").textContent = currentPoints;
+          document.getElementById("userStoreBalance").textContent = window._storeBalance;
           document.getElementById("userClassGroup").textContent = "📍 " + (data.class || "مش محدد") + " - " + (data.group || "مش محدد");
           document.getElementById("attendanceCounter").textContent = (data.attendanceCount || 0) + " / 18 يوم";
 
