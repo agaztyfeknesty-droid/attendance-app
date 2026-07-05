@@ -254,7 +254,7 @@
         <div class="wheel-pointer"></div>
         <canvas id="wheelCanvas" width="220" height="220"></canvas>
       </div>
-      <button class="spin-btn" id="spinBtn" onclick="spinWheel()">🎰 الف العجلة!</button>
+      <button class="spin-btn" id="spinBtn" onclick="spinWheel()" disabled>⏳ جاري التحقق...</button>
       <p class="wheel-result" id="wheelResult"></p>
     </div>
     <!-- ================== -->
@@ -293,6 +293,7 @@
 
     let currentPoints = 0;
     let isSpinning = false;
+    let wheelReady = false; // مش هيشتغل لحد ما Firebase يأكد
 
     // ===== العجلة =====
     const segments = [
@@ -365,7 +366,7 @@
     }
 
     function spinWheel() {
-      if (isSpinning) return;
+      if (!wheelReady || isSpinning) return;
       isSpinning = true;
 
       const btn = document.getElementById("spinBtn");
@@ -460,11 +461,19 @@
           }
 
           // لو لف النهاردة بالفعل
+          const btn = document.getElementById("spinBtn");
           if (data.lastSpinDate === getTodayString()) {
-            const btn = document.getElementById("spinBtn");
+            wheelReady = false;
             btn.disabled = true;
             btn.textContent = "🔒 تعالى بكرة تلف تاني!";
             document.getElementById("wheelResult").textContent = "لفيت العجلة النهاردة بالفعل ✅";
+          } else {
+            // Firebase أكد إنه ملفش — دلوقتي نفتح الزرار
+            if (!isSpinning) {
+              wheelReady = true;
+              btn.disabled = false;
+              btn.textContent = "🎰 الف العجلة!";
+            }
           }
         }
       });
