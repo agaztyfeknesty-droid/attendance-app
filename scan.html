@@ -202,11 +202,15 @@
                         `;
                     } else {
                         let currentPoints = student.points || 0;
+                        let currentStoreBalance = student.storeBalance || 0;
+                        let currentGroupPoints = student.groupPoints || 0;
                         let newPoints = currentPoints + 10;
                         let newCount = currentCount + 1;
 
                         db.collection("students").doc(decodedText).update({
                             points: newPoints,
+                            storeBalance: currentStoreBalance + 10,
+                            groupPoints: currentGroupPoints + 10,
                             attendanceCount: newCount,
                             lastAttendanceDate: todayStr
                         }).then(() => {
@@ -303,7 +307,11 @@
                 return;
             }
             const newPoints = currentPoints + val;
-            db.collection("students").doc(studentId).update({ points: newPoints }).then(() => {
+            db.collection("students").doc(studentId).update({
+                points: firebase.firestore.FieldValue.increment(val),
+                storeBalance: firebase.firestore.FieldValue.increment(val),
+                groupPoints: firebase.firestore.FieldValue.increment(val)
+            }).then(() => {
                 document.getElementById("pts-" + studentId).textContent = newPoints;
                 input.value = "";
                 alert("✅ تم إضافة " + val + " نقطة بنجاح!");
