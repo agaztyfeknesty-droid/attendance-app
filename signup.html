@@ -149,6 +149,25 @@
       groupWrapper.style.display = "block";
     });
 
+    // ===== توليد كود تسلسلي آمن (Transaction) =====
+    // بدل ما نعتمد على "عدد" الدكيومنتات الحالية (اللي بيتغير بعد أي حذف
+    // ويسبب تصادم كود مع مخدوم موجود فعلاً)، بنستخدم عداد ثابت محفوظ في
+    // "meta/studentCounter" وبنزوّده جوه transaction عشان حتى لو اتنين
+    // سجّلوا في نفس اللحظة بالظبط، كل واحد ياخد رقم مختلف ومضمون.
+    function generateNextCode() {
+      const counterRef = db.collection("meta").doc("studentCounter");
+      return db.runTransaction(function(transaction) {
+        return transaction.get(counterRef).then(function(counterSnap) {
+          const currentLast = counterSnap.exists ? (counterSnap.data().lastNumber || 0) : 0;
+          const nextNumber = currentLast + 1;
+          transaction.set(counterRef, { lastNumber: nextNumber }, { merge: true });
+          return nextNumber;
+        });
+      }).then(function(nextNumber) {
+        return "M" + String(nextNumber).padStart(3, '0');
+      });
+    }
+
     document.getElementById("signupForm").addEventListener("submit", function(event) {
       event.preventDefault();
       
@@ -163,10 +182,7 @@
       submitBtn.disabled = true;
       submitBtn.textContent = "جاري الحفظ... ⏳";
 
-      db.collection("students").get().then(function(querySnapshot) {
-        const nextNumber = querySnapshot.size + 1;
-        const generatedCode = "M" + String(nextNumber).padStart(3, '0');
-
+      generateNextCode().then(function(generatedCode) {
         const newStudent = {
           code: generatedCode,
           name: fullName,
@@ -176,14 +192,17 @@
           class: selectedClass,
           group: selectedGroup,
           points: 0,
+          storeBalance: 0,
+          groupPoints: 0,
           streak: 0,
           attendanceCount: 0,
           lastAttendanceDate: "",
+          lastSpinDate: "",
           avatar: "",
           badges: []
         };
 
-        db.collection("students").doc(generatedCode).set(newStudent).then(function() {
+        return db.collection("students").doc(generatedCode).set(newStudent).then(function() {
           document.getElementById("generatedCode").textContent = generatedCode;
           document.getElementById("successBox").style.display = "block";
           localStorage.setItem("loggedInStudent", JSON.stringify(newStudent));
