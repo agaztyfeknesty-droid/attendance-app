@@ -298,13 +298,21 @@
                                 <span style="color:#00f2fe; font-size:12px;">🆔 ${studentId}</span>
                             </div>
                             <p class="parent-phone">📞 ولي الأمر: ${data.parentPhone || 'غير مسجل'}</p>
-                            <p style="color:#cbd5e1; font-size:11px; margin:0 0 6px 0;">📊 الحضور: <b style="color:#00f2fe;">${count} / 18 يوم</b> | 🎯 النقاط: <b id="pts-${studentId}" style="color:#fbbf24;">${data.points || 0}</b> ن</p>
-                            <div style="display:flex; gap:6px; margin-bottom:10px; align-items:center;">
+                            <p style="color:#cbd5e1; font-size:11px; margin:0 0 6px 0;">📊 الحضور: <b id="count-${studentId}" style="color:#00f2fe;">${count}</b> / 18 يوم | 🎯 النقاط: <b id="pts-${studentId}" style="color:#fbbf24;">${data.points || 0}</b> ن</p>
+                            <div style="display:flex; gap:6px; margin-bottom:8px; align-items:center;">
                                 <input type="number" id="addpts-${studentId}" placeholder="نقاط" min="1"
                                     style="flex:1; padding:8px 10px; border-radius:10px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.08); color:white; font-family:'Cairo',sans-serif; font-size:13px; text-align:center;">
                                 <button onclick="addPoints('${studentId}', ${data.points || 0})"
                                     style="background:linear-gradient(135deg,#10b981,#065f46); color:white; border:none; padding:8px 14px; border-radius:10px; font-family:'Cairo',sans-serif; font-size:13px; font-weight:bold; cursor:pointer; white-space:nowrap;">
-                                    ➕ أضف
+                                    ➕ أضف نقط
+                                </button>
+                            </div>
+                            <div style="display:flex; gap:6px; margin-bottom:10px; align-items:center;">
+                                <input type="number" id="setcount-${studentId}" placeholder="عدد أيام الحضور" min="0"
+                                    style="flex:1; padding:8px 10px; border-radius:10px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.08); color:white; font-family:'Cairo',sans-serif; font-size:13px; text-align:center;">
+                                <button onclick="setAttendanceCount('${studentId}')"
+                                    style="background:linear-gradient(135deg,#00f2fe,#4facfe); color:#020617; border:none; padding:8px 14px; border-radius:10px; font-family:'Cairo',sans-serif; font-size:13px; font-weight:bold; cursor:pointer; white-space:nowrap;">
+                                    ✏️ عدّل الحضور
                                 </button>
                             </div>
                             <div class="qr-container">
@@ -347,6 +355,24 @@
                 document.getElementById("pts-" + studentId).textContent = newPoints;
                 input.value = "";
                 alert("✅ تم إضافة " + val + " نقطة بنجاح!");
+            }).catch(err => {
+                alert("❌ حصل خطأ: " + err.message);
+            });
+        }
+
+        function setAttendanceCount(studentId) {
+            const input = document.getElementById("setcount-" + studentId);
+            const val = parseInt(input.value);
+            if (isNaN(val) || val < 0) {
+                alert("⚠️ اكتب عدد أيام صحيح (0 أو أكتر)!");
+                return;
+            }
+            db.collection("students").doc(studentId).update({
+                attendanceCount: val
+            }).then(() => {
+                document.getElementById("count-" + studentId).textContent = val;
+                input.value = "";
+                alert("✅ اتعدّل عدد أيام الحضور لـ " + val + " يوم");
             }).catch(err => {
                 alert("❌ حصل خطأ: " + err.message);
             });
