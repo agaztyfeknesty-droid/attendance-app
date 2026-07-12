@@ -218,11 +218,8 @@
     </div>
 
     <div class="clean-info-card">
-      <p style="font-size:18px; margin:0 0 8px 0; font-weight:bold; color:#0f172a;">
+      <p style="font-size:18px; margin:0; font-weight:bold; color:#0f172a;">
         🪙 نقاطك: <span id="userPoints" style="color:#b45309;">0</span> نقطة
-      </p>
-      <p style="font-size:13px; margin:0; color:#64748b;">
-        📊 أيام الحضور: <span id="attendanceCounter" style="color:#1e3a8a; font-weight:bold;">0 / 18 يوم</span>
       </p>
     </div>
 
@@ -456,7 +453,6 @@
           document.getElementById("userPoints").textContent = currentPoints;
           document.getElementById("userStoreBalance").textContent = window._storeBalance;
           document.getElementById("userClassGroup").textContent = "📍 " + (data.class || "مش محدد") + " - " + (data.group || "مش محدد");
-          document.getElementById("attendanceCounter").textContent = (data.attendanceCount || 0) + " / 18 يوم";
 
           if (data.avatar) {
             document.getElementById("userAvatar").src = data.avatar;
