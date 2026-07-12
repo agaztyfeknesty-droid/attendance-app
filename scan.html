@@ -379,8 +379,13 @@
         }
 
         function initApp() {
-            let html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 15, qrbox: 230 });
-            html5QrcodeScanner.render(onScanSuccess);
+            // بنستنى شوية بعد ما نظهر الصفحة عشان نضمن إن حجم صندوق الكاميرا
+            // اتظبط صح قبل ما نبدأ الماسح (لو بدأناه فورًا ممكن ياخد حجم صفر ويفشل)
+            setTimeout(() => {
+                let html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 15, qrbox: 230 });
+                html5QrcodeScanner.render(onScanSuccess);
+            }, 200);
+
             listenToNewStudents();
 
             // طلبات المتجر لايف
