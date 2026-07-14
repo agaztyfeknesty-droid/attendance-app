@@ -92,23 +92,6 @@
       margin-bottom: 4px;
     }
     .wheel-card-sub { font-size: 12px; color: #94a3b8; margin-bottom: 16px; }
-    .wheel-wrapper {
-      position: relative;
-      width: 220px;
-      height: 220px;
-      margin: 0 auto 16px auto;
-    }
-    .wheel-pointer {
-      position: absolute;
-      top: -14px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 0; height: 0;
-      border-left: 12px solid transparent;
-      border-right: 12px solid transparent;
-      border-top: 26px solid #f43f5e;
-      z-index: 10;
-    }
     .spin-btn {
       width: 100%;
       background: linear-gradient(135deg, #fbbf24, #f59e0b);
@@ -243,17 +226,14 @@
       <p>استبدل نقاطك بهدايا حقيقية 🎁</p>
     </a>
 
-    <!-- ===== عجلة الحظ ===== -->
+    <!-- ===== هدية اليوم ===== -->
     <div class="wheel-card">
-      <p class="wheel-card-title">🎡 عجلة الحظ</p>
-      <p class="wheel-card-sub">لفّة واحدة كل يوم — جرب حظك!</p>
-      <div class="wheel-wrapper">
-        <div class="wheel-pointer"></div>
-        <canvas id="wheelCanvas" width="220" height="220"></canvas>
-      </div>
-      <button class="spin-btn" id="spinBtn" onclick="spinWheel()" disabled>⏳ جاري التحقق...</button>
+      <p class="wheel-card-title">🎁 هدية اليوم</p>
+      <p class="wheel-card-sub">هدية واحدة كل يوم — دوس واستلمها!</p>
+      <button class="spin-btn" id="spinBtn" onclick="claimDailyGift()" disabled>⏳ جاري التحقق...</button>
       <p class="wheel-result" id="wheelResult"></p>
     </div>
+
     <!-- ================== -->
 
     <div class="clean-info-card">
@@ -293,141 +273,67 @@
     let isSpinning = false;
     let alreadySpunToday = true; // افتراضيًا ممنوع اللف لحد ما نتأكد من السيرفر
 
-    // ===== العجلة =====
-    const segments = [
-      { label: "5 نقاط 🌟", points: 5, color: "#f43f5e" },
-      { label: "حظ أوفر 🍀", points: 0, color: "#475569" },
-      { label: "10 نقاط 👑", points: 10, color: "#fbbf24" },
-      { label: "2 نقطة ✨", points: 2, color: "#3b82f6" },
-      { label: "7 نقاط 🔥", points: 7, color: "#10b981" },
-      { label: "حظ أوفر 🍀", points: 0, color: "#475569" }
+    // ===== هدية اليوم (بسيطة بدل عجلة الحظ) =====
+    const dailyGifts = [
+      { label: "5 نقاط 🌟", points: 5 },
+      { label: "2 نقطة ✨", points: 2 },
+      { label: "10 نقاط 👑", points: 10 },
+      { label: "7 نقاط 🔥", points: 7 }
     ];
 
-    const numSeg = segments.length;
-    const arc = (2 * Math.PI) / numSeg;
-    let currentAngle = 0;
-
-    function drawWheel(angle) {
-      const canvas = document.getElementById("wheelCanvas");
-      const ctx = canvas.getContext("2d");
-      const cx = canvas.width / 2;
-      const cy = canvas.height / 2;
-      const r = cx - 4;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      for (let i = 0; i < numSeg; i++) {
-        const start = angle + i * arc;
-        const end = start + arc;
-        ctx.beginPath();
-        ctx.moveTo(cx, cy);
-        ctx.arc(cx, cy, r, start, end);
-        ctx.closePath();
-        ctx.fillStyle = segments[i].color;
-        ctx.fill();
-        ctx.strokeStyle = "rgba(255,255,255,0.25)";
-        ctx.lineWidth = 2;
-        ctx.stroke();
-
-        ctx.save();
-        ctx.translate(cx, cy);
-        ctx.rotate(start + arc / 2);
-        ctx.textAlign = "right";
-        ctx.fillStyle = "white";
-        ctx.font = "bold 11px Cairo, sans-serif";
-        ctx.fillText(segments[i].label, r - 8, 4);
-        ctx.restore();
-      }
-
-      // مركز العجلة
-      ctx.beginPath();
-      ctx.arc(cx, cy, 18, 0, 2 * Math.PI);
-      ctx.fillStyle = "#0f172a";
-      ctx.fill();
-      ctx.strokeStyle = "rgba(255,255,255,0.2)";
-      ctx.lineWidth = 2;
-      ctx.stroke();
-      ctx.fillStyle = "#fbbf24";
-      ctx.font = "14px serif";
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillText("⭐", cx, cy);
-    }
-
-    drawWheel(currentAngle);
-
     function getTodayString() {
-      const now = new Date();
-      const cairo = new Date(now.toLocaleString("en-US", { timeZone: "Africa/Cairo" }));
-      return cairo.getFullYear() + "-" +
-        String(cairo.getMonth() + 1).padStart(2, '0') + "-" +
-        String(cairo.getDate()).padStart(2, '0');
+      try {
+        const now = new Date();
+        const cairo = new Date(now.toLocaleString("en-US", { timeZone: "Africa/Cairo" }));
+        return cairo.getFullYear() + "-" +
+          String(cairo.getMonth() + 1).padStart(2, '0') + "-" +
+          String(cairo.getDate()).padStart(2, '0');
+      } catch (e) {
+        // لو الجهاز مش داعم لحساب توقيت القاهرة لأي سبب، نرجع لتاريخ الجهاز العادي
+        const now = new Date();
+        return now.getFullYear() + "-" +
+          String(now.getMonth() + 1).padStart(2, '0') + "-" +
+          String(now.getDate()).padStart(2, '0');
+      }
     }
 
-    function spinWheel() {
+    function claimDailyGift() {
       if (isSpinning || alreadySpunToday) return;
       isSpinning = true;
 
       const btn = document.getElementById("spinBtn");
       btn.disabled = true;
-      btn.textContent = "🎡 جاري اللف...";
+      btn.textContent = "🎁 جاري الفتح...";
       document.getElementById("wheelResult").textContent = "";
 
-      const winIndex = Math.floor(Math.random() * numSeg);
-      const targetAngle = (5 * 2 * Math.PI) +
-        (2 * Math.PI - winIndex * arc - arc / 2) - currentAngle;
-
-      const duration = 4000;
-      const startTime = performance.now();
-      const startAngle = currentAngle;
-
-      function animate(now) {
-        const elapsed = now - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        const eased = 1 - Math.pow(1 - progress, 4);
-        const angle = startAngle + targetAngle * eased;
-        drawWheel(angle);
-
-        if (progress < 1) {
-          requestAnimationFrame(animate);
-        } else {
-          currentAngle = angle % (2 * Math.PI);
-          isSpinning = false;
-          finishSpin(winIndex);
-        }
-      }
-      requestAnimationFrame(animate);
-    }
-
-    function finishSpin(winIndex) {
-      const winner = segments[winIndex];
-      const newStoreBalance = currentPoints + winner.points;
-      const newTotalPoints = totalLeaderboardPoints + winner.points;
+      const gift = dailyGifts[Math.floor(Math.random() * dailyGifts.length)];
+      const newStoreBalance = currentPoints + gift.points;
+      const newTotalPoints = totalLeaderboardPoints + gift.points;
       const todayString = getTodayString();
-
       const currentGroupPoints = window._groupPoints || 0;
 
       db.collection("students").doc(student.code).update({
         points: newTotalPoints,
         storeBalance: newStoreBalance,
-        groupPoints: currentGroupPoints + winner.points,
+        groupPoints: currentGroupPoints + gift.points,
         lastSpinDate: todayString
       }).then(function() {
         currentPoints = newStoreBalance;
         totalLeaderboardPoints = newTotalPoints;
         document.getElementById("userPoints").textContent = newStoreBalance;
 
-        const resultEl = document.getElementById("wheelResult");
-        if (winner.points > 0) {
-          resultEl.textContent = winner.label + " — رصيدك: " + newStoreBalance + " نقطة 🎉";
-        } else {
-          resultEl.textContent = "حظ أوفر المرة الجاية! 🍀";
-          resultEl.style.color = "#94a3b8";
-        }
+        document.getElementById("wheelResult").textContent = gift.label + " — رصيدك: " + newStoreBalance + " نقطة 🎉";
 
+        isSpinning = false;
         alreadySpunToday = true;
-        const btn = document.getElementById("spinBtn");
         btn.disabled = true;
-        btn.textContent = "🔒 تعالى بكرة تلف تاني!";
+        btn.textContent = "🔒 تعالى بكرة خد هدية تانية!";
+      }).catch(function(err) {
+        isSpinning = false;
+        btn.disabled = false;
+        btn.textContent = "🎁 هدية اليوم";
+        document.getElementById("wheelResult").textContent = "❌ حصل عطل، جرب تاني";
+        console.error("خطأ في استلام هدية اليوم:", err);
       });
     }
     // ==================
@@ -461,19 +367,25 @@
             document.getElementById("userAvatar").src = "https://ui-avatars.com/api/?name=" + encodeURIComponent(fl) + "&background=1e3a8a&color=fff&size=150&bold=true";
           }
 
-          // تحديث حالة اللف اليومي (يشتغل مع كل تحميل/ريفريش للصفحة)
-          const btn = document.getElementById("spinBtn");
-          if (data.lastSpinDate === getTodayString()) {
-            alreadySpunToday = true;
-            btn.disabled = true;
-            btn.textContent = "🔒 تعالى بكرة تلف تاني!";
-            document.getElementById("wheelResult").textContent = "لفيت العجلة النهاردة بالفعل ✅";
-          } else if (!isSpinning) {
-            alreadySpunToday = false;
-            btn.disabled = false;
-            btn.textContent = "🎰 الف العجلة!";
+          // تحديث حالة استلام الهدية اليومية (يشتغل مع كل تحميل/ريفريش للصفحة)
+          try {
+            const btn = document.getElementById("spinBtn");
+            if (data.lastSpinDate === getTodayString()) {
+              alreadySpunToday = true;
+              btn.disabled = true;
+              btn.textContent = "🔒 تعالى بكرة خد هدية تانية!";
+              document.getElementById("wheelResult").textContent = "خدت هديتك النهاردة بالفعل ✅";
+            } else if (!isSpinning) {
+              alreadySpunToday = false;
+              btn.disabled = false;
+              btn.textContent = "🎁 هدية اليوم";
+            }
+          } catch (e) {
+            console.error("خطأ في تحديث حالة هدية اليوم:", e);
           }
         }
+      }, function(error) {
+        console.error("خطأ في الاستماع لبيانات الطالب (onSnapshot):", error);
       });
     }
 
