@@ -157,6 +157,9 @@
                 <h3>👥 المخدومين المسجلين بالسيستم</h3>
                 <span class="counter-badge" id="studentCounter">0 مخدوم</span>
             </div>
+            <input type="text" id="studentSearchInput" placeholder="🔍 دور بالاسم أو الكود..."
+                oninput="filterStudentsList(this.value)"
+                style="width:100%; padding:12px 14px; border-radius:12px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.08); color:white; font-family:'Cairo',sans-serif; font-size:14px; margin-bottom:14px; box-sizing:border-box;">
             <div id="studentsContainer" style="max-height: 600px; overflow-y: auto; padding-left: 5px;">
                 <p style="text-align: center; color: #94a3b8; font-size: 13px;">جاري تحميل القائمة... 🔄</p>
             </div>
@@ -272,70 +275,99 @@
             });
         }
 
+        let allStudentsCache = [];
+
         function listenToNewStudents() {
             db.collection("students").onSnapshot(snapshot => {
-                const container = document.getElementById("studentsContainer");
-                const counter = document.getElementById("studentCounter");
-
-                counter.textContent = `${snapshot.size} مخدوم`;
-                container.innerHTML = "";
-
-                if (snapshot.empty) {
-                    container.innerHTML = `<p style="text-align:center; color:#94a3b8; font-size:13px;">لا يوجد مخدومين مسجلين حالياً.</p>`;
-                    return;
-                }
-
+                allStudentsCache = [];
                 snapshot.forEach(doc => {
-                    const data = doc.data();
-                    const studentId = doc.id;
-                    const count = data.attendanceCount || 0;
-                    const qrDivId = "qr-" + studentId;
-
-                    container.innerHTML += `
-                        <div class="student-item">
-                            <div class="student-name-row">
-                                <span>👤 ${data.name || 'بدون اسم'}</span>
-                                <span style="color:#00f2fe; font-size:12px;">🆔 ${studentId}</span>
-                            </div>
-                            <p class="parent-phone">📞 ولي الأمر: ${data.parentPhone || 'غير مسجل'}</p>
-                            <p style="color:#cbd5e1; font-size:11px; margin:0 0 6px 0;">📊 الحضور: <b id="count-${studentId}" style="color:#00f2fe;">${count}</b> / 18 يوم | 🎯 النقاط: <b id="pts-${studentId}" style="color:#fbbf24;">${data.points || 0}</b> ن</p>
-                            <div style="display:flex; gap:6px; margin-bottom:8px; align-items:center;">
-                                <input type="number" id="addpts-${studentId}" placeholder="نقاط" min="1"
-                                    style="flex:1; padding:8px 10px; border-radius:10px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.08); color:white; font-family:'Cairo',sans-serif; font-size:13px; text-align:center;">
-                                <button onclick="addPoints('${studentId}', ${data.points || 0})"
-                                    style="background:linear-gradient(135deg,#10b981,#065f46); color:white; border:none; padding:8px 14px; border-radius:10px; font-family:'Cairo',sans-serif; font-size:13px; font-weight:bold; cursor:pointer; white-space:nowrap;">
-                                    ➕ أضف نقط
-                                </button>
-                            </div>
-                            <div style="display:flex; gap:6px; margin-bottom:10px; align-items:center;">
-                                <input type="number" id="setcount-${studentId}" placeholder="عدد أيام الحضور" min="0"
-                                    style="flex:1; padding:8px 10px; border-radius:10px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.08); color:white; font-family:'Cairo',sans-serif; font-size:13px; text-align:center;">
-                                <button onclick="setAttendanceCount('${studentId}')"
-                                    style="background:linear-gradient(135deg,#00f2fe,#4facfe); color:#020617; border:none; padding:8px 14px; border-radius:10px; font-family:'Cairo',sans-serif; font-size:13px; font-weight:bold; cursor:pointer; white-space:nowrap;">
-                                    ✏️ عدّل الحضور
-                                </button>
-                            </div>
-                            <div class="qr-container">
-                                <div id="${qrDivId}"></div>
-                                <span class="qr-label">📲 كارت الحضور - ${data.name || studentId}</span>
-                            </div>
-                        </div>
-                    `;
-
-                    setTimeout(() => {
-                        const qrEl = document.getElementById(qrDivId);
-                        if (qrEl && qrEl.childElementCount === 0) {
-                            new QRCode(qrEl, {
-                                text: studentId,
-                                width: 120,
-                                height: 120,
-                                colorDark: "#0f172a",
-                                colorLight: "#ffffff",
-                                correctLevel: QRCode.CorrectLevel.H
-                            });
-                        }
-                    }, 100);
+                    allStudentsCache.push({ id: doc.id, data: doc.data() });
                 });
+
+                const searchInput = document.getElementById("studentSearchInput");
+                renderStudentsList(searchInput ? searchInput.value : "");
+            });
+        }
+
+        function filterStudentsList(searchText) {
+            renderStudentsList(searchText);
+        }
+
+        function renderStudentsList(searchText) {
+            const container = document.getElementById("studentsContainer");
+            const counter = document.getElementById("studentCounter");
+            const query = (searchText || "").trim().toLowerCase();
+
+            const filtered = query
+                ? allStudentsCache.filter(s =>
+                    (s.data.name || "").toLowerCase().includes(query) ||
+                    s.id.toLowerCase().includes(query)
+                  )
+                : allStudentsCache;
+
+            counter.textContent = `${allStudentsCache.length} مخدوم` + (query ? ` (${filtered.length} نتيجة)` : "");
+            container.innerHTML = "";
+
+            if (allStudentsCache.length === 0) {
+                container.innerHTML = `<p style="text-align:center; color:#94a3b8; font-size:13px;">لا يوجد مخدومين مسجلين حالياً.</p>`;
+                return;
+            }
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<p style="text-align:center; color:#94a3b8; font-size:13px;">مفيش نتائج مطابقة للبحث 🔍</p>`;
+                return;
+            }
+
+            filtered.forEach(s => {
+                const data = s.data;
+                const studentId = s.id;
+                const count = data.attendanceCount || 0;
+                const qrDivId = "qr-" + studentId;
+
+                container.innerHTML += `
+                    <div class="student-item">
+                        <div class="student-name-row">
+                            <span>👤 ${data.name || 'بدون اسم'}</span>
+                            <span style="color:#00f2fe; font-size:12px;">🆔 ${studentId}</span>
+                        </div>
+                        <p class="parent-phone">📞 ولي الأمر: ${data.parentPhone || 'غير مسجل'}</p>
+                        <p style="color:#cbd5e1; font-size:11px; margin:0 0 6px 0;">📊 الحضور: <b id="count-${studentId}" style="color:#00f2fe;">${count}</b> / 18 يوم | 🎯 النقاط: <b id="pts-${studentId}" style="color:#fbbf24;">${data.points || 0}</b> ن</p>
+                        <div style="display:flex; gap:6px; margin-bottom:8px; align-items:center;">
+                            <input type="number" id="addpts-${studentId}" placeholder="نقاط" min="1"
+                                style="flex:1; padding:8px 10px; border-radius:10px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.08); color:white; font-family:'Cairo',sans-serif; font-size:13px; text-align:center;">
+                            <button onclick="addPoints('${studentId}', ${data.points || 0})"
+                                style="background:linear-gradient(135deg,#10b981,#065f46); color:white; border:none; padding:8px 14px; border-radius:10px; font-family:'Cairo',sans-serif; font-size:13px; font-weight:bold; cursor:pointer; white-space:nowrap;">
+                                ➕ أضف نقط
+                            </button>
+                        </div>
+                        <div style="display:flex; gap:6px; margin-bottom:10px; align-items:center;">
+                            <input type="number" id="setcount-${studentId}" placeholder="عدد أيام الحضور" min="0"
+                                style="flex:1; padding:8px 10px; border-radius:10px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.08); color:white; font-family:'Cairo',sans-serif; font-size:13px; text-align:center;">
+                            <button onclick="setAttendanceCount('${studentId}')"
+                                style="background:linear-gradient(135deg,#00f2fe,#4facfe); color:#020617; border:none; padding:8px 14px; border-radius:10px; font-family:'Cairo',sans-serif; font-size:13px; font-weight:bold; cursor:pointer; white-space:nowrap;">
+                                ✏️ عدّل الحضور
+                            </button>
+                        </div>
+                        <div class="qr-container">
+                            <div id="${qrDivId}"></div>
+                            <span class="qr-label">📲 كارت الحضور - ${data.name || studentId}</span>
+                        </div>
+                    </div>
+                `;
+
+                setTimeout(() => {
+                    const qrEl = document.getElementById(qrDivId);
+                    if (qrEl && qrEl.childElementCount === 0) {
+                        new QRCode(qrEl, {
+                            text: studentId,
+                            width: 120,
+                            height: 120,
+                            colorDark: "#0f172a",
+                            colorLight: "#ffffff",
+                            correctLevel: QRCode.CorrectLevel.H
+                        });
+                    }
+                }, 100);
             });
         }
 
